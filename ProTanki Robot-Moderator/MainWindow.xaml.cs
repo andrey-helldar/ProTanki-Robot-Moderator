@@ -258,7 +258,8 @@ namespace ProTanki_Robot_Moderator
                                 // Если коммент больше XX минут - удаляем его
                                 if (DateTime.Now.Subtract(dt).Minutes > Convert.ToInt16(Properties.Resources.Live))
                                 {
-
+                                    // Удаляем коммент
+                                    WallDeleteComment((string)res[j]["id"]);
                                 }
                             }
                         }
@@ -266,6 +267,24 @@ namespace ProTanki_Robot_Moderator
                 }
             }
             catch (Exception ex) { File.WriteAllText("err.txt", ex.Message); }
+        }
+
+        /// <summary>
+        /// Удаляем коммент, если он не прошел отбор
+        /// </summary>
+        /// <param name="commentId"></param>
+        private void WallDeleteComment(string commentId)
+        {
+            try
+            {
+                string Data =
+                            "&access_token" + JsonGet("access_token") +
+                            "&owner_id=" + Properties.Resources.ID +
+                            "&comment_id=" + commentId;
+
+                POST(Properties.Resources.API + "wall.deleteComment", Data);
+            }
+            catch (Exception) { }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
