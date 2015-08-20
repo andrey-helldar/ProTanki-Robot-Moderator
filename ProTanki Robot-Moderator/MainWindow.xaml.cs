@@ -136,7 +136,7 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                string Data = "access_token=" + JsonGet("access_token") +
+                string Data =
                     "&owner_id=" + Properties.Resources.ID +
                     "&offset=0" +
                     "&count=" + Properties.Resources.Count +
@@ -146,17 +146,50 @@ namespace ProTanki_Robot_Moderator
 
                 if (result != null)
                 {
-
-
-
                     JToken res = JObject.Parse(result).SelectToken("response");
 
                     JObject wall = new JObject();
                     JArray ja = new JArray();
 
-                    for (int i = 1; i < res.Count(); i++)
-                        if ((int)res[i]["comments"]["count"] > 0)
-                            ja.Add(res[i]["id"]);
+                    //  Получаем общее количество записей
+                    int count = (int)res[0];
+
+                    // Вычисляем количество шагов
+                    int step = 0;
+                    if (count % Convert.ToInt32(Properties.Resources.Count) == 0)
+                        step = count / Convert.ToInt32(Properties.Resources.Count);
+                    else
+                        step = (count / Convert.ToInt32(Properties.Resources.Count)) + 1;
+
+                    for (int i = 0; i < step; i++)
+                    {
+                        Data =
+                            "&owner_id=" + Properties.Resources.ID +
+                            "&offset=" + i.ToString() +
+                            "&count=" + Properties.Resources.Count +
+                            "&filter=all";
+
+                        result = POST(Properties.Resources.API + "wall.get", Data);
+
+                        if (result != null)
+                        {
+                            res = JObject.Parse(result).SelectToken("response");
+
+                            for (int j = 1; j < res.Count(); j++)
+                            {
+                                // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
+                                if ((int)res[j]["comments"]["count"] > 0)
+                                {
+                                    // Если в записи отсутствует стоп-слово, читаем комменты
+                                    if (((string)res[j]["text"]).IndexOf(Properties.Resources.StopWord) == -1)
+                                    {
+                                        // Читаем комменты к записи
+                                        WallGetComments((string)res[j]["id"]);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     wall["response"] = ja;
                 }
@@ -166,7 +199,7 @@ namespace ProTanki_Robot_Moderator
             return null;
         }
 
-        private JToken WallGetComments(string postId)
+        private void WallGetComments(string postId)
         {
             try
             {
