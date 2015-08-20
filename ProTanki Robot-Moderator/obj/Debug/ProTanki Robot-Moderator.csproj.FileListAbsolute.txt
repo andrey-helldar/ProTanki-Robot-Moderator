@@ -1,0 +1,15 @@
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\ProTanki Robot-Moderator.exe.config
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\ProTanki Robot-Moderator.exe
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\ProTanki Robot-Moderator.pdb
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.csprojResolveAssemblyReference.cache
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\MainWindow.baml
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\MainWindow.g.cs
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\App.g.cs
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator_MarkupCompile.cache
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.g.resources
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki_Robot_Moderator.Properties.Resources.resources
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.csproj.GenerateResource.Cache
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.exe
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.pdb
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Newtonsoft.Json.dll
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Newtonsoft.Json.xml
