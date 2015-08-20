@@ -160,6 +160,8 @@ namespace ProTanki_Robot_Moderator
                     //  Получаем общее количество записей
                     int count = (int)res[0];
 
+                    Task.Factory.StartNew(() => ToLog("Всего записей на стене: " + count.ToString())).Wait();
+
                     // Вычисляем количество шагов для поста
                     int step = 0;
                     if (count % Convert.ToInt32(Properties.Resources.Count) == 0)
@@ -178,12 +180,16 @@ namespace ProTanki_Robot_Moderator
 
                         result = POST(Properties.Resources.API + "wall.get", Data);
 
+                        Task.Factory.StartNew(() => ToLog("\tЗаписи на стене. Шаг " + i.ToString())).Wait();
+
                         if (result != null)
                         {
                             res = JObject.Parse(result).SelectToken("response");
 
                             for (int j = 1; j < res.Count(); j++)
                             {
+                                Task.Factory.StartNew(() => ToLog("\t\tОбрабатываем пост #" + (string)res[j]["id"])).Wait();
+
                                 // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                 if ((int)res[j]["comments"]["count"] > 0)
                                 {
@@ -199,7 +205,7 @@ namespace ProTanki_Robot_Moderator
                     }
                 }
             }
-            catch (Exception ex) { File.WriteAllText("err.txt", ex.Message); }
+            catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
         }
 
         /// <summary>
@@ -225,8 +231,10 @@ namespace ProTanki_Robot_Moderator
                 {
                     JToken res = JObject.Parse(result).SelectToken("response");
 
-                    //  Получаем общее количество записей
+                    //  Получаем общее количество комментов
                     int count = (int)res[0];
+
+                    Task.Factory.StartNew(() => ToLog("\t\t\tКомментов в посте: " + count.ToString())).Wait();
 
                     // Вычисляем количество шагов для комментов
                     int step = 0;
@@ -252,6 +260,8 @@ namespace ProTanki_Robot_Moderator
 
                         for (int j = 1; j < res.Count(); j++)
                         {
+                            Task.Factory.StartNew(() => ToLog("\t\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
+
                             // Если пост содержит меньше XX лайков - приступаем к его обработке
                             if ((int)res[j]["likes"]["count"] < Convert.ToInt16(Properties.Resources.Likes))
                             {
@@ -263,14 +273,14 @@ namespace ProTanki_Robot_Moderator
                                 if (DateTime.Now.Subtract(dt).Minutes > Convert.ToInt16(Properties.Resources.Live))
                                 {
                                     // Удаляем коммент
-                                    WallDeleteComment((string)res[j]["id"]);
+                                    WallDeleteComment((string)res[j]["cid"]);
                                 }
                             }
                         }
                     }
                 }
             }
-            catch (Exception ex) { File.WriteAllText("err.txt", ex.Message); }
+            catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
         }
 
         /// <summary>
@@ -282,13 +292,17 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 string Data =
-                            "&access_token" + JsonGet("access_token") +
+                    // "&access_token" + JsonGet("access_token") +
                             "&owner_id=" + Properties.Resources.ID +
                             "&comment_id=" + commentId;
 
-                POST(Properties.Resources.API + "wall.deleteComment", Data);
+                string response = POST(Properties.Resources.API + "wall.deleteComment", Data);
+
+
+
+                Task.Factory.StartNew(() => ToLog("\t\t\tКомментарий #" + commentId + " удален")).Wait();
             }
-            catch (Exception) { }
+            catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
