@@ -132,7 +132,12 @@ namespace ProTanki_Robot_Moderator
             return null;
         }
 
-        private JObject WallGet()
+
+        /// <summary>
+        /// Получаем список постов на странице. Перебираем все
+        /// </summary>
+        /// <returns></returns>
+        private void WallGet()
         {
             try
             {
@@ -148,19 +153,17 @@ namespace ProTanki_Robot_Moderator
                 {
                     JToken res = JObject.Parse(result).SelectToken("response");
 
-                    JObject wall = new JObject();
-                    JArray ja = new JArray();
-
                     //  Получаем общее количество записей
                     int count = (int)res[0];
 
-                    // Вычисляем количество шагов
+                    // Вычисляем количество шагов для поста
                     int step = 0;
                     if (count % Convert.ToInt32(Properties.Resources.Count) == 0)
                         step = count / Convert.ToInt32(Properties.Resources.Count);
                     else
                         step = (count / Convert.ToInt32(Properties.Resources.Count)) + 1;
 
+                    // Перебираем записи по шагам
                     for (int i = 0; i < step; i++)
                     {
                         Data =
@@ -190,56 +193,85 @@ namespace ProTanki_Robot_Moderator
                             }
                         }
                     }
-
-                    wall["response"] = ja;
                 }
             }
             catch (Exception ex) { File.WriteAllText("err.txt", ex.Message); }
-
-            return null;
         }
 
+        /// <summary>
+        /// Получаем комменты к конкретной записи и проверяем дату жизни и лайки)))
+        /// </summary>
+        /// <param name="postId"></param>
         private void WallGetComments(string postId)
         {
             try
             {
-                string Data = "access_token=" + JsonGet("access_token") +
+                string Data =
                     "&owner_id=" + Properties.Resources.ID +
                     "&post_id=" + postId +
                     "&offset=0" +
-                    "&count=20" +
+                    "&count=" + Properties.Resources.Count +
                     "&need_likes=1" +
-                    "&sort=desc" +
+                    "&sort=asc" +
                     "&preview_length=0";
 
                 string result = POST(Properties.Resources.API + "wall.getComments", Data);
-
 
                 if (result != null)
                 {
                     JToken res = JObject.Parse(result).SelectToken("response");
 
-                    JObject wall = new JObject();
-                    JArray ja = new JArray();
+                    //  Получаем общее количество записей
+                    int count = (int)res[0];
 
-                    for (int i = 1; i < res.Count(); i++)
-                        if ((int)res[i].SelectToken("likes.count") < 20)
-                            ja.Add(res[i]["cid"]);
+                    // Вычисляем количество шагов для комментов
+                    int step = 0;
+                    if (count % Convert.ToInt32(Properties.Resources.Count) == 0)
+                        step = count / Convert.ToInt32(Properties.Resources.Count);
+                    else
+                        step = (count / Convert.ToInt32(Properties.Resources.Count)) + 1;
 
-                    wall["response"] = ja;
 
-                    return (JObject)wall;
+                    // Перебираем записи по шагам
+                    for (int i = 0; i < step; i++)
+                    {
+                        Data =
+                            "&owner_id=" + Properties.Resources.ID +
+                            "&post_id=" + postId +
+                            "&offset=" + i.ToString() +
+                            "&count=" + Properties.Resources.Count +
+                            "&need_likes=1" +
+                            "&sort=asc" +
+                            "&preview_length=0";
+
+                        res = JObject.Parse(result).SelectToken("response");
+
+                        for (int j = 1; j < res.Count(); j++)
+                        {
+                            // Если пост содержит меньше XX лайков - приступаем к его обработке
+                            if ((int)res[j]["likes"]["count"] < Convert.ToInt16(Properties.Resources.Likes))
+                            {
+                                // Конвертируем дату коммента
+                                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                dt = dt.AddSeconds((double)res[j]["date"]);
+
+                                // Если коммент больше XX минут - удаляем его
+                                if (DateTime.Now.Subtract(dt).Minutes > Convert.ToInt16(Properties.Resources.Live))
+                                {
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex) { File.WriteAllText("err.txt", ex.Message); }
-
-            return null;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //tbLog.Text = WallGet().ToString();
-            tbLog.Text = WallGetComments("220626").ToString();
+            WallGet();
+            //tbLog.Text = WallGetComments("220626").ToString();
         }
     }
 }

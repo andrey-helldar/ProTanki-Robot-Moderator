@@ -141,6 +141,13 @@
   <data name="ID" xml:space="preserve">
     <value>-58816477</value>
   </data>
+  <data name="Likes" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>20</value>
+    <comment>Количество минут жизни коммента, зарезервированного от удаления</comment>
+  </data>
   <data name="OAuth" xml:space="preserve">
     <value>https://oauth.vk.com/authorize</value>
   </data>
