@@ -124,7 +124,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -58816477.
+        ///   Looks up a localized string similar to -24349046.
         /// </summary>
         internal static string ID {
             get {

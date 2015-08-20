@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -141,6 +142,9 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
+                Task.Factory.StartNew(() => ToLog("\tStarting")).Wait();
+                Task.Factory.StartNew(() => ToLog("========================")).Wait();
+
                 string Data =
                     "&owner_id=" + Properties.Resources.ID +
                     "&offset=0" +
@@ -289,8 +293,16 @@ namespace ProTanki_Robot_Moderator
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            WallGet();
-            //tbLog.Text = WallGetComments("220626").ToString();
+            Task.Factory.StartNew(() => WallGet());
+        }
+
+        private void ToLog(string message)
+        {
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                try { tbLog.Text += message + Environment.NewLine; }
+                catch (Exception) { }
+            }));
         }
     }
 }
