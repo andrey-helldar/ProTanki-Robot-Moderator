@@ -28,6 +28,16 @@ namespace ProTanki_Robot_Moderator
     {
         private JObject obj;
 
+        private JObject log = new JObject(
+            new JProperty("AllPosts", 0),
+            new JProperty("AllComments", 0),
+            new JProperty("Teenage", 0),
+            new JProperty("Deleted", 0),
+            new JProperty("BanPermanent", 0),
+            new JProperty("BanMonth", 0),
+            new JProperty("BanWeek", 0),
+            new JProperty("ErrorDelete", 0)
+        );
 
         public MainWindow()
         {
@@ -284,10 +294,11 @@ namespace ProTanki_Robot_Moderator
                             Task.Factory.StartNew(() => ToLog("\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
 
                             // Проверяем наличие слов для бана
-                            if (ToBan((string)res[j]["text"]))
+                            double ban = ToBan((string)res[j]["text"]);
+                            if (ban > -1)
                             {
                                 // Слово найдено - отправляем в бан
-                                GroupsBanUser((string)res[j]["from_id"], (JToken)res[j]);
+                                GroupsBanUser((string)res[j]["from_id"], (JToken)res[j], ban);
                             }
                             else
                             {
@@ -366,7 +377,7 @@ namespace ProTanki_Robot_Moderator
         /// Добавляем юзера в бан
         /// </summary>
         /// <param name="user_id"></param>
-        private void GroupsBanUser(string user_id, JToken token = null)
+        private void GroupsBanUser(string user_id, JToken token = null, double time = 0)
         {
             try
             {
@@ -380,6 +391,9 @@ namespace ProTanki_Robot_Moderator
                          "&reason=1" +
                          "&comment=" + Properties.Resources.Reason + " (" + (string)token["text"] + ")" +
                          "&comment_visible=1";
+
+                if (time > 0)
+                    Data += "&end_date=" + time;
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.banUser", Data));
 
@@ -406,65 +420,78 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 JsonSet("access_token", tbToken.Text.Trim());
-                tbLog.Text = "";
-
                 Task.Factory.StartNew(() => WallGet());
             }
-            catch (Exception ex) { tbLog.Text = ex.Message; }
+            catch (Exception) { }
         }
 
-        private void ToLog(string message = "========================")
-        {
-            Dispatcher.BeginInvoke(new ThreadStart(delegate
-            {
-                try {
-                    tbLog.Text += message + Environment.NewLine;
-                    tbLog.ScrollToEnd();
-                }
-                catch (Exception) { }
-            }));
-        }
-
-        private bool ToBan(string text)
+        /// <summary>
+        /// Проверяем текст на запрещенные слова
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns>
+        ///     -1          Юзер чист. Бана нет
+        ///     0           Бессрочный бан
+        ///     timestamp   дата разблокировки
+        /// </returns>
+        private double ToBan(string text)
         {
             try
             {
-                string[] words = {
+                text = text.ToLower();
+
+                // Сообщения о продаже
+                string[] wordsSale = {
                     "акки",
                     "продам",
+                    "cTене",
+                };
+
+                // "Легкие" маты - неделя бана
+                string[] wordProfanityWeek = {
                     "хуй",
                     //"блять",
                     "ебать",
-                    "пoдарю",
-                    "cTене",
                     "пиздец",
                     "пизда",
-                    "иди на х**",
-                    "ебучий",
                     "сука",
+                };
+
+                // "Тяжелые" маты - месяц бана
+                string[] wordProfanityMonth = {
+                    "иди на х**",
                     "обсосок",
+                    "ебучий",
                     "гандон",
                     "гондон"
                 };
 
-                text = text.ToLower();
-
-                foreach (string word in words)
-                {
-                    if (text.IndexOf(word) > -1)
-                        return true;
-                }
-
+                // Является ли текст цельной ссылкой
                 if (
                     text.IndexOf(" ") == -1 &&
                     text.IndexOf("video") > -1 &&
                     text.Length > 30
                     )
-                    return true;
+                    return 0;
+
+                // Проверяем текст на продажу
+                foreach (string word in wordsSale)
+                    if (text.IndexOf(word) > -1)
+                        return 0;
+
+                // Проверяем текст на тяжелые маты
+                foreach (string word in wordProfanityMonth)
+                    if (text.IndexOf(word) > -1)
+                        return (double)((DateTime.UtcNow.AddMonths(1)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+
+                // Проверяем текст на легкие маты
+                foreach (string word in wordProfanityWeek)
+                    if (text.IndexOf(word) > -1)
+                        return (double)((DateTime.UtcNow.AddDays(7)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
             }
             catch (Exception) { }
 
-            return false;
+            return -1;
         }
 
         private void SetStatus(string block = "start")
@@ -520,6 +547,59 @@ namespace ProTanki_Robot_Moderator
                        tbProgress.Text = String.Format("{0} / {1}", pbStatus.Value.ToString(), pbStatus.Maximum.ToString());
                    }
                }));
+        }
+
+        private void Log(string path, string key, bool clear = false)
+        {
+            try
+            {
+                // Если массив новый - сбрасываем его
+                if (clear)
+                {
+                    log = new JObject(
+                        new JProperty("AllPosts", 0),
+                        new JProperty("AllComments", 0),
+                        new JProperty("Teenage", 0),
+                        new JProperty("Deleted", 0),
+                        new JProperty("BanPermanent", 0),
+                        new JProperty("BanMonth", 0),
+                        new JProperty("BanWeek", 0),
+                        new JProperty("ErrorDelete", 0)
+                    );
+                }
+
+                // Записываем логи
+                if (log != null)
+                {
+                    if (log.SelectToken(path) == null)
+                    {
+                        JObject jo = (JObject)log[path];
+                        jo.Add(new JProperty(path, key));
+                    }
+                    else
+                        log[path] = key;
+                }
+                else
+                {
+                    log = new JObject();
+                    log.Add(new JProperty(path, key));
+                }
+
+
+                // Выводим логи на экран
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+               {
+                   logAllPosts.Text = (string)log.SelectToken("AllPosts");
+                   logAllComments.Text = (string)log.SelectToken("AllComments");
+                   logTeenage.Text = (string)log.SelectToken("Teenage");
+                   logDeleted.Text = (string)log.SelectToken("Deleted");
+                   logBanPermanent.Text = (string)log.SelectToken("BanPermanent");
+                   logBanMonth.Text = (string)log.SelectToken("BanPermanent");
+                   logBanWeek.Text = (string)log.SelectToken("BanMonth");
+                   logErrorDelete.Text = (string)log.SelectToken("ErrorDelete");
+               }));
+            }
+            catch (Exception) { }
         }
     }
 }
