@@ -1,15 +1,16 @@
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\ProTanki Robot-Moderator.exe.config
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\ProTanki Robot-Moderator.exe
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\ProTanki Robot-Moderator.pdb
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\Newtonsoft.Json.dll
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\Newtonsoft.Json.xml
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\MainWindow.baml
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\MainWindow.g.cs
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\App.g.cs
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator_MarkupCompile.cache
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.g.resources
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki_Robot_Moderator.Properties.Resources.resources
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.csproj.GenerateResource.Cache
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.exe
-f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.pdb
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\data.json
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\ProTanki Bot-Moderator.exe.config
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.csprojResolveAssemblyReference.cache
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Bot-Moderator_MarkupCompile.cache
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Bot-Moderator.g.resources
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\ProTanki Bot-Moderator.exe
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\ProTanki Bot-Moderator.pdb
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Bot-Moderator.exe
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Bot-Moderator.pdb

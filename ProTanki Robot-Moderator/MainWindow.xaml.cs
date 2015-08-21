@@ -213,6 +213,8 @@ namespace ProTanki_Robot_Moderator
 
                             for (int j = 1; j < res.Count(); j++)
                             {
+                                Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
+
                                 // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                 if ((int)res[j]["comments"]["count"] > 0)
                                 {
@@ -222,11 +224,10 @@ namespace ProTanki_Robot_Moderator
 
                                 // Изменяем положение прогресс бара
                                 Task.Factory.StartNew(() => SetProgress());
-                                Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
                             }
                         }
 
-                        Thread.Sleep(500);
+                        Thread.Sleep(350);
                     }
                 }
             }
@@ -302,7 +303,7 @@ namespace ProTanki_Robot_Moderator
 
                             Task.Factory.StartNew(() => Log("CurrentComment"));
 
-                            Thread.Sleep(500);
+                            Thread.Sleep(350);
                         }
                     }
                 }
@@ -488,8 +489,8 @@ namespace ProTanki_Robot_Moderator
                    {
                        logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
                        logAllComments.Text = (string)log.SelectToken("CurrentComment") + " / " + (string)log.SelectToken("AllComments");
-                       logDeleted.Text = (string)log.SelectToken("Deleted");
-                       logErrorDelete.Text = (string)log.SelectToken("ErrorDelete");
+                       logDeleted.Text = (string)log.SelectToken("Deleted") + " / " + (Math.Round((double)log.SelectToken("Deleted") / (double)log.SelectToken("AllComments"), 2)).ToString();
+                       logErrorDelete.Text = (string)log.SelectToken("ErrorDelete") + " / " + (Math.Round((double)log.SelectToken("ErrorDelete") / (double)log.SelectToken("AllComments"), 2)).ToString();
                    }));
                 }
             }
