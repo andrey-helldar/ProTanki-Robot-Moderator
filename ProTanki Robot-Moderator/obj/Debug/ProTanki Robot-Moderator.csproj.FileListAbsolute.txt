@@ -13,3 +13,4 @@ f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранен
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.pdb
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Newtonsoft.Json.dll
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Newtonsoft.Json.xml
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\data.json

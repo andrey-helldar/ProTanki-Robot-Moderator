@@ -132,10 +132,6 @@
   <data name="Count" xml:space="preserve">
     <value>100</value>
   </data>
-  <data name="ID" xml:space="preserve">
-    <value>-58816477</value>
-    <comment>-24349046</comment>
-  </data>
   <data name="Length" xml:space="preserve">
     <value>10</value>
     <comment>Минимальное количество символов в сообщении</comment>

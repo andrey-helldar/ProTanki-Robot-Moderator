@@ -12,3 +12,4 @@ f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранен
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.csproj.GenerateResource.Cache
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.exe
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\obj\Release\ProTanki Robot-Moderator.pdb
+f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Release\data.json

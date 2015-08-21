@@ -27,6 +27,7 @@ namespace ProTanki_Robot_Moderator
     public partial class MainWindow : Window
     {
         private JObject obj;
+        private JObject data;
 
         private JObject log = new JObject(
             new JProperty("CurrentPost", 0),
@@ -48,6 +49,11 @@ namespace ProTanki_Robot_Moderator
             }
             else
                 JsonSet("access_token", "");
+
+            if (File.Exists("data.json"))
+            {
+                data = JObject.Parse(File.ReadAllText("data.json"));
+            }
         }
 
         public void Authorization()
@@ -161,7 +167,7 @@ namespace ProTanki_Robot_Moderator
                 Task.Factory.StartNew(() => Log(null, null, true));
 
                 string Data =
-                    "&owner_id=" + Properties.Resources.ID +
+                    "&owner_id=" + (string)data["id"] +
                     "&offset=0" +
                     "&count=" + Properties.Resources.Count +
                     "&filter=all";
@@ -192,7 +198,7 @@ namespace ProTanki_Robot_Moderator
                     for (int i = 0; i < step; i++)
                     {
                         Data =
-                            "&owner_id=" + Properties.Resources.ID +
+                            "&owner_id=" + (string)data["id"] +
                             "&offset=" + (Convert.ToInt32(Properties.Resources.Count) * i).ToString() +
                             "&count=" + Properties.Resources.Count +
                             "&filter=all";
@@ -243,7 +249,7 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 string Data =
-                    "&owner_id=" + Properties.Resources.ID +
+                    "&owner_id=" + (string)data["id"] +
                     "&post_id=" + postId +
                     "&offset=0" +
                     "&count=" + Properties.Resources.Count +
@@ -275,7 +281,7 @@ namespace ProTanki_Robot_Moderator
                     for (int i = 0; i < step; i++)
                     {
                         Data =
-                            "&owner_id=" + Properties.Resources.ID +
+                            "&owner_id=" + (string)data["id"] +
                             "&post_id=" + postId +
                             "&offset=" + (Convert.ToInt32(Properties.Resources.Count) * i).ToString() +
                             "&count=" + Properties.Resources.Count +
@@ -314,7 +320,7 @@ namespace ProTanki_Robot_Moderator
             {
                 string Data =
                      "&access_token=" + JsonGet("access_token") +
-                     "&owner_id=" + Properties.Resources.ID +
+                     "&owner_id=" + (string)data["id"] +
                      "&comment_id=" + commentId;
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "wall.deleteComment", Data));
@@ -375,26 +381,6 @@ namespace ProTanki_Robot_Moderator
             {
                 text = text.ToLower();
 
-                // Сообщения о продаже
-                string[] words = {
-                    "акки",
-                    "продам",
-                    "cTене",
-                    "хуй",
-                    "ебать",
-                    "пиздец",
-                    "пизда",
-                    "сука",
-                    "иди на х**",
-                    "обсосок",
-                    "ебучий",
-                    "гандон",
-                    "гондон",
-                    "три бонус кода",
-                    "продам аккаунт",
-                    "раздача бонус кодов"
-                };
-
                 // Является ли текст цельной ссылкой
                 if (
                     text.IndexOf(" ") == -1 &&
@@ -404,6 +390,8 @@ namespace ProTanki_Robot_Moderator
                     return true;
 
                 // Проверяем текст на продажу
+                JArray words = (JArray)data["words"];
+
                 foreach (string word in words)
                     if (text.IndexOf(word) > -1)
                         return true;
