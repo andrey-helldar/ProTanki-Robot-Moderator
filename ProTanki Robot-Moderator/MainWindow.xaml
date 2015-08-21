@@ -35,7 +35,7 @@
         <TextBlock x:Name="logDeleted" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="2"/>
         <TextBlock x:Name="logErrorDelete" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="3"/>
         <TextBox x:Name="tbToken" Height="23" Margin="10,5" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="4" Grid.RowSpan="2"/>
-        <TextBox x:Name="tbLog" Grid.ColumnSpan="5" Margin="10" Grid.Row="6" TextWrapping="Wrap"/>
+        <TextBox x:Name="tbLog" Grid.ColumnSpan="5" Margin="10" Grid.Row="6" TextWrapping="Wrap" IsReadOnly="True" AcceptsReturn="True" AcceptsTab="True"/>
         <StackPanel Margin="0" Grid.Row="5" VerticalAlignment="Center" Grid.ColumnSpan="5" HorizontalAlignment="Center">
             <Grid>
                 <Grid.ColumnDefinitions>

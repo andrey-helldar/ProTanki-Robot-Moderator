@@ -152,6 +152,11 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                {
+                    tbLog.Text = String.Empty;
+                }));
+
                 Task.Factory.StartNew(() => SetStatus());
                 Task.Factory.StartNew(() => Log(null, null, true));
 
@@ -340,9 +345,16 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                JsonSet("access_token", tbToken.Text.Trim());
+                if (tbToken.Text.Trim() != String.Empty)
+                {
+                    JsonSet("access_token", tbToken.Text.Trim());
 
-                Task.Factory.StartNew(() => WallGet());
+                    Task.Factory.StartNew(() => WallGet());
+                }
+                else
+                {
+                    tbLog.Text = "access_token не может быть пустым!";
+                }
 
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
@@ -377,7 +389,10 @@ namespace ProTanki_Robot_Moderator
                     "обсосок",
                     "ебучий",
                     "гандон",
-                    "гондон"
+                    "гондон",
+                    "три бонус кода",
+                    "продам аккаунт",
+                    "раздача бонус кодов"
                 };
 
                 // Является ли текст цельной ссылкой
@@ -503,7 +518,7 @@ namespace ProTanki_Robot_Moderator
 
         private void Timer(int sec = 0)
         {
-            for (int i = sec; i > 0; i--)
+            for (int i = sec; i >= 0; i--)
             {
                 Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
