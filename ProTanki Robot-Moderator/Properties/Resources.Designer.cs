@@ -106,7 +106,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -24349046.
+        ///   Looks up a localized string similar to -58816477.
         /// </summary>
         internal static string ID {
             get {
@@ -115,7 +115,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 10.
+        ///   Looks up a localized string similar to 5.
         /// </summary>
         internal static string Likes {
             get {
@@ -124,7 +124,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 20.
+        ///   Looks up a localized string similar to 120.
         /// </summary>
         internal static string Live {
             get {
@@ -138,6 +138,16 @@ namespace ProTanki_Robot_Moderator.Properties {
         internal static string OAuth {
             get {
                 return ResourceManager.GetString("OAuth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon PROTanks {
+            get {
+                object obj = ResourceManager.GetObject("PROTanks", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

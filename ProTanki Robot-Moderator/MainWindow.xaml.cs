@@ -143,6 +143,7 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 Task.Factory.StartNew(() => ToLog("\tStarting")).Wait();
+                Task.Factory.StartNew(() => ToLog("\t"+DateTime.UtcNow.ToLongTimeString())).Wait();
                 Task.Factory.StartNew(() => ToLog()).Wait();
                 Task.Factory.StartNew(() => ToLog(JsonGet("access_token"))).Wait();
                 Task.Factory.StartNew(() => ToLog()).Wait();
@@ -201,14 +202,19 @@ namespace ProTanki_Robot_Moderator
                                         // Читаем комменты к записи
                                         WallGetComments((string)res[j]["id"]);
                                     }
+                                    else
+                                        Task.Factory.StartNew(() => ToLog("\t\tПост " + (string)res[j]["id"] + " содержит стоп-слово")).Wait();
                                 }
                             }
                         }
+
+                        Thread.Sleep(1500);
                     }
                 }
 
                 Task.Factory.StartNew(() => ToLog()).Wait();
                 Task.Factory.StartNew(() => ToLog("\tStopped")).Wait();
+                Task.Factory.StartNew(() => ToLog("\t" + DateTime.UtcNow.ToLongTimeString())).Wait();
             }
             catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
         }
@@ -267,27 +273,40 @@ namespace ProTanki_Robot_Moderator
                         {
                             Task.Factory.StartNew(() => ToLog("\t\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
 
-                            // Если пост содержит меньше XX лайков - приступаем к его обработке
-                            if ((int)res[j]["likes"]["count"] < Convert.ToInt16(Properties.Resources.Likes))
+                            // Проверяем наличие слов для бана
+                            if (ToBan((string)res[j]["text"]))
                             {
-                                // Конвертируем дату коммента
-                                DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                dt = dt.AddSeconds((double)res[j]["date"]);
-
-                                // Если коммент больше XX минут - удаляем его
-                                if (DateTime.Now.Subtract(dt).Minutes > Convert.ToInt16(Properties.Resources.Live))
-                                {
-                                    Task.Factory.StartNew(() => ToLog("\t\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
-
-                                    // Удаляем коммент
-                                    WallDeleteComment((string)res[j]["cid"]);
-                                }
-                                else
-                                    Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + (DateTime.Now.Subtract(dt).Minutes).ToString() + " минут)")).Wait();
+                                // Слово найдено - отправляем в бан
+                                GroupsBanUser((string)res[j]["from_id"], (JToken)res[j]);
                             }
                             else
-                                Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
+                            {
+                                // Если пост содержит меньше XX лайков - приступаем к его обработке
+                                if ((int)res[j]["likes"]["count"] < Convert.ToInt16(Properties.Resources.Likes))
+                                {
+                                    // Конвертируем дату коммента
+                                    DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                    dt = dt.AddSeconds((double)res[j]["date"]);
+
+                                    // Если коммент больше XX минут - удаляем его
+                                    if (DateTime.UtcNow.Subtract(dt).TotalMinutes > Convert.ToInt16(Properties.Resources.Live))
+                                    {
+                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
+
+                                        // Удаляем коммент
+                                        WallDeleteComment((string)res[j]["cid"]);
+                                    }
+                                    else
+                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + DateTime.UtcNow.Subtract(dt).TotalMinutes.ToString() + " минуты)")).Wait();
+                                }
+                                else
+                                    Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
+                            }
+
+                            Thread.Sleep(1500);
                         }
+
+                        Thread.Sleep(1500);
                     }
                 }
             }
@@ -320,6 +339,45 @@ namespace ProTanki_Robot_Moderator
             catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
         }
 
+        /// <summary>
+        /// Добавляем юзера в бан
+        /// </summary>
+        /// <param name="user_id"></param>
+        private void GroupsBanUser(string user_id, JToken token = null)
+        {
+            try
+            {
+                string Data =
+                         "&access_token=" + JsonGet("access_token") +
+                         "&group_id=" + Properties.Resources.ID.Remove(0, 1) +
+                         "&user_id=" + user_id +
+                         "&reason=1" +
+                         "&comment=Робот нашел запрещенный текст" +
+                         "&comment_visible=1";
+
+                JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.banUser", Data));
+
+                // Удаляем комментарий
+                WallDeleteComment((string)token["cid"]);
+
+                if (response["response"] != null)
+                {
+                    if ((int)response.SelectToken("response") == 1)
+                        Task.Factory.StartNew(() => ToLog("\t\t\t\tПользователь" + user_id + " отправлен в бессрочный отпуск)")).Wait();
+
+                    // Если директории нет - создаем
+                    if (!Directory.Exists("bans"))
+                        Directory.CreateDirectory("bans");
+
+                    // Записываем лог о бане
+                    File.WriteAllText(@"bans\" + user_id + ".txt", token.ToString());
+                }
+                else
+                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
+            }
+            catch (Exception) { }
+        }
+
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
 
@@ -340,6 +398,31 @@ namespace ProTanki_Robot_Moderator
                 try { tbLog.Text += message + Environment.NewLine; }
                 catch (Exception) { }
             }));
+        }
+
+        private bool ToBan(string text)
+        {
+            try
+            {
+                string[] words = {
+                    "акки",
+                    "продам",
+                    "продаю",
+                    "халява",
+                    "бонус код"
+                };
+
+                text = text.ToLower();
+
+                foreach (string word in words)
+                {
+                    if (text.IndexOf(word) > -1)
+                        return true;
+                }
+            }
+            catch (Exception) { }
+
+            return false;
         }
     }
 }

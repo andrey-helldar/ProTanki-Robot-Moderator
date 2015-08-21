@@ -1,1 +1,0 @@
-Не удалось привести тип объекта "Newtonsoft.Json.Linq.JArray" к типу "Newtonsoft.Json.Linq.JObject".
