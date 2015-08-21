@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -187,15 +188,13 @@ namespace ProTanki_Robot_Moderator
 
                         result = POST(Properties.Resources.API + "wall.get", Data);
 
-                        Task.Factory.StartNew(() => ToLog("Записи на стене. Шаг " + i.ToString())).Wait();
-
                         if (result != null)
                         {
                             res = JObject.Parse(result).SelectToken("response");
 
                             for (int j = 1; j < res.Count(); j++)
                             {
-                                Task.Factory.StartNew(() => ToLog("\tОбрабатываем пост #" + (string)res[j]["id"])).Wait();
+                                Task.Factory.StartNew(() => ToLog("Обрабатываем пост #" + (string)res[j]["id"])).Wait();
 
                                 // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                 if ((int)res[j]["comments"]["count"] > 0)
@@ -207,7 +206,7 @@ namespace ProTanki_Robot_Moderator
                                         WallGetComments((string)res[j]["id"]);
                                     }
                                     else
-                                        Task.Factory.StartNew(() => ToLog("\t\tПост " + (string)res[j]["id"] + " содержит стоп-слово")).Wait();
+                                        Task.Factory.StartNew(() => ToLog("\tПост " + (string)res[j]["id"] + " содержит стоп-слово")).Wait();
                                 }
 
                                 // Изменяем положение прогресс бара
@@ -256,7 +255,7 @@ namespace ProTanki_Robot_Moderator
                     //  Получаем общее количество комментов
                     int count = (int)res[0];
 
-                    Task.Factory.StartNew(() => ToLog("\t\tКомментов в посте: " + count.ToString())).Wait();
+                    Task.Factory.StartNew(() => ToLog("\tКомментов в посте: " + count.ToString())).Wait();
 
                     // Вычисляем количество шагов для комментов
                     int step = 0;
@@ -282,8 +281,8 @@ namespace ProTanki_Robot_Moderator
 
                         for (int j = 1; j < res.Count(); j++)
                         {
-                            Task.Factory.StartNew(() => ToLog("\t\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
-
+                            Task.Factory.StartNew(() => ToLog("\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
+                        
                             // Проверяем наличие слов для бана
                             if (ToBan((string)res[j]["text"]))
                             {
@@ -302,16 +301,16 @@ namespace ProTanki_Robot_Moderator
                                     // Если коммент больше XX минут - удаляем его
                                     if (DateTime.UtcNow.Subtract(dt).TotalMinutes > Convert.ToInt16(Properties.Resources.Live))
                                     {
-                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
+                                        Task.Factory.StartNew(() => ToLog("\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
 
                                         // Удаляем коммент
-                                        WallDeleteComment((string)res[j]["cid"]);
+                                        WallDeleteComment((string)res[j]["cid"], (JToken)res);
                                     }
                                     else
-                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минут)")).Wait();
+                                        Task.Factory.StartNew(() => ToLog("\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минут)")).Wait();
                                 }
                                 else
-                                    Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
+                                    Task.Factory.StartNew(() => ToLog("\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
                             }
 
                             Thread.Sleep(500);
@@ -326,7 +325,7 @@ namespace ProTanki_Robot_Moderator
         /// Удаляем коммент, если он не прошел отбор
         /// </summary>
         /// <param name="commentId"></param>
-        private void WallDeleteComment(string commentId)
+        private void WallDeleteComment(string commentId, JToken token = null)
         {
             try
             {
@@ -340,10 +339,22 @@ namespace ProTanki_Robot_Moderator
                 if (response["response"] != null)
                 {
                     if ((int)response.SelectToken("response") == 1)
-                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКомментарий #" + commentId + " удален")).Wait();
+                        Task.Factory.StartNew(() => ToLog("\t\t\tКомментарий #" + commentId + " удален")).Wait();
                 }
                 else
-                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
+                {
+                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
+
+                    if (token != null)
+                    {
+                        // Если директории нет - создаем
+                        if (!Directory.Exists("errors"))
+                            Directory.CreateDirectory("errors");
+
+                        // Записываем лог о бане
+                        File.WriteAllText(@"errors\" + commentId + ".txt", token.ToString());
+                    }
+                }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
         }
@@ -372,7 +383,7 @@ namespace ProTanki_Robot_Moderator
                 if (response["response"] != null)
                 {
                     if ((int)response.SelectToken("response") == 1)
-                        Task.Factory.StartNew(() => ToLog("\t\t\t\tПользователь" + user_id + " отправлен в бессрочный отпуск)")).Wait();
+                        Task.Factory.StartNew(() => ToLog("\t\t\tПользователь" + user_id + " отправлен в бессрочный отпуск)")).Wait();
 
                     // Если директории нет - создаем
                     if (!Directory.Exists("bans"))
@@ -382,7 +393,7 @@ namespace ProTanki_Robot_Moderator
                     File.WriteAllText(@"bans\" + user_id + ".txt", token.ToString());
                 }
                 else
-                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
+                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
             }
             catch (Exception) { }
         }
@@ -422,7 +433,15 @@ namespace ProTanki_Robot_Moderator
                     //"блять",
                     "ебать",
                     "пoдарю",
-                    "cTене"
+                    "cTене",
+                    "пиздец",
+                    "пизда",
+                    "иди на х**",
+                    "ебучий",
+                    "сука",
+                    "обсосок",
+                    "гандон",
+                    "гондон"
                 };
 
                 text = text.ToLower();
@@ -432,6 +451,17 @@ namespace ProTanki_Robot_Moderator
                     if (text.IndexOf(word) > -1)
                         return true;
                 }
+
+                // Проверяем коммент на факт ссылки
+                /*Regex RgxUrl = new Regex("(([a-zA-Z][0-9a-zA-Z+\\-\\.]*:)?/{0,2}[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?");
+                if(RgxUrl.IsMatch(text))
+                    return true;*/
+                if (
+                    text.IndexOf(" ") == -1 &&
+                    text.IndexOf("video") > -1 &&
+                    text.Length > 30
+                    )
+                    return true;
             }
             catch (Exception) { }
 
