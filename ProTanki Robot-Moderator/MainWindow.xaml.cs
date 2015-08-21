@@ -146,7 +146,6 @@ namespace ProTanki_Robot_Moderator
 
                 Task.Factory.StartNew(() => ToLog("\tStarting")).Wait();
                 Task.Factory.StartNew(() => ToLog()).Wait();
-                Task.Factory.StartNew(() => ToLog(JsonGet("access_token"))).Wait();
                 Task.Factory.StartNew(() => ToLog("Group ID: " + Properties.Resources.ID.Remove(0, 1))).Wait();
                 Task.Factory.StartNew(() => ToLog()).Wait();
 
@@ -445,13 +444,16 @@ namespace ProTanki_Robot_Moderator
                        switch (block)
                        {
                            case "end":
-                               tbEndAt.Text = DateTime.UtcNow.ToString("Y-m-d H:i:s");
+                               tbEndAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                                tbStatus.Text = "Отдыхаем";
                                bStartBot.IsEnabled = true;
+
+                               // Вычисляем продолжительность работы
+                               tbDiff.Text = DateTime.UtcNow.Subtract(DateTime.Parse(tbStartAt.Text)).ToString("HH:mm:ss");
                                break;
 
                            default:
-                               tbStartAt.Text = DateTime.UtcNow.ToString("Y-m-d H:i:s");
+                               tbStartAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                                tbStatus.Text = "Работаем...";
                                bStartBot.IsEnabled = false;
                                break;
