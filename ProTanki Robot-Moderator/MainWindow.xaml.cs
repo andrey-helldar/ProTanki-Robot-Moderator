@@ -268,7 +268,7 @@ namespace ProTanki_Robot_Moderator
                     int count = (int)res[0];
 
                     // Запоминаем количество комментариев
-                    Task.Factory.StartNew(() => Log("AllComments", count.ToString()));
+                    Task.Factory.StartNew(() => Log("AllComments", count.ToString())).Wait();
 
                     // Вычисляем количество шагов для комментов
                     int step = 0;
@@ -380,7 +380,7 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                text = text.ToLower();
+                text = text.ToLower().Trim();
 
                 // Является ли текст цельной ссылкой
                 if (
@@ -394,7 +394,7 @@ namespace ProTanki_Robot_Moderator
                 JArray words = (JArray)data["words"];
 
                 foreach (string word in words)
-                    if (text.IndexOf(word) > -1)
+                    if (text.IndexOf(word) > -1 || text.Length < Convert.ToInt16(Properties.Resources.Length))
                         return true;
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
