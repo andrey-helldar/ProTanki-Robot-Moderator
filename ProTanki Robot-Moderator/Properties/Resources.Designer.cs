@@ -70,7 +70,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://ai-rus.com.
+        ///   Looks up a localized string similar to https://oauth.vk.com/blank.html.
         /// </summary>
         internal static string ApiRedirect {
             get {
@@ -106,24 +106,6 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 86400.
-        /// </summary>
-        internal static string ExpireIn {
-            get {
-                return ResourceManager.GetString("ExpireIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to protanki.
-        /// </summary>
-        internal static string Group {
-            get {
-                return ResourceManager.GetString("Group", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to -24349046.
         /// </summary>
         internal static string ID {
@@ -133,7 +115,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 20.
+        ///   Looks up a localized string similar to 10.
         /// </summary>
         internal static string Likes {
             get {

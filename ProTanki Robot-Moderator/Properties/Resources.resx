@@ -121,7 +121,7 @@
     <value>https://api.vk.com/method/</value>
   </data>
   <data name="ApiRedirect" xml:space="preserve">
-    <value>https://ai-rus.com</value>
+    <value>https://oauth.vk.com/blank.html</value>
   </data>
   <data name="AppID" xml:space="preserve">
     <value>5038642</value>
@@ -132,18 +132,12 @@
   <data name="Count" xml:space="preserve">
     <value>100</value>
   </data>
-  <data name="ExpireIn" xml:space="preserve">
-    <value>86400</value>
-  </data>
-  <data name="Group" xml:space="preserve">
-    <value>protanki</value>
-  </data>
   <data name="ID" xml:space="preserve">
     <value>-24349046</value>
     <comment>-58816477</comment>
   </data>
   <data name="Likes" xml:space="preserve">
-    <value>20</value>
+    <value>10</value>
   </data>
   <data name="Live" xml:space="preserve">
     <value>20</value>
