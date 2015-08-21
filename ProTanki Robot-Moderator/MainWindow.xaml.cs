@@ -361,7 +361,7 @@ namespace ProTanki_Robot_Moderator
                          "&group_id=" + Properties.Resources.ID.Remove(0, 1) +
                          "&user_id=" + user_id +
                          "&reason=1" +
-                         "&comment=Робот нашел запрещенный текст" +
+                         "&comment=" + Properties.Resources.Reason +
                          "&comment_visible=1";
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.banUser", Data));

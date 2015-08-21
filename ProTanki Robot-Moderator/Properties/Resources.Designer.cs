@@ -152,6 +152,15 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Робот нашел запрещенный текст (продажа аккаунтов, маты или что другое).
+        /// </summary>
+        internal static string Reason {
+            get {
+                return ResourceManager.GetString("Reason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to #Конкурс.
         /// </summary>
         internal static string StopWord {
