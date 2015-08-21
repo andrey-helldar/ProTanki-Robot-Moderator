@@ -307,7 +307,7 @@ namespace ProTanki_Robot_Moderator
                                         Task.Factory.StartNew(() => ToLog("\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
 
                                         // Удаляем коммент
-                                        WallDeleteComment((string)res[j]["cid"], (JToken)res);
+                                        WallDeleteComment((string)res[j]["cid"], (JToken)res[j]);
                                     }
                                     else
                                         Task.Factory.StartNew(() => ToLog("\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минут)")).Wait();
@@ -455,10 +455,6 @@ namespace ProTanki_Robot_Moderator
                         return true;
                 }
 
-                // Проверяем коммент на факт ссылки
-                /*Regex RgxUrl = new Regex("(([a-zA-Z][0-9a-zA-Z+\\-\\.]*:)?/{0,2}[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\\.\\-_!~*'()%]+)?");
-                if(RgxUrl.IsMatch(text))
-                    return true;*/
                 if (
                     text.IndexOf(" ") == -1 &&
                     text.IndexOf("video") > -1 &&
