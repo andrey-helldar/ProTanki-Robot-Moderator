@@ -403,7 +403,10 @@ namespace ProTanki_Robot_Moderator
         {
             Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
-                try { tbLog.Text += message + Environment.NewLine; }
+                try {
+                    tbLog.Text += message + Environment.NewLine;
+                    tbLog.ScrollToEnd();
+                }
                 catch (Exception) { }
             }));
         }
