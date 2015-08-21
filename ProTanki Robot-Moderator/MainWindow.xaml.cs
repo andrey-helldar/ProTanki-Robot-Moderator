@@ -254,7 +254,7 @@ namespace ProTanki_Robot_Moderator
                     "&post_id=" + postId +
                     "&offset=0" +
                     "&count=" + Properties.Resources.Count +
-                    "&need_likes=1" +
+                    "&need_likes=0" +
                     "&sort=asc" +
                     "&preview_length=0";
 
