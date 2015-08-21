@@ -142,10 +142,12 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
+                Task.Factory.StartNew(() => SetStatus()).Wait();
+
                 Task.Factory.StartNew(() => ToLog("\tStarting")).Wait();
-                Task.Factory.StartNew(() => ToLog("\t"+DateTime.UtcNow.ToLongTimeString())).Wait();
                 Task.Factory.StartNew(() => ToLog()).Wait();
                 Task.Factory.StartNew(() => ToLog(JsonGet("access_token"))).Wait();
+                Task.Factory.StartNew(() => ToLog("Group ID: " + Properties.Resources.ID.Remove(0, 1))).Wait();
                 Task.Factory.StartNew(() => ToLog()).Wait();
 
                 string Data =
@@ -162,6 +164,9 @@ namespace ProTanki_Robot_Moderator
 
                     //  Получаем общее количество записей
                     int count = (int)res[0];
+
+                    // Устанавливаем значение прогресс бара
+                    Task.Factory.StartNew(() => SetProgress(true, count));
 
                     Task.Factory.StartNew(() => ToLog("Всего записей на стене: " + count.ToString())).Wait();
 
@@ -205,10 +210,13 @@ namespace ProTanki_Robot_Moderator
                                     else
                                         Task.Factory.StartNew(() => ToLog("\t\tПост " + (string)res[j]["id"] + " содержит стоп-слово")).Wait();
                                 }
+
+                                // Изменяем положение прогресс бара
+                                Task.Factory.StartNew(() => SetProgress());
                             }
                         }
 
-                        Thread.Sleep(1500);
+                        Thread.Sleep(500);
                     }
                 }
 
@@ -217,6 +225,10 @@ namespace ProTanki_Robot_Moderator
                 Task.Factory.StartNew(() => ToLog("\t" + DateTime.UtcNow.ToLongTimeString())).Wait();
             }
             catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
+            finally
+            {
+                Task.Factory.StartNew(() => SetStatus("end")).Wait();
+            }
         }
 
         /// <summary>
@@ -297,16 +309,14 @@ namespace ProTanki_Robot_Moderator
                                         WallDeleteComment((string)res[j]["cid"]);
                                     }
                                     else
-                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + DateTime.UtcNow.Subtract(dt).TotalMinutes.ToString() + " минуты)")).Wait();
+                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минуты)")).Wait();
                                 }
                                 else
                                     Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
                             }
 
-                            Thread.Sleep(1500);
+                            Thread.Sleep(500);
                         }
-
-                        Thread.Sleep(1500);
                     }
                 }
             }
@@ -380,15 +390,14 @@ namespace ProTanki_Robot_Moderator
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
             try
             {
                 JsonSet("access_token", tbToken.Text.Trim());
                 tbLog.Text = "";
-            }
-            catch (Exception) { }
 
-            Task.Factory.StartNew(() => WallGet());
+                Task.Factory.StartNew(() => WallGet());
+            }
+            catch (Exception ex) { tbLog.Text = ex.Message; }
         }
 
         private void ToLog(string message = "========================")
@@ -409,7 +418,9 @@ namespace ProTanki_Robot_Moderator
                     "продам",
                     "продаю",
                     "халява",
-                    "бонус код"
+                    "хуй",
+                    "бля",
+                    "ебать"
                 };
 
                 text = text.ToLower();
@@ -423,6 +434,54 @@ namespace ProTanki_Robot_Moderator
             catch (Exception) { }
 
             return false;
+        }
+
+        private void SetStatus(string block = "start")
+        {
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+               {
+                   try
+                   {
+                       switch (block)
+                       {
+                           case "end":
+                               tbEndAt.Text = DateTime.UtcNow.ToString("Y-m-d H:i:s");
+                               tbStatus.Text = "Отдыхаем";
+                               bStartBot.IsEnabled = true;
+                               break;
+
+                           default:
+                               tbStartAt.Text = DateTime.UtcNow.ToString("Y-m-d H:i:s");
+                               tbStatus.Text = "Работаем...";
+                               bStartBot.IsEnabled = false;
+                               break;
+                       }
+                   }
+                   catch (Exception)
+                   {
+                       bStartBot.IsEnabled = true;
+                   }
+               }));
+        }
+
+        private void SetProgress(bool set = false, int value = 100)
+        {
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+               {
+                   try
+                   {
+                       if (set == true)
+                       {
+                           pbStatus.Maximum = value;
+                           pbStatus.Value = 0;
+                       }
+                       else
+                       {
+                           pbStatus.Value += 1;
+                       }
+                   }
+                   catch (Exception) { }
+               }));
         }
     }
 }
