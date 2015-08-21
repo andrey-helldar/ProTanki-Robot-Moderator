@@ -29,13 +29,11 @@ namespace ProTanki_Robot_Moderator
         private JObject obj;
 
         private JObject log = new JObject(
+            new JProperty("CurrentPost", 0),
+            new JProperty("CurrentComment", 0),
             new JProperty("AllPosts", 0),
             new JProperty("AllComments", 0),
-            new JProperty("Teenage", 0),
             new JProperty("Deleted", 0),
-            new JProperty("BanPermanent", 0),
-            new JProperty("BanMonth", 0),
-            new JProperty("BanWeek", 0),
             new JProperty("ErrorDelete", 0)
         );
 
@@ -95,13 +93,14 @@ namespace ProTanki_Robot_Moderator
 
                 return Out;
             }
-            catch (WebException ex) { return ex.Message; }
-            catch (Exception ex) { return ex.Message; }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
+
+            return null;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Authorization();
+            Task.Factory.StartNew(() => Authorization());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -134,7 +133,7 @@ namespace ProTanki_Robot_Moderator
                     obj.Add(new JProperty(path, key));
                 }
             }
-            catch (Exception ex) { File.WriteAllText(path + "_" + key + ".txt", ex.Message); }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
         }
 
         private string JsonGet(string path)
@@ -153,12 +152,8 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                Task.Factory.StartNew(() => SetStatus()).Wait();
-
-                Task.Factory.StartNew(() => ToLog("\tStarting")).Wait();
-                Task.Factory.StartNew(() => ToLog()).Wait();
-                Task.Factory.StartNew(() => ToLog("Group ID: " + Properties.Resources.ID.Remove(0, 1))).Wait();
-                Task.Factory.StartNew(() => ToLog()).Wait();
+                Task.Factory.StartNew(() => SetStatus());
+                Task.Factory.StartNew(() => Log(null, null, true));
 
                 string Data =
                     "&owner_id=" + Properties.Resources.ID +
@@ -178,7 +173,8 @@ namespace ProTanki_Robot_Moderator
                     // Устанавливаем значение прогресс бара
                     Task.Factory.StartNew(() => SetProgress(true, count));
 
-                    Task.Factory.StartNew(() => ToLog("Всего записей на стене: " + count.ToString())).Wait();
+                    // Запоминаем статистику
+                    Task.Factory.StartNew(() => Log("AllPosts", count.ToString()));
 
                     // Вычисляем количество шагов для поста
                     int step = 0;
@@ -202,40 +198,34 @@ namespace ProTanki_Robot_Moderator
                         {
                             res = JObject.Parse(result).SelectToken("response");
 
+                            Task.Factory.StartNew(() => Log("AllPosts", count.ToString()));
+
                             for (int j = 1; j < res.Count(); j++)
                             {
-                                Task.Factory.StartNew(() => ToLog("Обрабатываем пост #" + (string)res[j]["id"])).Wait();
-
                                 // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                 if ((int)res[j]["comments"]["count"] > 0)
                                 {
-                                    // Если в записи отсутствует стоп-слово, читаем комменты
-                                    if (((string)res[j]["text"]).IndexOf(Properties.Resources.StopWord) == -1)
-                                    {
-                                        // Читаем комменты к записи
-                                        WallGetComments((string)res[j]["id"]);
-                                    }
-                                    else
-                                        Task.Factory.StartNew(() => ToLog("\tПост " + (string)res[j]["id"] + " содержит стоп-слово")).Wait();
+                                    // Читаем комменты к записи
+                                    WallGetComments((string)res[j]["id"]);
                                 }
 
                                 // Изменяем положение прогресс бара
                                 Task.Factory.StartNew(() => SetProgress());
+                                Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
                             }
                         }
 
                         Thread.Sleep(500);
                     }
                 }
-
-                Task.Factory.StartNew(() => ToLog()).Wait();
-                Task.Factory.StartNew(() => ToLog("\tStopped")).Wait();
-                Task.Factory.StartNew(() => ToLog("\t" + DateTime.UtcNow.ToLongTimeString())).Wait();
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
             finally
             {
-                Task.Factory.StartNew(() => SetStatus("end")).Wait();
+                Task.Factory.StartNew(() => SetStatus("end"));
+
+                // Ждем 1 минуту и повторяем
+                Task.Factory.StartNew(() => Timer(30));
             }
         }
 
@@ -265,7 +255,8 @@ namespace ProTanki_Robot_Moderator
                     //  Получаем общее количество комментов
                     int count = (int)res[0];
 
-                    Task.Factory.StartNew(() => ToLog("\tКомментов в посте: " + count.ToString())).Wait();
+                    // Запоминаем количество комментариев
+                    Task.Factory.StartNew(() => Log("AllComments", count.ToString()));
 
                     // Вычисляем количество шагов для комментов
                     int step = 0;
@@ -291,48 +282,21 @@ namespace ProTanki_Robot_Moderator
 
                         for (int j = 1; j < res.Count(); j++)
                         {
-                            Task.Factory.StartNew(() => ToLog("\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
-
                             // Проверяем наличие слов для бана
-                            double ban = ToBan((string)res[j]["text"]);
-                            if (ban > -1)
+                            if (ToDelete((string)res[j]["text"]))
                             {
-                                // Слово найдено - отправляем в бан
-                                GroupsBanUser((string)res[j]["from_id"], (JToken)res[j], ban);
+                                // Удаляем коммент
+                                WallDeleteComment((string)res[j]["cid"], (JToken)res[j]);
                             }
-                            else
-                            {
-                                // Если пост содержит меньше XX лайков - приступаем к его обработке
-                                if ((int)res[j]["likes"]["count"] < Convert.ToInt16(Properties.Resources.Likes))
-                                {
-                                    // Конвертируем дату коммента
-                                    DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                                    dt = dt.AddSeconds((double)res[j]["date"]);
 
-                                    // Если коммент больше XX минут - удаляем его
-                                    if (
-                                        DateTime.UtcNow.Subtract(dt).TotalMinutes > Convert.ToInt16(Properties.Resources.Live) ||
-                                        ((string)res[j]["text"]).Length > Convert.ToInt16(Properties.Resources.Length)
-                                        )
-                                    {
-                                        Task.Factory.StartNew(() => ToLog("\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
-
-                                        // Удаляем коммент
-                                        WallDeleteComment((string)res[j]["cid"], (JToken)res[j]);
-                                    }
-                                    else
-                                        Task.Factory.StartNew(() => ToLog("\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минут)")).Wait();
-                                }
-                                else
-                                    Task.Factory.StartNew(() => ToLog("\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
-                            }
+                            Task.Factory.StartNew(() => Log("CurrentComment"));
 
                             Thread.Sleep(500);
                         }
                     }
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
         }
 
         /// <summary>
@@ -352,12 +316,11 @@ namespace ProTanki_Robot_Moderator
 
                 if (response["response"] != null)
                 {
-                    if ((int)response.SelectToken("response") == 1)
-                        Task.Factory.StartNew(() => ToLog("\t\t\tКомментарий #" + commentId + " удален")).Wait();
+                    Task.Factory.StartNew(() => Log("Deleted"));
                 }
                 else
                 {
-                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
+                    Task.Factory.StartNew(() => Log("ErrorDelete"));
 
                     if (token != null)
                     {
@@ -370,49 +333,7 @@ namespace ProTanki_Robot_Moderator
                     }
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => ToLog(ex.Message)).Wait(); }
-        }
-
-        /// <summary>
-        /// Добавляем юзера в бан
-        /// </summary>
-        /// <param name="user_id"></param>
-        private void GroupsBanUser(string user_id, JToken token = null, double time = 0)
-        {
-            try
-            {
-                // Удаляем комментарий
-                WallDeleteComment((string)token["cid"]);
-
-                string Data =
-                         "&access_token=" + JsonGet("access_token") +
-                         "&group_id=" + Properties.Resources.ID.Remove(0, 1) +
-                         "&user_id=" + user_id +
-                         "&reason=1" +
-                         "&comment=" + Properties.Resources.Reason + " (" + (string)token["text"] + ")" +
-                         "&comment_visible=1";
-
-                if (time > 0)
-                    Data += "&end_date=" + time;
-
-                JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.banUser", Data));
-
-                if (response["response"] != null)
-                {
-                    if ((int)response.SelectToken("response") == 1)
-                        Task.Factory.StartNew(() => ToLog("\t\t\tПользователь" + user_id + " отправлен в бессрочный отпуск)")).Wait();
-
-                    // Если директории нет - создаем
-                    if (!Directory.Exists("bans"))
-                        Directory.CreateDirectory("bans");
-
-                    // Записываем лог о бане
-                    File.WriteAllText(@"bans\" + user_id + ".txt", token.ToString());
-                }
-                else
-                    Task.Factory.StartNew(() => ToLog(String.Format("\t\t\tОшибка: {0}: {1}", (string)response["error"]["error_code"], (string)response["error"]["error_msg"]))).Wait();
-            }
-            catch (Exception) { }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -420,9 +341,11 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 JsonSet("access_token", tbToken.Text.Trim());
+
                 Task.Factory.StartNew(() => WallGet());
+
             }
-            catch (Exception) { }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
         }
 
         /// <summary>
@@ -434,31 +357,22 @@ namespace ProTanki_Robot_Moderator
         ///     0           Бессрочный бан
         ///     timestamp   дата разблокировки
         /// </returns>
-        private double ToBan(string text)
+        private bool ToDelete(string text)
         {
             try
             {
                 text = text.ToLower();
 
                 // Сообщения о продаже
-                string[] wordsSale = {
+                string[] words = {
                     "акки",
                     "продам",
                     "cTене",
-                };
-
-                // "Легкие" маты - неделя бана
-                string[] wordProfanityWeek = {
                     "хуй",
-                    //"блять",
                     "ебать",
                     "пиздец",
                     "пизда",
                     "сука",
-                };
-
-                // "Тяжелые" маты - месяц бана
-                string[] wordProfanityMonth = {
                     "иди на х**",
                     "обсосок",
                     "ебучий",
@@ -472,26 +386,16 @@ namespace ProTanki_Robot_Moderator
                     text.IndexOf("video") > -1 &&
                     text.Length > 30
                     )
-                    return 0;
+                    return true;
 
                 // Проверяем текст на продажу
-                foreach (string word in wordsSale)
+                foreach (string word in words)
                     if (text.IndexOf(word) > -1)
-                        return 0;
-
-                // Проверяем текст на тяжелые маты
-                foreach (string word in wordProfanityMonth)
-                    if (text.IndexOf(word) > -1)
-                        return (double)((DateTime.UtcNow.AddMonths(1)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
-
-                // Проверяем текст на легкие маты
-                foreach (string word in wordProfanityWeek)
-                    if (text.IndexOf(word) > -1)
-                        return (double)((DateTime.UtcNow.AddDays(7)).Subtract(new DateTime(1970, 1, 1)).TotalSeconds);
+                        return true;
             }
-            catch (Exception) { }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
 
-            return -1;
+            return false;
         }
 
         private void SetStatus(string block = "start")
@@ -506,9 +410,6 @@ namespace ProTanki_Robot_Moderator
                                tbEndAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                                tbStatus.Text = "Отдыхаем";
                                bStartBot.IsEnabled = true;
-
-                               // Вычисляем продолжительность работы
-                               tbDiff.Text = DateTime.UtcNow.Subtract(DateTime.Parse(tbStartAt.Text)).ToString("HH:mm:ss");
                                break;
 
                            default:
@@ -518,9 +419,10 @@ namespace ProTanki_Robot_Moderator
                                break;
                        }
                    }
-                   catch (Exception)
+                   catch (Exception ex)
                    {
                        bStartBot.IsEnabled = true;
+                       Task.Factory.StartNew(() => textLog(ex));
                    }
                }));
         }
@@ -541,15 +443,11 @@ namespace ProTanki_Robot_Moderator
                            pbStatus.Value += 1;
                        }
                    }
-                   catch (Exception) { }
-                   finally
-                   {
-                       tbProgress.Text = String.Format("{0} / {1}", pbStatus.Value.ToString(), pbStatus.Maximum.ToString());
-                   }
+                   catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
                }));
         }
 
-        private void Log(string path, string key, bool clear = false)
+        private void Log(string path = null, string key = null, bool clear = false)
         {
             try
             {
@@ -557,49 +455,65 @@ namespace ProTanki_Robot_Moderator
                 if (clear)
                 {
                     log = new JObject(
+                        new JProperty("CurrentPost", 0),
+                        new JProperty("CurrentComment", 0),
                         new JProperty("AllPosts", 0),
                         new JProperty("AllComments", 0),
-                        new JProperty("Teenage", 0),
                         new JProperty("Deleted", 0),
-                        new JProperty("BanPermanent", 0),
-                        new JProperty("BanMonth", 0),
-                        new JProperty("BanWeek", 0),
                         new JProperty("ErrorDelete", 0)
                     );
                 }
-
-                // Записываем логи
-                if (log != null)
-                {
-                    if (log.SelectToken(path) == null)
-                    {
-                        JObject jo = (JObject)log[path];
-                        jo.Add(new JProperty(path, key));
-                    }
-                    else
-                        log[path] = key;
-                }
                 else
                 {
-                    log = new JObject();
-                    log.Add(new JProperty(path, key));
+                    // Записываем логи
+                    if (path != null && key == null)
+                    {
+                        log[path] = (double)log.SelectToken(path) + 1;
+                    }
+                    else if (path != null && key != null)
+                    {
+                        switch (path)
+                        {
+                            case "AllComments": log[path] = (double)log.SelectToken(path) + Convert.ToDouble(key); break;
+
+                            default: log[path] = key; break;
+                        }
+                    }
+
+                    // Выводим логи на экран
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                   {
+                       logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
+                       logAllComments.Text = (string)log.SelectToken("CurrentComment") + " / " + (string)log.SelectToken("AllComments");
+                       logDeleted.Text = (string)log.SelectToken("Deleted");
+                       logErrorDelete.Text = (string)log.SelectToken("ErrorDelete");
+                   }));
                 }
-
-
-                // Выводим логи на экран
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
-               {
-                   logAllPosts.Text = (string)log.SelectToken("AllPosts");
-                   logAllComments.Text = (string)log.SelectToken("AllComments");
-                   logTeenage.Text = (string)log.SelectToken("Teenage");
-                   logDeleted.Text = (string)log.SelectToken("Deleted");
-                   logBanPermanent.Text = (string)log.SelectToken("BanPermanent");
-                   logBanMonth.Text = (string)log.SelectToken("BanPermanent");
-                   logBanWeek.Text = (string)log.SelectToken("BanMonth");
-                   logErrorDelete.Text = (string)log.SelectToken("ErrorDelete");
-               }));
             }
-            catch (Exception) { }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)); }
+        }
+
+        private void textLog(Exception ex)
+        {
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                   {
+                       tbLog.Text = String.Format("{0}\n\n=============================\n\n{1}", ex.Message, ex.StackTrace);
+                   }));
+        }
+
+        private void Timer(int sec = 0)
+        {
+            for (int i = sec; i > 0; i--)
+            {
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                {
+                    tbDiff.Text = String.Format("00:00:{0}", i.ToString());
+                }));
+
+                Thread.Sleep(1000);
+            }
+
+            Task.Factory.StartNew(() => WallGet());
         }
     }
 }

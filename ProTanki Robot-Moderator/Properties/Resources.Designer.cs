@@ -106,7 +106,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -58816477.
+        ///   Looks up a localized string similar to -24349046.
         /// </summary>
         internal static string ID {
             get {
@@ -115,29 +115,11 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 20.
+        ///   Looks up a localized string similar to 10.
         /// </summary>
         internal static string Length {
             get {
                 return ResourceManager.GetString("Length", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 5.
-        /// </summary>
-        internal static string Likes {
-            get {
-                return ResourceManager.GetString("Likes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 120.
-        /// </summary>
-        internal static string Live {
-            get {
-                return ResourceManager.GetString("Live", resourceCulture);
             }
         }
         
@@ -157,24 +139,6 @@ namespace ProTanki_Robot_Moderator.Properties {
             get {
                 object obj = ResourceManager.GetObject("PROTanks", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Робот нашел запрещенный текст.
-        /// </summary>
-        internal static string Reason {
-            get {
-                return ResourceManager.GetString("Reason", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to #Конкурс.
-        /// </summary>
-        internal static string StopWord {
-            get {
-                return ResourceManager.GetString("StopWord", resourceCulture);
             }
         }
     }
