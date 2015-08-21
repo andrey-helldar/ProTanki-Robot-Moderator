@@ -115,6 +115,15 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 20.
+        /// </summary>
+        internal static string Length {
+            get {
+                return ResourceManager.GetString("Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 5.
         /// </summary>
         internal static string Likes {

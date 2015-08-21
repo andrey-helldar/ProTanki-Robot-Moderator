@@ -136,6 +136,10 @@
     <value>-58816477</value>
     <comment>-24349046</comment>
   </data>
+  <data name="Length" xml:space="preserve">
+    <value>20</value>
+    <comment>Минимальное количество символов в сообщении</comment>
+  </data>
   <data name="Likes" xml:space="preserve">
     <value>5</value>
   </data>

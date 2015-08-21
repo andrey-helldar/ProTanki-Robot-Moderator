@@ -282,7 +282,7 @@ namespace ProTanki_Robot_Moderator
                         for (int j = 1; j < res.Count(); j++)
                         {
                             Task.Factory.StartNew(() => ToLog("\t\tОбрабатываем коммент #" + (string)res[j]["cid"])).Wait();
-                        
+
                             // Проверяем наличие слов для бана
                             if (ToBan((string)res[j]["text"]))
                             {
@@ -299,7 +299,10 @@ namespace ProTanki_Robot_Moderator
                                     dt = dt.AddSeconds((double)res[j]["date"]);
 
                                     // Если коммент больше XX минут - удаляем его
-                                    if (DateTime.UtcNow.Subtract(dt).TotalMinutes > Convert.ToInt16(Properties.Resources.Live))
+                                    if (
+                                        DateTime.UtcNow.Subtract(dt).TotalMinutes > Convert.ToInt16(Properties.Resources.Live) ||
+                                        ((string)res[j]["text"]).Length > Convert.ToInt16(Properties.Resources.Length)
+                                        )
                                     {
                                         Task.Factory.StartNew(() => ToLog("\t\t\tПодготавливаем удаление #" + (string)res[j]["cid"])).Wait();
 
