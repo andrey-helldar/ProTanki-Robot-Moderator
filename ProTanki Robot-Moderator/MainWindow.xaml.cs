@@ -49,7 +49,7 @@ namespace ProTanki_Robot_Moderator
                 "?client_id=" + Properties.Resources.AppID +
                     "&redirect_uri=" + Properties.Resources.ApiRedirect +
                     "&display=page" +
-                    "&scope=wall,groups,offline" +
+                    "&scope=wall,groups,friends,offline" +
                     "&response_type=token");
             }
             catch (Exception) { }
@@ -308,7 +308,7 @@ namespace ProTanki_Robot_Moderator
                                         WallDeleteComment((string)res[j]["cid"]);
                                     }
                                     else
-                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минуты)")).Wait();
+                                        Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент еще молодой (" + (Math.Round(DateTime.UtcNow.Subtract(dt).TotalMinutes, 0)).ToString() + " минут)")).Wait();
                                 }
                                 else
                                     Task.Factory.StartNew(() => ToLog("\t\t\t\tКоммент содержит больше " + Properties.Resources.Likes + " лайков")).Wait();
@@ -356,18 +356,18 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
+                // Удаляем комментарий
+                WallDeleteComment((string)token["cid"]);
+
                 string Data =
                          "&access_token=" + JsonGet("access_token") +
                          "&group_id=" + Properties.Resources.ID.Remove(0, 1) +
                          "&user_id=" + user_id +
                          "&reason=1" +
-                         "&comment=" + Properties.Resources.Reason +
+                         "&comment=" + Properties.Resources.Reason + " (" + (string)token["text"] + ")" +
                          "&comment_visible=1";
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.banUser", Data));
-
-                // Удаляем комментарий
-                WallDeleteComment((string)token["cid"]);
 
                 if (response["response"] != null)
                 {
@@ -419,7 +419,9 @@ namespace ProTanki_Robot_Moderator
                     "халява",
                     "хуй",
                     "бля",
-                    "ебать"
+                    "ебать",
+                    "пoдарю",
+                    "cTене"
                 };
 
                 text = text.ToLower();
@@ -483,6 +485,10 @@ namespace ProTanki_Robot_Moderator
                        }
                    }
                    catch (Exception) { }
+                   finally
+                   {
+                       tbProgress.Text = String.Format("{0} / {1}", pbStatus.Value.ToString(), pbStatus.Maximum.ToString());
+                   }
                }));
         }
     }

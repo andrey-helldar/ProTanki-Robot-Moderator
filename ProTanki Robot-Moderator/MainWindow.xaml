@@ -9,6 +9,7 @@
             <ColumnDefinition Width="160"/>
             <ColumnDefinition Width="160"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,17 +19,18 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="Authorize" HorizontalAlignment="Center" Margin="78,5,6,5" Grid.Row="4" VerticalAlignment="Center" Width="76" Click="Button_Click" Height="22" Grid.Column="2"/>
-        <TextBox x:Name="tbToken" Height="23" Margin="5,5,10,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="4"/>
+        <Button Content="Authorize" HorizontalAlignment="Center" Margin="88,5,136,5" Grid.Row="4" VerticalAlignment="Center" Click="Button_Click" Grid.ColumnSpan="6" Padding="20,5"/>
+        <TextBox x:Name="tbToken" Height="23" Margin="5,5,10,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="5"/>
         <Label Content="access token" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="3" VerticalAlignment="Top" Height="26" Width="77"/>
-        <Button x:Name="bStartBot" Content="Start bot" HorizontalAlignment="Center" Margin="78,5,6,5" Grid.Row="5" VerticalAlignment="Center" Width="76" Click="Button_Click_1" Height="22" Grid.Column="2"/>
-        <TextBox x:Name="tbLog" Margin="10" TextWrapping="Wrap" Grid.ColumnSpan="5" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="True" Grid.Row="2"/>
+        <Button x:Name="bStartBot" Content="Start bot" HorizontalAlignment="Center" Margin="91,5,139,5" Grid.Row="5" VerticalAlignment="Center" Click="Button_Click_1" Grid.ColumnSpan="6" Padding="20,5"/>
+        <TextBox x:Name="tbLog" Margin="10" TextWrapping="Wrap" Grid.ColumnSpan="6" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="True" Grid.Row="2"/>
         <Label Content="Статус:" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Center"/>
         <TextBlock x:Name="tbStatus" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="Отдыхаю" VerticalAlignment="Center"/>
         <TextBlock x:Name="tbStartAt" Grid.Column="2" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center"/>
         <TextBlock x:Name="tbEndAt" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center"/>
         <ProgressBar x:Name="pbStatus" Grid.ColumnSpan="5" Height="10" Margin="10,5" Grid.Row="1" VerticalAlignment="Center"/>
-        <TextBlock x:Name="tbDiff" Grid.Column="4" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"/>
+        <TextBlock x:Name="tbDiff" Grid.Column="4" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="tbProgress" Grid.Column="5" HorizontalAlignment="Center" Margin="10,5" Grid.Row="1" TextWrapping="Wrap" Text="0 / 0" VerticalAlignment="Center"/>
 
     </Grid>
 </Window>
