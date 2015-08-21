@@ -152,7 +152,7 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Робот нашел запрещенный текст (продажа аккаунтов, маты или что другое).
+        ///   Looks up a localized string similar to Робот нашел запрещенный текст.
         /// </summary>
         internal static string Reason {
             get {
