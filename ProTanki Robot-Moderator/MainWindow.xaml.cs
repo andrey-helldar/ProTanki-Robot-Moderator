@@ -293,16 +293,15 @@ namespace ProTanki_Robot_Moderator
                         //  Получаем общее количество комментов
                         int count = (int)res[0];
 
-                        // Запоминаем количество комментариев
-                        Task.Factory.StartNew(() => Log("AllComments", (string)res[0])).Wait();
-
                         // Вычисляем количество шагов для комментов
                         int step = 0;
                         if (count % 100 == 0)
                             step = count / 100;
                         else
                             step = (count / 100) + 1;
-
+                        
+                        // Запоминаем количество комментариев
+                        Task.Factory.StartNew(() => Log("AllComments", (string)res[0])).Wait();
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
@@ -539,8 +538,8 @@ namespace ProTanki_Robot_Moderator
                    {
                        logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
                        logAllComments.Text = (string)log.SelectToken("CurrentComment") + " / " + (string)log.SelectToken("AllComments");
-                       logDeleted.Text = (string)log.SelectToken("Deleted") + " / " + (Math.Round((double)log.SelectToken("Deleted") / (double)log.SelectToken("AllComments"), 2)).ToString();
-                       logErrorDelete.Text = (string)log.SelectToken("ErrorDelete") + " / " + (Math.Round((double)log.SelectToken("ErrorDelete") / (double)log.SelectToken("AllComments"), 2)).ToString();
+                       logDeleted.Text = (string)log.SelectToken("Deleted") + " / " + (Math.Round((double)log.SelectToken("Deleted") / (double)log.SelectToken("AllComments"), 2)).ToString() + "%";
+                       logErrorDelete.Text = (string)log.SelectToken("ErrorDelete") + " / " + (Math.Round((double)log.SelectToken("ErrorDelete") / (double)log.SelectToken("AllComments"), 2)).ToString() + "%";
                    }));
                 }
             }
