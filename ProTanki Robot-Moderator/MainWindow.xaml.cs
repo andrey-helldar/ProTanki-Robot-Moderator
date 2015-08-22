@@ -26,7 +26,7 @@ namespace ProTanki_Robot_Moderator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private JObject obj;
+        private JObject settings;
         private JObject data;
 
         private JObject log = new JObject(
@@ -44,18 +44,13 @@ namespace ProTanki_Robot_Moderator
         {
             InitializeComponent();
 
-            if (File.Exists("settings.data"))
+            if (File.Exists("settings.json"))
             {
-                obj = JObject.Parse(File.ReadAllText("settings.data"));
+                settings = JObject.Parse(File.ReadAllText("settings.json"));
                 tbToken.Text = JsonGet("access_token");
             }
             else
                 JsonSet("access_token", "");
-
-            if (File.Exists("data.json"))
-            {
-                data = JObject.Parse(File.ReadAllText("data.json"));
-            }
         }
 
         public void Authorization()
@@ -116,7 +111,7 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 JsonSet("access_token", tbToken.Text);
-                File.WriteAllText("settings.data", obj.ToString());
+                File.WriteAllText("settings.json", settings.ToString());
             }
             catch (Exception ex) { File.WriteAllText("errors.log", ex.StackTrace); }
         }
@@ -125,20 +120,20 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                if (obj != null)
+                if (settings != null)
                 {
-                    if (obj.SelectToken(path) == null)
+                    if (settings.SelectToken(path) == null)
                     {
-                        JObject jo = (JObject)obj[path];
+                        JObject jo = (JObject)settings[path];
                         jo.Add(new JProperty(path, key));
                     }
                     else
-                        obj[path] = key;
+                        settings[path] = key;
                 }
                 else
                 {
-                    obj = new JObject();
-                    obj.Add(new JProperty(path, key));
+                    settings = new JObject();
+                    settings.Add(new JProperty(path, key));
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
@@ -146,7 +141,7 @@ namespace ProTanki_Robot_Moderator
 
         private string JsonGet(string path)
         {
-            try { return (string)obj.SelectToken(path); }
+            try { return (string)settings.SelectToken(path); }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
             return null;
         }
@@ -165,81 +160,88 @@ namespace ProTanki_Robot_Moderator
                     tbLog.Text = String.Empty;
                 }));
 
-                Task.Factory.StartNew(() => SetStatus());
-                Task.Factory.StartNew(() => Log(null, null, true));
-
-                string Data =
-                    "&owner_id=" + (string)data["id"] +
-                    "&offset=0" +
-                    "&count=" + ((int)data["posts"] > 100 ? "100" : (string)data["posts"]) +
-                    "&filter=all";
-
-                string result = POST(Properties.Resources.API + "wall.get", Data);
-
-                if (result != null)
+                // Подгружаем список слов при каждом запуске бота
+                if (File.Exists("data.json"))
                 {
-                    JToken res = JObject.Parse(result).SelectToken("response");
+                    data = JObject.Parse(File.ReadAllText("data.json"));
 
-                    //  Получаем общее количество записей
-                    int count = (int)res[0];
+                    // Приступаем
+                    Task.Factory.StartNew(() => SetStatus());
+                    Task.Factory.StartNew(() => Log(null, null, true)).Wait();
 
-                    // Устанавливаем значение прогресс бара
-                    Task.Factory.StartNew(() => SetProgress(true, count));
+                    string Data =
+                        "&owner_id=" + (string)settings["id"] +
+                        "&offset=0" +
+                        "&count=" + ((int)settings["posts"] > 100 ? "100" : (string)settings["posts"]) +
+                        "&filter=all";
 
-                    // Запоминаем статистику
-                    Task.Factory.StartNew(() => Log("AllPosts", count.ToString()));
+                    string result = POST(Properties.Resources.API + "wall.get", Data);
 
-                    // Вычисляем количество шагов для поста
-                    int step = 0;
-
-                    if (count < (int)data["max_posts"])
+                    if (result != null)
                     {
-                        step = 1;
-                    }
-                    else
-                    {
-                        count = (int)data["max_posts"];
+                        JToken res = JObject.Parse(result).SelectToken("response");
 
-                        if (count % (int)data["posts"] == 0)
-                            step = count / (int)data["posts"];
-                        else
-                            step = (count / (int)data["posts"]) + 1;
-                    }
+                        //  Получаем общее количество записей
+                        int count = (int)res[0];
 
-                    // Перебираем записи по шагам
-                    for (int i = 0; i < step; i++)
-                    {
-                        Data =
-                            "&owner_id=" + (string)data["id"] +
-                            "&offset=" + ((int)data["posts"] * i).ToString() +
-                            "&count=" + ((int)data["posts"] > 100 ? "100" : (string)data["posts"]) +
-                            "&filter=all";
+                        // Устанавливаем значение прогресс бара
+                        Task.Factory.StartNew(() => SetProgress(true, count));
 
-                        result = POST(Properties.Resources.API + "wall.get", Data);
+                        // Запоминаем статистику
+                        Task.Factory.StartNew(() => Log("AllPosts", count.ToString())).Wait();
 
-                        if (result != null)
+                        // Вычисляем количество шагов для поста
+                        int step = 0;
+
+                        if (count < (int)settings["max_posts"])
                         {
-                            res = JObject.Parse(result).SelectToken("response");
+                            step = 1;
+                        }
+                        else
+                        {
+                            count = (int)settings["max_posts"];
 
-                            Task.Factory.StartNew(() => Log("AllPosts", count.ToString()));
-
-                            for (int j = 1; j < res.Count(); j++)
-                            {
-                                Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
-
-                                // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
-                                if ((int)res[j]["comments"]["count"] > 0)
-                                {
-                                    // Читаем комменты к записи
-                                    WallGetComments((string)res[j]["id"]);
-                                }
-
-                                // Изменяем положение прогресс бара
-                                Task.Factory.StartNew(() => SetProgress());
-                            }
+                            if (count % (int)settings["posts"] == 0)
+                                step = count / (int)settings["posts"];
+                            else
+                                step = (count / (int)settings["posts"]) + 1;
                         }
 
-                        Thread.Sleep(350);
+                        // Перебираем записи по шагам
+                        for (int i = 0; i < step; i++)
+                        {
+                            Data =
+                                "&owner_id=" + (string)settings["id"] +
+                                "&offset=" + ((int)settings["posts"] * i).ToString() +
+                                "&count=" + ((int)settings["posts"] > 100 ? "100" : (string)settings["posts"]) +
+                                "&filter=all";
+
+                            result = POST(Properties.Resources.API + "wall.get", Data);
+
+                            if (result != null)
+                            {
+                                res = JObject.Parse(result).SelectToken("response");
+
+                                Task.Factory.StartNew(() => Log("AllPosts", count.ToString())).Wait();
+
+                                for (int j = 1; j < res.Count(); j++)
+                                {
+                                    Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
+
+                                    // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
+                                    if ((int)res[j]["comments"]["count"] > 0)
+                                    {
+                                        // Читаем комменты к записи
+                                        WallGetComments((string)res[j]["id"]);
+                                    }
+
+                                    // Изменяем положение прогресс бара
+                                    Task.Factory.StartNew(() => SetProgress());
+                                }
+                            }
+
+                            Thread.Sleep(350);
+                        }
                     }
                 }
             }
@@ -249,7 +251,7 @@ namespace ProTanki_Robot_Moderator
                 Task.Factory.StartNew(() => SetStatus("end"));
 
                 // Ждем 1 минуту и повторяем
-                Task.Factory.StartNew(() => Timer(30));
+                Task.Factory.StartNew(() => Timer(settings["sleep"] == null ? 30 : (int)settings["sleep"]));
             }
         }
 
@@ -262,7 +264,7 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 string Data =
-                    "&owner_id=" + (string)data["id"] +
+                    "&owner_id=" + (string)settings["id"] +
                     "&post_id=" + postId +
                     "&offset=0" +
                     "&count=100" +
@@ -303,7 +305,7 @@ namespace ProTanki_Robot_Moderator
                         for (int i = 0; i < step; i++)
                         {
                             Data =
-                                "&owner_id=" + (string)data["id"] +
+                                "&owner_id=" + (string)settings["id"] +
                                 "&post_id=" + postId +
                                 "&offset=" + (100 * i).ToString() +
                                 "&count=100" +
@@ -322,7 +324,7 @@ namespace ProTanki_Robot_Moderator
                                     WallDeleteComment((string)res[j]["cid"], (JToken)res[j]);
                                 }
 
-                                Task.Factory.StartNew(() => Log("CurrentComment"));
+                                Task.Factory.StartNew(() => Log("CurrentComment")).Wait();
                             }
 
                             Thread.Sleep(350);
@@ -343,18 +345,18 @@ namespace ProTanki_Robot_Moderator
             {
                 string Data =
                      "&access_token=" + JsonGet("access_token") +
-                     "&owner_id=" + (string)data["id"] +
+                     "&owner_id=" + (string)settings["id"] +
                      "&comment_id=" + commentId;
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "wall.deleteComment", Data));
 
                 if (response["response"] != null)
                 {
-                    Task.Factory.StartNew(() => Log("Deleted"));
+                    Task.Factory.StartNew(() => Log("Deleted")).Wait();
                 }
                 else
                 {
-                    Task.Factory.StartNew(() => Log("ErrorDelete"));
+                    Task.Factory.StartNew(() => Log("ErrorDelete")).Wait();
 
                     if (token != null)
                     {
@@ -418,7 +420,7 @@ namespace ProTanki_Robot_Moderator
                 JArray words = (JArray)data["words"];
 
                 foreach (string word in words)
-                    if (text.IndexOf(word) > -1 || text.Length < Convert.ToInt16(Properties.Resources.Length))
+                    if (text.IndexOf(word.ToLower()) > -1 || text.Length < Convert.ToInt16(Properties.Resources.Length))
                         return true;
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
