@@ -51,6 +51,9 @@ namespace ProTanki_Robot_Moderator
             }
             else
                 JsonSet("access_token", "");
+
+            // Устанавливаем заголовок
+            this.Title += " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
         }
 
         public void Authorization()
@@ -184,12 +187,6 @@ namespace ProTanki_Robot_Moderator
                         //  Получаем общее количество записей
                         int count = (int)res[0];
 
-                        // Устанавливаем значение прогресс бара
-                        Task.Factory.StartNew(() => SetProgress(true, count));
-
-                        // Запоминаем статистику
-                        Task.Factory.StartNew(() => Log("AllPosts", count.ToString())).Wait();
-
                         // Вычисляем количество шагов для поста
                         int step = 0;
 
@@ -206,6 +203,12 @@ namespace ProTanki_Robot_Moderator
                             else
                                 step = (count / (int)settings["posts"]) + 1;
                         }
+
+                        // Устанавливаем значение прогресс бара
+                        Task.Factory.StartNew(() => SetProgress(true, count));
+
+                        // Запоминаем статистику
+                        Task.Factory.StartNew(() => Log("AllPosts", count.ToString())).Wait();
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
@@ -291,7 +294,7 @@ namespace ProTanki_Robot_Moderator
                         int count = (int)res[0];
 
                         // Запоминаем количество комментариев
-                        Task.Factory.StartNew(() => Log("AllComments", count.ToString())).Wait();
+                        Task.Factory.StartNew(() => Log("AllComments", (string)res[0])).Wait();
 
                         // Вычисляем количество шагов для комментов
                         int step = 0;
