@@ -129,9 +129,6 @@
   <data name="AppSecret" xml:space="preserve">
     <value>4XGqXBfDi2lwWvOsE8mb</value>
   </data>
-  <data name="Count" xml:space="preserve">
-    <value>100</value>
-  </data>
   <data name="Length" xml:space="preserve">
     <value>10</value>
     <comment>Минимальное количество символов в сообщении</comment>
