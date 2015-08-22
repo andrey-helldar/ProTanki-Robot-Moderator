@@ -54,18 +54,59 @@ namespace ProTanki_Robot_Moderator
 
             // Устанавливаем заголовок
             this.Title += " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
+
+            // Если нет идентификатора группы - запрещаем запуск бота
+            if (settings["id"] == null)
+            {
+                bStartBot.IsEnabled = false;
+            }
+
         }
 
         public void Authorization()
         {
             try
             {
-                Process.Start(Properties.Resources.OAuth +
-                "?client_id=" + Properties.Resources.AppID +
-                    "&redirect_uri=" + Properties.Resources.ApiRedirect +
-                    "&display=page" +
-                    "&scope=wall,groups,friends,offline" +
-                    "&response_type=token");
+                // Запрашиваем идентификатор приложения
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Resources.Author + JsonGet("group"));
+                request.Method = "GET";
+                request.Accept = "application/json";
+
+                // Получаем идентификатор приложения
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                StringBuilder output = new StringBuilder();
+                output.Append(reader.ReadToEnd());
+                response.Close();
+
+                JObject data = JObject.Parse(output.ToString());
+
+                if (data["error"] == null)
+                {
+                    // Запоминаем ID в настройки
+                    JsonSet("id", (string)data["group_id"]);
+
+                    // Открываем окно авторизации
+                    Process.Start(Properties.Resources.OAuth +
+                    "?client_id=" + (string)data["app_id"] +
+                        "&redirect_uri=" + Properties.Resources.ApiRedirect +
+                        "&display=page" +
+                        "&scope=wall,groups,friends,offline" +
+                        "&response_type=token");
+
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    {
+                        bStartBot.IsEnabled = true;
+                    }));
+                }
+                else
+                {
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    {
+                        tbLog.Text = (string)data["error"];
+                        bStartBot.IsEnabled = false;
+                    }));
+                }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
         }
@@ -125,12 +166,6 @@ namespace ProTanki_Robot_Moderator
             {
                 if (settings != null)
                 {
-                    if (settings.SelectToken(path) == null)
-                    {
-                        JObject jo = (JObject)settings[path];
-                        jo.Add(new JProperty(path, key));
-                    }
-                    else
                         settings[path] = key;
                 }
                 else

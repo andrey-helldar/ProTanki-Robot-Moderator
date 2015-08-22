@@ -79,20 +79,11 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 5038642.
+        ///   Looks up a localized string similar to https://ai-rus.com/api/bot/.
         /// </summary>
-        internal static string AppID {
+        internal static string Author {
             get {
-                return ResourceManager.GetString("AppID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 4XGqXBfDi2lwWvOsE8mb.
-        /// </summary>
-        internal static string AppSecret {
-            get {
-                return ResourceManager.GetString("AppSecret", resourceCulture);
+                return ResourceManager.GetString("Author", resourceCulture);
             }
         }
         

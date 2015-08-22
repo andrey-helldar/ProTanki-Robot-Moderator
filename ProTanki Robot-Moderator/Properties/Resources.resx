@@ -123,11 +123,8 @@
   <data name="ApiRedirect" xml:space="preserve">
     <value>https://oauth.vk.com/blank.html</value>
   </data>
-  <data name="AppID" xml:space="preserve">
-    <value>5038642</value>
-  </data>
-  <data name="AppSecret" xml:space="preserve">
-    <value>4XGqXBfDi2lwWvOsE8mb</value>
+  <data name="Author" xml:space="preserve">
+    <value>https://ai-rus.com/api/bot/</value>
   </data>
   <data name="Length" xml:space="preserve">
     <value>10</value>
