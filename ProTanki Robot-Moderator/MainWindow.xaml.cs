@@ -323,9 +323,9 @@ namespace ProTanki_Robot_Moderator
                                 }
 
                                 Task.Factory.StartNew(() => Log("CurrentComment"));
-
-                                Thread.Sleep(350);
                             }
+
+                            Thread.Sleep(350);
                         }
                     }
                 }
@@ -366,6 +366,8 @@ namespace ProTanki_Robot_Moderator
                         File.WriteAllText(@"errors\" + commentId + ".txt", token.ToString());
                     }
                 }
+
+                Thread.Sleep(350);
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
         }
