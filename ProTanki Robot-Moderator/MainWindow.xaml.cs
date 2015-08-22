@@ -84,11 +84,11 @@ namespace ProTanki_Robot_Moderator
                 if (data["error"] == null)
                 {
                     // Запоминаем ID в настройки
-                    JsonSet("id", (string)data["group_id"]);
+                    JsonSet("id", (string)data.SelectToken("response.group_id"));
 
                     // Открываем окно авторизации
                     Process.Start(Properties.Resources.OAuth +
-                    "?client_id=" + (string)data["app_id"] +
+                    "?client_id=" + (string)data.SelectToken("response.app_id") +
                         "&redirect_uri=" + Properties.Resources.ApiRedirect +
                         "&display=page" +
                         "&scope=wall,groups,friends,offline" +
