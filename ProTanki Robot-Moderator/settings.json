@@ -1,7 +1,6 @@
 ﻿{
-    "access_token": "ee434cd50c3eab9ab3fe3a661efacd9522601b38b3b8f288325c14308ef224bc09f9c1db59f840e313ce9",
+    "access_token": "56c71d5ed38c6bae0d4683e4d3e17b860c5df1794b8dcf24379d73cbe9c29d35c232feb6011b606225087",
     "group": "protanki",
-    "posts": 100,
-    "max_posts": 500,
+    "posts": 500,
     "sleep": 30
 }
