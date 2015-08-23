@@ -36,7 +36,10 @@ namespace ProTanki_Robot_Moderator
             new JProperty("Deleted", 0),
             new JProperty("ErrorDelete", 0),
             new JProperty("Circles", 0),
-            new JProperty("Starting", 0)
+            new JProperty("Starting", 0),
+            new JProperty("AllComments", 0),
+            new JProperty("AllDeleted", 0),
+            new JProperty("AllErrorDelete", 0)
         );
 
         private bool timer = false;
@@ -354,10 +357,18 @@ namespace ProTanki_Robot_Moderator
                         tbLog.Text += "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine;
                         tbLog.Text += "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine;
 
-                        tbLog.Text += "Всего постов: " + (string)log["AllPosts"] + Environment.NewLine;
-                        tbLog.Text += "Всего комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
+                        tbLog.Text += "Постов: " + (string)log["AllPosts"] + Environment.NewLine;
+                        tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
                         tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
-                        tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
+                        tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
+                        
+                        log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
+                        log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
+                        log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
+
+                        tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
+                        tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
+                        tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
                     }
                     catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
                 }));
@@ -644,6 +655,10 @@ namespace ProTanki_Robot_Moderator
 
                     log["Starting"] = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                     log["Circles"] = 0;
+
+                    log["AllComments"] = 0;
+                    log["AllDeleted"] = 0;
+                    log["AllErrorDelete"] = 0;
                 }
                 else
                 {
