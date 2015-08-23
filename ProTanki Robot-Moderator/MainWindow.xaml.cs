@@ -673,8 +673,8 @@ namespace ProTanki_Robot_Moderator
                        {
                            logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
                            logAllComments.Text = (string)log.SelectToken("CurrentComment");
-                           logDeleted.Text = (string)log.SelectToken("Deleted") + " / " + (Math.Round((double)log.SelectToken("Deleted") / (double)log.SelectToken("CurrentComment"), 2)).ToString() + "%";
-                           logErrorDelete.Text = (string)log.SelectToken("ErrorDelete") + " / " + (Math.Round((double)log.SelectToken("ErrorDelete") / (double)log.SelectToken("CurrentComment"), 2)).ToString() + "%";
+                           logDeleted.Text = String.Format("{0} / {1}%", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 2)).ToString());
+                           logErrorDelete.Text = String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 2)).ToString());
                        }));
                     }
                 }
