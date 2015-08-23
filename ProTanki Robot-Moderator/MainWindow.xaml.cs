@@ -222,6 +222,10 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
+                // Приступаем
+                Task.Factory.StartNew(() => SetStatus());
+                Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
+
                 JObject groupId = GroupId((string)settings["group"]);
 
                 // Запоминаем ID в настройки
@@ -244,11 +248,7 @@ namespace ProTanki_Robot_Moderator
                         data = JObject.Parse(File.ReadAllText("data.json"));
 
                         // Устанавливаем переменную
-                        int max_posts = (int)settings["posts"] > 100 ? 100 : (int)settings["posts"];
-
-                        // Приступаем
-                        Task.Factory.StartNew(() => SetStatus());
-                        Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
+                        int max_posts = (int)settings["posts"] > 100 || (int)settings["posts"] == 0 ? 100 : (int)settings["posts"];
 
                         string Data =
                             "&access_token=" + JsonGet("access_token") +
@@ -373,10 +373,13 @@ namespace ProTanki_Robot_Moderator
                         tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
                     }
                     catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
+                    finally
+                    {
+                        if (settings["close"] != null)
+                            if ((bool)settings["close"])
+                                this.Close();
+                    }
                 }));
-
-                if ((bool)settings["close"])
-                    this.Close();
 
                 // Ждем и повторяем
                 Task.Factory.StartNew(() => Timer(settings["sleep"] == null ? 30 : (int)settings["sleep"]));
