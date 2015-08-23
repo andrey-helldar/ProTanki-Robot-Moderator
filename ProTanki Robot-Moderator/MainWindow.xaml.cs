@@ -251,6 +251,7 @@ namespace ProTanki_Robot_Moderator
                         Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
                         string Data =
+                            "&access_token=" + JsonGet("access_token") +
                             "&owner_id=" + (string)settings["id"] +
                             "&offset=0" +
                             "&count=" + max_posts.ToString() +
@@ -293,6 +294,7 @@ namespace ProTanki_Robot_Moderator
                             for (int i = 0; i < step; i++)
                             {
                                 Data =
+                                    "&access_token=" + JsonGet("access_token") +
                                     "&owner_id=" + (string)settings["id"] +
                                     "&offset=" + (max_posts * i).ToString() +
                                     "&count=" + max_posts.ToString() +
@@ -361,7 +363,7 @@ namespace ProTanki_Robot_Moderator
                         tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
                         tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
                         tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
-                        
+
                         log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
                         log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
                         log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
@@ -372,6 +374,9 @@ namespace ProTanki_Robot_Moderator
                     }
                     catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
                 }));
+
+                if ((bool)settings["close"])
+                    this.Close();
 
                 // Ждем и повторяем
                 Task.Factory.StartNew(() => Timer(settings["sleep"] == null ? 30 : (int)settings["sleep"]));
@@ -387,6 +392,7 @@ namespace ProTanki_Robot_Moderator
             try
             {
                 string Data =
+                    "&access_token=" + JsonGet("access_token") +
                     "&owner_id=" + (string)settings["id"] +
                     "&post_id=" + postId +
                     "&offset=0" +
@@ -424,6 +430,7 @@ namespace ProTanki_Robot_Moderator
                         for (int i = 0; i < step; i++)
                         {
                             Data =
+                                "&access_token=" + JsonGet("access_token") +
                                 "&owner_id=" + (string)settings["id"] +
                                 "&post_id=" + postId +
                                 "&offset=" + (100 * i).ToString() +
@@ -503,7 +510,9 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                string Data = "&group_id=" + name;
+                string Data =
+                     "&access_token=" + JsonGet("access_token") +
+                     "&group_id=" + name;
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.getById", Data));
 
