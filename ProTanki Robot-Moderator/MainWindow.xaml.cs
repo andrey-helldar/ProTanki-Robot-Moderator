@@ -450,7 +450,7 @@ namespace ProTanki_Robot_Moderator
                                 if (ToDelete((string)res[j]["text"]))
                                 {
                                     // Удаляем коммент
-                                    WallDeleteComment((string)res[j]["cid"], (JToken)res[j]);
+                                    WallDeleteComment((string)res[j]["cid"], (JToken)res[j], postId);
                                 }
 
                                 Task.Factory.StartNew(() => Log("CurrentComment")).Wait();
@@ -468,7 +468,7 @@ namespace ProTanki_Robot_Moderator
         /// Удаляем коммент, если он не прошел отбор
         /// </summary>
         /// <param name="commentId"></param>
-        private void WallDeleteComment(string commentId, JToken token = null)
+        private void WallDeleteComment(string commentId, JToken token = null, string postId=null)
         {
             try
             {
@@ -482,6 +482,18 @@ namespace ProTanki_Robot_Moderator
                 if (response["response"] != null)
                 {
                     Task.Factory.StartNew(() => Log("Deleted")).Wait();
+
+                    if (token != null)
+                    {
+                        string dir = String.Format(@"success\{0}\", postId);
+
+                        // Если директории нет - создаем
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+
+                        // Записываем лог
+                        File.WriteAllText(dir + commentId + ".json", token.ToString());
+                    }
                 }
                 else
                 {
@@ -489,12 +501,14 @@ namespace ProTanki_Robot_Moderator
 
                     if (token != null)
                     {
-                        // Если директории нет - создаем
-                        if (!Directory.Exists("errors"))
-                            Directory.CreateDirectory("errors");
+                        string dir = String.Format(@"errors\{0}\", postId);
 
-                        // Записываем лог о бане
-                        File.WriteAllText(@"errors\" + commentId + ".txt", token.ToString());
+                        // Если директории нет - создаем
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+
+                        // Записываем лог
+                        File.WriteAllText(dir + commentId + ".json", token.ToString());
                     }
                 }
 
