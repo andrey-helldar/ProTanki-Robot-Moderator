@@ -123,6 +123,9 @@
   <data name="ApiRedirect" xml:space="preserve">
     <value>https://oauth.vk.com/blank.html</value>
   </data>
+  <data name="ApiVer" xml:space="preserve">
+    <value>5.37</value>
+  </data>
   <data name="Author" xml:space="preserve">
     <value>https://ai-rus.com/api/bot/</value>
   </data>

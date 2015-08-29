@@ -79,6 +79,15 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 5.37.
+        /// </summary>
+        internal static string ApiVer {
+            get {
+                return ResourceManager.GetString("ApiVer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://ai-rus.com/api/bot/.
         /// </summary>
         internal static string Author {

@@ -23,7 +23,7 @@
         <TextBlock x:Name="tbStatus" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="Отдыхаю" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF055710"/>
         <TextBlock x:Name="tbStartAt" Grid.Column="2" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center"/>
         <TextBlock x:Name="tbEndAt" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center"/>
-        <TextBlock x:Name="tbDiff" Grid.Column="4" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center" Foreground="#FF4600FF"/>
+        <TextBlock x:Name="tbDiff" Grid.Column="4" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="00" VerticalAlignment="Center" Foreground="#FF4600FF"/>
         <ProgressBar x:Name="pbStatus" Grid.ColumnSpan="5" Height="10" Margin="10" VerticalAlignment="Center" Grid.Row="1"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="Всего постов:" VerticalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="2"/>
         <TextBlock x:Name="logAllPosts" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="2"/>
