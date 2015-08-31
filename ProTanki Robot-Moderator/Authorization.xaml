@@ -1,0 +1,14 @@
+﻿<Window x:Class="ProTanki_Robot_Moderator.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Authorization" Height="300" Width="300" MinWidth="640" MinHeight="480" Icon="Resources/PROTanks.ico" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="61*"/>
+            <RowDefinition Height="389*"/>
+        </Grid.RowDefinitions>
+        <WebBrowser x:Name="wbAuth" Margin="0" Grid.Row="1"/>
+        <TextBox x:Name="tb1" Height="23" Margin="23,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

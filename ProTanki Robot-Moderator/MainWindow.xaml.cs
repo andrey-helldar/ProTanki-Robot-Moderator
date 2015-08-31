@@ -26,9 +26,6 @@ namespace ProTanki_Robot_Moderator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private JObject settings;
-        private JObject data;
-
         private JObject log = new JObject(
             new JProperty("CurrentPost", 0),
             new JProperty("CurrentComment", 0),
@@ -42,6 +39,15 @@ namespace ProTanki_Robot_Moderator
             new JProperty("AllErrorDelete", 0)
         );
 
+        public static string appId { get { return APPId; } }
+        private static string APPId = null;
+
+        public static string appSecret { get { return APPSecret; } }
+        private static string APPSecret = null;
+
+        private string groupId = null;
+        private bool groupAdmin = false;
+
         private bool timer = false;
         private bool first = true;
 
@@ -52,46 +58,22 @@ namespace ProTanki_Robot_Moderator
         {
             InitializeComponent();
 
-            if (File.Exists("settings.json"))
-            {
-                settings = JObject.Parse(File.ReadAllText("settings.json"));
-                tbToken.Text = JsonGet("access_token");
-            }
-            else
-                JsonSet("access_token", "");
-
             // Устанавливаем заголовок
-            this.Title = Application.Current.GetType().Assembly.GetName().Name + " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
+            this.Title = Application.Current.GetType().Assembly.GetName().Name +
+                " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
 
-            // Если нет идентификатора группы - запрещаем запуск бота
-            if (settings["access_token"] == null)
-            {
-                bStartBot.IsEnabled = false;
-            }
+            // Загружаем данные
+            Task.Factory.StartNew(() => LoadingData());
         }
 
-        public void Authorization()
+        private void LoadingData()
         {
             try
             {
-                JObject groupId = GroupId((string)settings["group"]);
-
-                // Запоминаем ID в настройки
-                if (groupId != null)
+                if (Data.Default.Group != "0")
                 {
-                    JsonSet("id", (string)groupId["id"]);
-
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
-                    {
-                        // Устанавливаем заголовок приложения
-                        this.Title = Application.Current.GetType().Assembly.GetName().Name +
-                            " v" + Application.Current.GetType().Assembly.GetName().Version.ToString() +
-                            " : " + (string)groupId["name"];
-                    }));
-
-
-                    // Запрашиваем данные приложения
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Resources.Author + JsonGet("group"));
+                    // Отправляем запрос
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Resources.Author + Data.Default.Group);
                     request.Method = "GET";
                     request.Accept = "application/json";
 
@@ -102,22 +84,67 @@ namespace ProTanki_Robot_Moderator
                     output.Append(reader.ReadToEnd());
                     response.Close();
 
+                    // Парсим ответ
                     JObject data = JObject.Parse(output.ToString());
 
                     if (data["error"] == null)
                     {
-                        // Открываем окно авторизации
-                        Process.Start(Properties.Resources.OAuth +
-                        "?client_id=" + (string)data.SelectToken("response.app_id") +
-                            "&redirect_uri=" + Properties.Resources.ApiRedirect +
-                            "&display=page" +
-                            "&scope=wall,groups,friends,offline" +
-                            "&response_type=token");
+                        APPId = (string)data.SelectToken("response.app_id");
+                        APPSecret = (string)data.SelectToken("response.app_secret");
 
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        this.Closing += delegate { APPId = null; };
+                        this.Closing += delegate { APPSecret = null; };
+
+                        // Получаем идентификатор группы
+                        JObject group = GetGroup(Data.Default.Group);
+
+                        if (group != null)
                         {
-                            bStartBot.IsEnabled = true;
-                        }));
+                            groupId = (string)group["id"];
+                            groupAdmin = (bool)group["admin"];
+
+                            // Устанавливаем заголовок приложения
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            {
+                                this.Title = Application.Current.GetType().Assembly.GetName().Name +
+                                    " v" + Application.Current.GetType().Assembly.GetName().Version.ToString() +
+                                    " : " + (string)group["name"];
+                            }));
+
+                            // Если нет идентификаторов - запрещаем запуск
+                            if (
+                                Data.Default.AccessToken == "0" ||
+                                Data.Default.Group == "0" ||
+                                appId == null ||
+                                appSecret == null ||
+                                groupId == null
+                                )
+                            {
+                                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                {
+                                    tbLog.Text = "Ошибка получения данных!\nПерезапустите приложение либо свяжитесь с разработчиком.";
+                                    bStartBot.IsEnabled = false;
+                                }));
+                            }
+
+                            // Если юзер - не админ
+                            if (!groupAdmin)
+                            {
+                                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                {
+                                    tbLog.Text = "Нет прав администратора/модератора группы.";
+                                    bStartBot.IsEnabled = false;
+                                }));
+                            }
+                        }
+                        else
+                        {
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            {
+                                tbLog.Text = "Ошибка получения id группы!";
+                                bStartBot.IsEnabled = false;
+                            }));
+                        }
                     }
                     else
                     {
@@ -132,15 +159,24 @@ namespace ProTanki_Robot_Moderator
                 {
                     Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
-                        tbLog.Text = "Ошибка получения идентификатора!";
+                        tbLog.Text = "Не указан идентификатор группы!";
                         bStartBot.IsEnabled = false;
                     }));
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
+            catch (Exception ex)
+            {
+                Task.Factory.StartNew(() => textLog(ex)).Wait();
+
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                {
+                    tbLog.Text = "Ошибка обработки данных!\nПерезапустите приложение либо свяжитесь с разработчиком.";
+                    bStartBot.IsEnabled = false;
+                }));
+            }
         }
 
-        private string POST(string Url, string Data)
+        public string POST(string Url, string Data)
         {
             try
             {
@@ -174,45 +210,14 @@ namespace ProTanki_Robot_Moderator
             return null;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void bAuthorize_Click(object sender, RoutedEventArgs e)
         {
-            Task.Factory.StartNew(() => Authorization());
-        }
+            //Task.Factory.StartNew(() => Authorization());
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            try
-            {
-                JsonSet("access_token", tbToken.Text);
-                File.WriteAllText("settings.json", settings.ToString());
-            }
-            catch (Exception ex) { File.WriteAllText("errors.log", ex.StackTrace); }
+            Authorization auth = new Authorization();
+            auth.ShowInTaskbar = false;
+            auth.ShowDialog();
         }
-
-        private void JsonSet(string path, string key)
-        {
-            try
-            {
-                if (settings != null)
-                {
-                    settings[path] = key;
-                }
-                else
-                {
-                    settings = new JObject();
-                    settings.Add(new JProperty(path, key));
-                }
-            }
-            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
-        }
-
-        private string JsonGet(string path)
-        {
-            try { return (string)settings.SelectToken(path); }
-            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
-            return null;
-        }
-
 
         /// <summary>
         /// Получаем список постов на странице. Перебираем все
@@ -228,136 +233,109 @@ namespace ProTanki_Robot_Moderator
                 Task.Factory.StartNew(() => SetStatus());
                 Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
-                JObject groupId = GroupId((string)settings["group"]);
-
                 // Запоминаем ID в настройки
-                if (groupId["id"] != null)
+                if (
+                    Data.Default.AccessToken != "0" &&
+                    appId != null &&
+                    appSecret != null &&
+                    groupId != null
+                    )
                 {
-                    JsonSet("id", (string)groupId["id"]);
+                    // Устанавливаем переменную
+                    int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    string data =
+                        "&v=" + Properties.Resources.Version +
+                        "&https=1" +
+                        "&access_token=" + Data.Default.AccessToken +
+                        "&owner_id=" + groupId +
+                        "&offset=0" +
+                        "&count=" + max_posts.ToString() +
+                        "&filter=all";
+
+                    string result = POST(Properties.Resources.API + "wall.get", data);
+                    Thread.Sleep(350);
+
+                    if (result != null)
                     {
-                        // Устанавливаем заголовок приложения
-                        this.Title = Application.Current.GetType().Assembly.GetName().Name +
-                            " v" + Application.Current.GetType().Assembly.GetName().Version.ToString() +
-                            " : " + (string)groupId["name"];
-                    }));
+                        JToken res = JObject.Parse(result);
 
-
-                    // Подгружаем список слов при каждом запуске бота
-                    if (File.Exists("data.json"))
-                    {
-                        data = JObject.Parse(File.ReadAllText("data.json"));
-
-                        // Устанавливаем переменную
-                        int max_posts = (int)settings["posts"] > 100 || (int)settings["posts"] == 0 ? 100 : (int)settings["posts"];
-
-                        string Data =
-                            "&v=" + Properties.Resources.ApiVer +
-                            "&https=1" +
-                            "&access_token=" + JsonGet("access_token") +
-                            "&owner_id=" + (string)settings["id"] +
-                            "&offset=0" +
-                            "&count=" + max_posts.ToString() +
-                            "&filter=all";
-
-                        string result = POST(Properties.Resources.API + "wall.get", Data);
-                        Thread.Sleep(350);
-
-                        if (result != null)
+                        if (res["response"] != null)
                         {
-                            JToken res = JObject.Parse(result);
+                            res = (JToken)res.SelectToken("response");
 
-                            if (res["response"] != null)
+                            //  Получаем общее количество записей
+                            int count = (int)res["count"];
+
+                            // Вычисляем количество шагов для поста
+                            int step = 0;
+
+                            if (count <= 100)
                             {
-                                res = (JToken)res.SelectToken("response");
+                                step = 1;
+                            }
+                            else
+                            {
+                                if (Data.Default.Posts > 0 && !first)
+                                    count = Data.Default.Posts;
 
-                                //  Получаем общее количество записей
-                                int count = (int)res["count"];
-
-                                // Вычисляем количество шагов для поста
-                                int step = 0;
-
-                                if (count <= 100)
-                                {
-                                    step = 1;
-                                }
+                                if (count % max_posts == 0)
+                                    step = count / max_posts;
                                 else
+                                    step = (count / max_posts) + 1;
+                            }
+
+                            // Устанавливаем значение прогресс бара
+                            Task.Factory.StartNew(() => SetProgress(true, count));
+
+                            // Запоминаем статистику
+                            Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+
+                            // Перебираем записи по шагам
+                            for (int i = 0; i < step; i++)
+                            {
+                                data =
+                                    "&v=" + Properties.Resources.Version +
+                                    "&https=1" +
+                                    "&access_token=" + Data.Default.AccessToken +
+                                    "&owner_id=" + groupId +
+                                    "&offset=" + (max_posts * i).ToString() +
+                                    "&count=" + max_posts.ToString() +
+                                    "&filter=all";
+
+                                result = POST(Properties.Resources.API + "wall.get", data);
+                                Thread.Sleep(350);
+
+                                if (result != null)
                                 {
-                                    if ((int)settings["posts"] > 0 && !first)
-                                        count = (int)settings["posts"];
+                                    res = JObject.Parse(result);
 
-                                    if (count % max_posts == 0)
-                                        step = count / max_posts;
-                                    else
-                                        step = (count / max_posts) + 1;
-                                }
-
-                                // Устанавливаем значение прогресс бара
-                                Task.Factory.StartNew(() => SetProgress(true, count));
-
-                                // Запоминаем статистику
-                                Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
-
-                                // Перебираем записи по шагам
-                                for (int i = 0; i < step; i++)
-                                {
-                                    Data =
-                                        "&v=" + Properties.Resources.ApiVer +
-                                        "&https=1" +
-                                        "&access_token=" + JsonGet("access_token") +
-                                        "&owner_id=" + (string)settings["id"] +
-                                        "&offset=" + (max_posts * i).ToString() +
-                                        "&count=" + max_posts.ToString() +
-                                        "&filter=all";
-
-                                    result = POST(Properties.Resources.API + "wall.get", Data);
-                                    Thread.Sleep(350);
-
-                                    if (result != null)
+                                    if (res["response"] != null)
                                     {
-                                        res = JObject.Parse(result);
+                                        Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
-                                        if (res["response"] != null)
+                                        res = (JToken)res.SelectToken("response.items");
+
+                                        for (int j = 0; j < res.Count(); j++)
                                         {
-                                            Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+                                            Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
 
-                                            res = (JToken)res.SelectToken("response.items");
-
-                                            for (int j = 0; j < res.Count(); j++)
+                                            // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
+                                            if ((int)res[j]["comments"]["count"] > 0)
                                             {
-                                                Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
-
-                                                // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
-                                                if ((int)res[j]["comments"]["count"] > 0)
-                                                {
-                                                    // Читаем комменты к записи
-                                                    WallGetComments((string)res[j]["id"]);
-                                                }
-
-                                                // Изменяем положение прогресс бара
-                                                Task.Factory.StartNew(() => SetProgress());
+                                                // Читаем комменты к записи
+                                                WallGetComments((string)res[j]["id"]);
                                             }
-                                        }
-                                        else
-                                        {
-                                            Dispatcher.BeginInvoke(new ThreadStart(delegate
-                                            {
-                                                tbLog.Text = String.Format("Error: {0}\n{1}", (string)groupId.SelectToken("error.error_code"), (string)groupId.SelectToken("error.error_msg"));
-                                                bStartBot.IsEnabled = false;
-                                            }));
 
-                                            error = true;
-
-                                            // Принудительно выходим из цикла
-                                            break;
+                                            // Изменяем положение прогресс бара
+                                            Task.Factory.StartNew(() => SetProgress());
                                         }
                                     }
                                     else
                                     {
                                         Dispatcher.BeginInvoke(new ThreadStart(delegate
                                         {
-                                            tbLog.Text = "Ошибка получения данных!";
+                                            tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
                                             bStartBot.IsEnabled = false;
                                         }));
 
@@ -367,23 +345,26 @@ namespace ProTanki_Robot_Moderator
                                         break;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                else
                                 {
-                                    tbLog.Text = String.Format("Error: {0}\n{1}", (string)groupId.SelectToken("error.error_code"), (string)groupId.SelectToken("error.error_msg"));
-                                    bStartBot.IsEnabled = false;
-                                }));
+                                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                    {
+                                        tbLog.Text = "Ошибка получения данных!";
+                                        bStartBot.IsEnabled = false;
+                                    }));
 
-                                error = true;
+                                    error = true;
+
+                                    // Принудительно выходим из цикла
+                                    break;
+                                }
                             }
                         }
                         else
                         {
                             Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
-                                tbLog.Text = "Ошибка получения данных!";
+                                tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
                                 bStartBot.IsEnabled = false;
                             }));
 
@@ -405,7 +386,7 @@ namespace ProTanki_Robot_Moderator
                 {
                     Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
-                        tbLog.Text = String.Format("Error: {0}\n{1}", (string)groupId["error_code"], (string)groupId["error_msg"]);
+                        tbLog.Text = "Ошибка получения настроек!\nПерезапустите приложение";
                         bStartBot.IsEnabled = false;
                     }));
 
@@ -423,9 +404,9 @@ namespace ProTanki_Robot_Moderator
                     first = false;
 
                     // Выводим статистику в блок
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    try
                     {
-                        try
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
                             tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
                             tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
@@ -447,18 +428,20 @@ namespace ProTanki_Robot_Moderator
                             tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
                             tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
                             tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
-                        }
-                        catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
-                        finally
-                        {
-                            if (settings["close"] != null)
-                                if ((bool)settings["close"])
-                                    this.Close();
-                        }
-                    }));
-
-                    // Ждем и повторяем
-                    Task.Factory.StartNew(() => Timer(settings["sleep"] == null ? 30 : (int)settings["sleep"]));
+                        }));
+                    }
+                    catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
+                    finally
+                    {
+                        if (Data.Default.Close)
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            {
+                                this.Close();
+                            }));
+                        else
+                            // Ждем и повторяем
+                            Task.Factory.StartNew(() => Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep));
+                    }
                 }
             }
         }
@@ -471,11 +454,11 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                string Data =
-                    "&v=" + Properties.Resources.ApiVer +
+                string data =
+                    "&v=" + Properties.Resources.Version +
                     "&https=1" +
-                    "&access_token=" + JsonGet("access_token") +
-                    "&owner_id=" + (string)settings["id"] +
+                    "&access_token=" + Data.Default.AccessToken +
+                    "&owner_id=" + groupId +
                     "&post_id=" + postId +
                     "&offset=0" +
                     "&count=100" +
@@ -483,7 +466,7 @@ namespace ProTanki_Robot_Moderator
                     "&sort=desc" +
                     "&preview_length=0";
 
-                string result = POST(Properties.Resources.API + "wall.getComments", Data);
+                string result = POST(Properties.Resources.API + "wall.getComments", data);
                 Thread.Sleep(350);
 
                 if (result != null)
@@ -512,11 +495,11 @@ namespace ProTanki_Robot_Moderator
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
                         {
-                            Data =
-                                "&v=" + Properties.Resources.ApiVer +
+                            data =
+                                "&v=" + Properties.Resources.Version +
                                 "&https=1" +
-                                "&access_token=" + JsonGet("access_token") +
-                                "&owner_id=" + (string)settings["id"] +
+                                "&access_token=" + Data.Default.AccessToken +
+                                "&owner_id=" + groupId +
                                 "&post_id=" + postId +
                                 "&offset=" + (100 * i).ToString() +
                                 "&count=100" +
@@ -524,7 +507,7 @@ namespace ProTanki_Robot_Moderator
                                 "&sort=desc" +
                                 "&preview_length=0";
 
-                            result = POST(Properties.Resources.API + "wall.getComments", Data);
+                            result = POST(Properties.Resources.API + "wall.getComments", data);
                             Thread.Sleep(350);
 
                             if (result != null)
@@ -583,14 +566,14 @@ namespace ProTanki_Robot_Moderator
         {
             try
             {
-                string Data =
-                     "&v=" + Properties.Resources.ApiVer +
+                string data =
+                     "&v=" + Properties.Resources.Version +
                      "&https=1" +
-                     "&access_token=" + JsonGet("access_token") +
-                     "&owner_id=" + (string)settings["id"] +
+                     "&access_token=" + Data.Default.AccessToken +
+                     "&owner_id=" + groupId +
                      "&comment_id=" + commentId;
 
-                JObject response = JObject.Parse(POST(Properties.Resources.API + "wall.deleteComment", Data));
+                JObject response = JObject.Parse(POST(Properties.Resources.API + "wall.deleteComment", data));
                 Thread.Sleep(350);
 
                 if (response["response"] != null)
@@ -635,51 +618,41 @@ namespace ProTanki_Robot_Moderator
         /// </summary>
         /// <param name="name">Имя группы или сообщества</param>
         /// <returns>ID</returns>
-        private JObject GroupId(string name)
+        private JObject GetGroup(string name = null)
         {
             try
             {
-                string Data =
-                     "&https=1" +
-                     "&access_token=" + JsonGet("access_token") +
-                     "&group_ids=" + name;
-
-                JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.getById", Data));
-                Thread.Sleep(350);
-
-                if (response["response"] != null)
+                if (name != null)
                 {
-                    return new JObject(
-                        new JProperty("id", "-" + (string)response["response"][0]["gid"]),
-                        new JProperty("name", (string)response["response"][0]["name"])
-                    );
+                    string data =
+                         "&https=1" +
+                         "&access_token=" + Data.Default.AccessToken +
+                         "&group_ids=" + name;
+
+                    JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.getById", data));
+                    Thread.Sleep(350);
+
+                    if (response["response"] != null)
+                    {
+                        return new JObject(
+                            new JProperty("id", "-" + (string)response["response"][0]["id"]),
+                            new JProperty("name", (string)response["response"][0]["name"]),
+                            new JProperty("admin", (int)response["response"][0]["is_admin"] == 1)
+                        );
+                    }
+                    else
+                        return (JObject)response["error"];
                 }
-                else
-                    return (JObject)response["error"];
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
 
             return null;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void bStartBot_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (tbToken.Text.Trim() != String.Empty)
-                {
-                    JsonSet("access_token", tbToken.Text.Trim());
-
-                    Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
-                    Task.Factory.StartNew(() => WallGet());
-                }
-                else
-                {
-                    tbLog.Text = "access_token не может быть пустым!";
-                }
-
-            }
-            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
+            Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
+            Task.Factory.StartNew(() => WallGet());
         }
 
         /// <summary>
@@ -691,26 +664,29 @@ namespace ProTanki_Robot_Moderator
         ///     0           Бессрочный бан
         ///     timestamp   дата разблокировки
         /// </returns>
-        private bool ToDelete(string text)
+        private bool ToDelete(string text = "")
         {
             try
             {
-                text = text.ToLower().Trim();
+                if (text != "")
+                {
+                    text = text.ToLower().Trim();
 
-                // Является ли текст цельной ссылкой
-                if (
-                    text.IndexOf(" ") == -1 &&
-                    text.IndexOf("video") > -1 &&
-                    text.Length > 30
-                    )
-                    return true;
-
-                // Проверяем текст на продажу
-                JArray words = (JArray)data["words"];
-
-                foreach (string word in words)
-                    if (text.IndexOf(word.ToLower()) > -1 || text.Length < Convert.ToInt16(Properties.Resources.Length))
+                    // Является ли текст цельной ссылкой
+                    if (
+                        text.IndexOf(" ") == -1 &&
+                        text.IndexOf("video") > -1 &&
+                        text.Length > 30
+                        )
                         return true;
+
+                    // Проверяем текст на продажу
+                    JArray words = Data.Default.Words;
+
+                    foreach (string word in words)
+                        if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                            return true;
+                }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
 

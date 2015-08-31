@@ -120,18 +120,8 @@
   <data name="API" xml:space="preserve">
     <value>https://api.vk.com/method/</value>
   </data>
-  <data name="ApiRedirect" xml:space="preserve">
-    <value>https://oauth.vk.com/blank.html</value>
-  </data>
-  <data name="ApiVer" xml:space="preserve">
-    <value>5.37</value>
-  </data>
   <data name="Author" xml:space="preserve">
     <value>https://ai-rus.com/api/bot/</value>
-  </data>
-  <data name="Length" xml:space="preserve">
-    <value>10</value>
-    <comment>Минимальное количество символов в сообщении</comment>
   </data>
   <data name="OAuth" xml:space="preserve">
     <value>https://oauth.vk.com/authorize</value>
@@ -139,5 +129,11 @@
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="PROTanks" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PROTanks.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Redirect" xml:space="preserve">
+    <value>https://oauth.vk.com/blank.html</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>5.37</value>
   </data>
 </root>

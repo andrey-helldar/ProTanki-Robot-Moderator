@@ -70,38 +70,11 @@ namespace ProTanki_Robot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://oauth.vk.com/blank.html.
-        /// </summary>
-        internal static string ApiRedirect {
-            get {
-                return ResourceManager.GetString("ApiRedirect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 5.37.
-        /// </summary>
-        internal static string ApiVer {
-            get {
-                return ResourceManager.GetString("ApiVer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to https://ai-rus.com/api/bot/.
         /// </summary>
         internal static string Author {
             get {
                 return ResourceManager.GetString("Author", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 10.
-        /// </summary>
-        internal static string Length {
-            get {
-                return ResourceManager.GetString("Length", resourceCulture);
             }
         }
         
@@ -121,6 +94,24 @@ namespace ProTanki_Robot_Moderator.Properties {
             get {
                 object obj = ResourceManager.GetObject("PROTanks", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://oauth.vk.com/blank.html.
+        /// </summary>
+        internal static string Redirect {
+            get {
+                return ResourceManager.GetString("Redirect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 5.37.
+        /// </summary>
+        internal static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
     }

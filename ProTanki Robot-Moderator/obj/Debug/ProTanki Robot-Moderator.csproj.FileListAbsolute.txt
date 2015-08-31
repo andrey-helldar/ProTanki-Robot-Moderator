@@ -14,8 +14,6 @@ f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранен
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Newtonsoft.Json.dll
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Newtonsoft.Json.xml
 f:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\ProTanki Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\data.json
-F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\data.json
-F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\settings.json
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Bot-Moderator.exe.config
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Bot-Moderator.exe
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\bin\Debug\Bot-Moderator.pdb
@@ -31,3 +29,7 @@ F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранен
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.csproj.GenerateResource.Cache
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Bot-Moderator.exe
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Bot-Moderator.pdb
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Authorization.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Authorization.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Settings.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Settings.g.cs
