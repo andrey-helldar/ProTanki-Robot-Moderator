@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProTanki_Robot_Moderator {
+namespace AIRUS_Bot_Moderator {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -85,10 +85,10 @@ namespace ProTanki_Robot_Moderator {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
-        public global::Newtonsoft.Json.Linq.JArray Words {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Words {
             get {
-                return ((global::Newtonsoft.Json.Linq.JArray)(this["Words"]));
+                return ((string)(this["Words"]));
             }
             set {
                 this["Words"] = value;
@@ -164,6 +164,42 @@ namespace ProTanki_Robot_Moderator {
             }
             set {
                 this["DeleteDays"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Likes {
+            get {
+                return ((bool)(this["Likes"]));
+            }
+            set {
+                this["Likes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int LikesCount {
+            get {
+                return ((int)(this["LikesCount"]));
+            }
+            set {
+                this["LikesCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int LikesOld {
+            get {
+                return ((int)(this["LikesOld"]));
+            }
+            set {
+                this["LikesOld"] = value;
             }
         }
     }

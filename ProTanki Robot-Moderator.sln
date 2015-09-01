@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProTanki Robot-Moderator", "ProTanki Robot-Moderator\ProTanki Robot-Moderator.csproj", "{60005774-AE69-461B-B774-31922B2A1007}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIRUS_Bot_Moderator", "ProTanki Robot-Moderator\AIRUS_Bot_Moderator.csproj", "{60005774-AE69-461B-B774-31922B2A1007}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VK BOT Clear Wall", "VK BOT Clear Wall\VK BOT Clear Wall.csproj", "{4EF0E5BE-07B9-4285-972A-D8B4B8211937}"
 EndProject

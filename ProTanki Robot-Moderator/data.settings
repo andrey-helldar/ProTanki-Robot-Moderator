@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ProTanki_Robot_Moderator" GeneratedClassName="Data">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AIRUS_Bot_Moderator" GeneratedClassName="Data">
   <Profiles />
   <Settings>
     <Setting Name="AccessToken" Type="System.String" Scope="User">
@@ -17,8 +17,8 @@
     <Setting Name="Posts" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Words" Type="Newtonsoft.Json.Linq.JArray" Scope="User">
-      <Value Profile="(Default)">[]</Value>
+    <Setting Name="Words" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SleepDefault" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
@@ -37,6 +37,15 @@
     </Setting>
     <Setting Name="DeleteDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">365</Value>
+    </Setting>
+    <Setting Name="Likes" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LikesCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="LikesOld" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>

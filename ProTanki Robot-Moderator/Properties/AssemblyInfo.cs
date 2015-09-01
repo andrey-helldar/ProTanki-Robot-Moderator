@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ProTanki Robot-Moderator")]
+[assembly: AssemblyTitle("AI RUS: Bot-Moderator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ProTanki Robot-Moderator")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("AI RUS - Professional IT support")]
+[assembly: AssemblyProduct("AI RUS: Bot-Moderator")]
+[assembly: AssemblyCopyright("Copyright ©  2015 AI RUS - Professional IT support")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

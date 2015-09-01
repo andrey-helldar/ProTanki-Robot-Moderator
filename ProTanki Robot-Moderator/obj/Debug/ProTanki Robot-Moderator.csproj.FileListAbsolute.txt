@@ -25,7 +25,6 @@ F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранен
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\App.g.cs
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Bot-Moderator_MarkupCompile.cache
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Bot-Moderator.g.resources
-F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki_Robot_Moderator.Properties.Resources.resources
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\ProTanki Robot-Moderator.csproj.GenerateResource.Cache
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Bot-Moderator.exe
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Bot-Moderator.pdb
@@ -33,3 +32,4 @@ F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранен
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Authorization.g.cs
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Settings.baml
 F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\Settings.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\ProTanki Robot-Moderator\obj\Debug\AIRUS_Bot_Moderator.Properties.Resources.resources

@@ -1,4 +1,4 @@
-﻿<Window x:Name="FormSettings" x:Class="ProTanki_Robot_Moderator.Settings"
+﻿<Window x:Name="FormSettings" x:Class="AIRUS_Bot_Moderator.Settings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Settings" Height="300" Width="300" Icon="Resources/PROTanks.ico" WindowStartupLocation="CenterScreen" MinWidth="800" MinHeight="600" ShowInTaskbar="False" Loaded="FormSettings_Loaded" Closing="FormSettings_Closing">
@@ -42,21 +42,28 @@
                     <LineBreak/>
                     <Run>Для отключения укажите "0"</Run>
                 </TextBlock>
-                <CheckBox x:Name="cbBan" Content="Банить аккаунты на " HorizontalAlignment="Left" Margin="5,8,0,9" VerticalAlignment="Center" Grid.Column="2"/>
+                <CheckBox x:Name="cbBan" Content="Банить аккаунты на " HorizontalAlignment="Left" Margin="5,8,0,9" VerticalAlignment="Center" Grid.Column="2" Click="cbBan_Click"/>
                 <ComboBox x:Name="cbBanPeriod" HorizontalAlignment="Center" Margin="5,6,5,5" VerticalAlignment="Center" Width="100" Grid.Column="3" Grid.ColumnSpan="2" SelectedIndex="0" IsEnabled="False">
                     <ComboBoxItem Content="1 сутки"/>
                     <ComboBoxItem Content="3 суток"/>
                     <ComboBoxItem Content="1 неделю"/>
                     <ComboBoxItem Content="1 месяц"/>
+                    <ComboBoxItem Content="1 год"/>
                     <ComboBoxItem Content="перманентно"/>
                 </ComboBox>
-                <CheckBox x:Name="cbDelete" Content="Удалять комментарии старше" HorizontalAlignment="Left" Margin="5,13,0,12.92" VerticalAlignment="Center" Grid.Column="2" Grid.Row="1"/>
+                <CheckBox x:Name="cbDelete" Content="Удалять комментарии старше" HorizontalAlignment="Left" Margin="5,13,0,12.92" VerticalAlignment="Center" Grid.Column="2" Grid.Row="1" Click="cbDelete_Click"/>
                 <TextBox x:Name="tbDeleteDays" Grid.Column="3" Height="24" Margin="5" Grid.Row="1" TextWrapping="Wrap" Text="365" VerticalAlignment="Center" Width="50" TextAlignment="Center" IsEnabled="False"/>
                 <Label Content="дней" Grid.Column="4" HorizontalAlignment="Center" Margin="5" Grid.Row="1" VerticalAlignment="Center"/>
+                <CheckBox x:Name="cbLikes" Content="Удалять комментарий, если он набрал меньше" Grid.Column="2" HorizontalAlignment="Left" Margin="5" Grid.Row="2" VerticalAlignment="Center" Click="cbLikes_Click"/>
+                <TextBox x:Name="tbLikesCount" Grid.Column="3" HorizontalAlignment="Center" Height="24" Margin="5" Grid.Row="2" TextWrapping="Wrap" Text="10" VerticalAlignment="Center" Width="50" TextAlignment="Center" IsEnabled="False"/>
+                <Label Content="лайков" Grid.Column="4" HorizontalAlignment="Center" Margin="5" Grid.Row="2" VerticalAlignment="Center"/>
+                <Label Content="за" Grid.Column="2" HorizontalAlignment="Right" Margin="5" Grid.Row="3" VerticalAlignment="Center"/>
+                <TextBox x:Name="tbLikesOld" Grid.Column="3" HorizontalAlignment="Center" Height="23" Margin="5" Grid.Row="3" TextWrapping="Wrap" Text="10" VerticalAlignment="Center" Width="50" TextAlignment="Center" IsEnabled="False"/>
+                <Label Content="минут" Grid.Column="4" HorizontalAlignment="Center" Margin="5" Grid.Row="3" VerticalAlignment="Center"/>
             </Grid>
         </GroupBox>
         <GroupBox Header="Стоп-слова для удаления комментария (одно слово на строку)" Margin="5" Grid.Row="2">
-            <TextBox x:Name="tbWords" Margin="5" TextWrapping="Wrap"/>
+            <TextBox x:Name="tbWords" Margin="5" TextWrapping="Wrap" AcceptsReturn="True"/>
         </GroupBox>
         <Button x:Name="bSaving" Content="Сохранить и закрыть" HorizontalAlignment="Center" Margin="10" Grid.Row="3" VerticalAlignment="Center" Padding="25,5" Click="bSaving_Click"/>
 

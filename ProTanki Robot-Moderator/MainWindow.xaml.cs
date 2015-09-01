@@ -19,7 +19,7 @@ using System.IO;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 
-namespace ProTanki_Robot_Moderator
+namespace AIRUS_Bot_Moderator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -212,11 +212,10 @@ namespace ProTanki_Robot_Moderator
 
         private void bAuthorize_Click(object sender, RoutedEventArgs e)
         {
-            //Task.Factory.StartNew(() => Authorization());
+            new Authorization().ShowDialog();
 
-            Authorization auth = new Authorization();
-            auth.ShowInTaskbar = false;
-            auth.ShowDialog();
+            // Перезагружаем данные
+            Task.Factory.StartNew(() => LoadingData());
         }
 
         /// <summary>
@@ -436,12 +435,7 @@ namespace ProTanki_Robot_Moderator
                     catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
                     finally
                     {
-                        if (Data.Default.Deactivate)
-                            Dispatcher.BeginInvoke(new ThreadStart(delegate
-                            {
-                                this.Close();
-                            }));
-                        else
+                        if (!Data.Default.Deactivate)
                             // Ждем и повторяем
                             Task.Factory.StartNew(() => Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep));
                     }
@@ -524,7 +518,7 @@ namespace ProTanki_Robot_Moderator
                                     for (int j = 0; j < res.Count(); j++)
                                     {
                                         // Проверяем наличие слов для бана
-                                        if (ToDelete((string)res[j]["text"]))
+                                        if (ToDelete((JToken)res[j]))
                                         {
                                             // Удаляем коммент
                                             WallDeleteComment((string)res[j]["id"], (JToken)res[j], postId);
@@ -667,33 +661,92 @@ namespace ProTanki_Robot_Moderator
         ///     0           Бессрочный бан
         ///     timestamp   дата разблокировки
         /// </returns>
-        private bool ToDelete(string text = "")
+        private bool ToDelete(JToken token = null)
         {
             try
             {
-                if (text != "")
+                if (token != null)
                 {
-                    text = text.ToLower().Trim();
+                    string text = ((string)token["text"]).ToLower().Trim();
 
-                    // Является ли текст цельной ссылкой
-                    if (
-                        text.IndexOf(" ") == -1 &&
-                        text.IndexOf("video") > -1 &&
-                        text.Length > 30
-                        )
+                    // Проверяем текст на вхождение слов
+                    if (((JArray)JObject.Parse(Data.Default.Words)["words"]).Count > 0)
+                    {
+                        JArray words = (JArray)JObject.Parse(Data.Default.Words)["words"];
+                        foreach (string word in words)
+                            if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                            {
+                                // Отправляем пользователя в бан
+                                ToBan((string)token["from_id"]);
+
+                                // Возвращаем ответ на удаление комментария
+                                return true;
+                            }
+                    }
+
+                    // Проверяем количество символов в комментарии
+                    if (text.Length < Data.Default.Length)
                         return true;
 
-                    // Проверяем текст на продажу
-                    JArray words = Data.Default.Words;
+                    // Проверяем возраст комментария
+                    if (Data.Default.Delete)
+                        if ((Int32)token["date"] < (Int32)(DateTime.UtcNow.AddDays(Data.Default.DeleteDays * -1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds)
+                            return true;
 
-                    foreach (string word in words)
-                        if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                    // Проверяем лайки
+                    if (Data.Default.Likes)
+                        if ((int)token.SelectToken("likes.count") < Data.Default.LikesCount &&
+                            (Int32)token["date"] < (Int32)(DateTime.UtcNow.AddMinutes(Data.Default.LikesOld * -1).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds)
                             return true;
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
 
             return false;
+        }
+
+        private void ToBan(string user_id)
+        {
+            try
+            {
+                if (Data.Default.Ban)
+                {
+                    string data =
+                         "&v=" + Properties.Resources.Version +
+                         "&https=1" +
+                         "&access_token=" + Data.Default.AccessToken +
+                         "&group_id=" + groupId +
+                         "&user_id=" + user_id;
+
+                    // Определяем срок бана
+                    //<ComboBoxItem Content="1 сутки"/>
+                    //<ComboBoxItem Content="3 суток"/>
+                    //<ComboBoxItem Content="1 неделю"/>
+                    //<ComboBoxItem Content="1 месяц"/>
+                    //<ComboBoxItem Content="1 год"/>
+                    //<ComboBoxItem Content="перманентно"/>
+                    Int32 time = 0;
+
+                    switch (Data.Default.BanPeriod)
+                    {
+                        case 0: time = (Int32)(DateTime.UtcNow.AddDays(1).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds; break;
+                        case 1: time = (Int32)(DateTime.UtcNow.AddDays(3).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds; break;
+                        case 2: time = (Int32)(DateTime.UtcNow.AddDays(7).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds; break;
+                        case 3: time = (Int32)(DateTime.UtcNow.AddMonths(1).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds; break;
+                        case 4: time = (Int32)(DateTime.UtcNow.AddYears(1).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds; break;
+                        default: time = 0; break;
+                    }
+
+                    if (time > 0)
+                        data += "&end_date=" + time.ToString();
+
+
+                    // Отправляем запрос
+                    POST(Properties.Resources.API + "groups.banUser", data);
+                    Thread.Sleep(350);
+                }
+            }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
         }
 
         private void SetStatus(string block = "start")
@@ -844,6 +897,9 @@ namespace ProTanki_Robot_Moderator
         private void bSettings_Click(object sender, RoutedEventArgs e)
         {
             new Settings().ShowDialog();
+            
+            // Перезагружаем данные
+            Task.Factory.StartNew(() => LoadingData());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

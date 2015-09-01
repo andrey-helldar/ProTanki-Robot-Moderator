@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace ProTanki_Robot_Moderator
+namespace AIRUS_Bot_Moderator
 {
     /// <summary>
     /// Interaction logic for Settings.xaml
@@ -56,13 +56,23 @@ namespace ProTanki_Robot_Moderator
                     cbBanPeriod.SelectedIndex = Data.Default.BanPeriod; // Период бана
                     cbDelete.IsChecked = Data.Default.Delete; // Удалять старые сообщения
                     tbDeleteDays.Text = Data.Default.DeleteDays.ToString(); // Количество дней, по истечении которого сообщение будет считаться старым
+                    cbLikes.IsChecked = Data.Default.Likes; // Удалять сообщения по количеству лайков
+                    tbLikesCount.Text = Data.Default.LikesCount.ToString(); // Минимальное количество лайков
+                    tbLikesOld.Text = Data.Default.LikesOld.ToString(); // Время ожидания лайков
 
                     // Загружаем слова
-                    if (Data.Default.Words.Count > 0)
-                        foreach (string word in (JArray)Data.Default.Words)
+                    if (Data.Default.Words.Length > 2)
+                    {
+                        JArray array = (JArray)JObject.Parse(Data.Default.Words)["words"];
+
+                        foreach (string word in array)
                             tbWords.Text += word + Environment.NewLine;
+                    }
                 }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    tbWords.Text = String.Format("{0}\n\n{1}", ex.Message, ex.StackTrace);
+                }
             }));
         }
 
@@ -81,10 +91,43 @@ namespace ProTanki_Robot_Moderator
                     Data.Default.BanPeriod = cbBanPeriod.SelectedIndex;
                     Data.Default.Delete = (bool)cbDelete.IsChecked;
                     Data.Default.DeleteDays = Convert.ToInt16(tbDeleteDays.Text.Trim());
+                    Data.Default.Likes = (bool)cbLikes.IsChecked;
+                    Data.Default.LikesCount = Convert.ToInt16(tbLikesCount.Text.Trim());
+                    Data.Default.LikesOld = Convert.ToInt16(tbLikesOld.Text.Trim());
+
+                    if (tbWords.Text.Trim().Length > 0)
+                    {
+                        JArray array = new JArray();
+
+                        for (int i = 0; i < tbWords.LineCount; i++)
+                            if (tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, "").Length > 0)
+                                array.Add(tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, ""));
+
+                        JObject obj = new JObject();
+                        obj["words"] = array;
+
+                        Data.Default.Words = obj.ToString();
+                    }
                 }
                 catch (Exception) { }
                 finally { Data.Default.Save(); }
             }));
+        }
+
+        private void cbBan_Click(object sender, RoutedEventArgs e)
+        {
+            cbBanPeriod.IsEnabled = (bool)cbBan.IsChecked;
+        }
+
+        private void cbDelete_Click(object sender, RoutedEventArgs e)
+        {
+            tbDeleteDays.IsEnabled = (bool)cbDelete.IsChecked;
+        }
+
+        private void cbLikes_Click(object sender, RoutedEventArgs e)
+        {
+            tbLikesCount.IsEnabled = (bool)cbLikes.IsChecked;
+            tbLikesOld.IsEnabled = (bool)cbLikes.IsChecked;
         }
     }
 }
