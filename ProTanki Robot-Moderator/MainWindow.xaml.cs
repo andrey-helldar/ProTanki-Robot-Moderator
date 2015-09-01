@@ -46,7 +46,6 @@ namespace AIRUS_Bot_Moderator
         private static string APPSecret = null;
 
         private string groupId = null;
-        private bool groupAdmin = false;
 
         private bool timer = false;
         private bool first = true;
@@ -66,10 +65,21 @@ namespace AIRUS_Bot_Moderator
             Task.Factory.StartNew(() => LoadingData());
         }
 
-        private void LoadingData()
+        private void LoadingData(bool open = true)
         {
+            bool botBtn = true;
+
             try
             {
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                {
+                    bAuthorize.IsEnabled = false;
+                    bSettings.IsEnabled = false;
+                    bStartBot.IsEnabled = false;
+
+                    tbLog.Text = "Загрузка данных...";
+                }));
+
                 if (Data.Default.Group != "0")
                 {
                     // Отправляем запрос
@@ -101,7 +111,6 @@ namespace AIRUS_Bot_Moderator
                         if (group != null)
                         {
                             groupId = (string)group["id"];
-                            groupAdmin = (bool)group["admin"];
 
                             // Устанавливаем заголовок приложения
                             Dispatcher.BeginInvoke(new ThreadStart(delegate
@@ -111,29 +120,29 @@ namespace AIRUS_Bot_Moderator
                                     " : " + (string)group["name"];
                             }));
 
-                            // Если нет идентификаторов - запрещаем запуск
-                            if (
-                                Data.Default.AccessToken == "0" ||
-                                Data.Default.Group == "0" ||
-                                appId == null ||
-                                appSecret == null ||
-                                groupId == null
-                                )
-                            {
-                                Dispatcher.BeginInvoke(new ThreadStart(delegate
-                                {
-                                    tbLog.Text = "Ошибка получения данных!\nПерезапустите приложение либо свяжитесь с разработчиком.";
-                                    bStartBot.IsEnabled = false;
-                                }));
-                            }
+                            // Проверяем идентификаторы
+                            string log = "";
 
-                            // Если юзер - не админ
-                            if (!groupAdmin)
+                            // Если нет идентификаторов - запрещаем запуск
+                            if (Data.Default.AccessToken == "0")
+                                log += "Авторизуйтесь в приложении." + Environment.NewLine;
+
+                            if (Data.Default.Group == "0")
+                                log += "Не указано имя группы. Перейдите в настройки приложения." + Environment.NewLine;
+
+                            if (appId == null || appSecret == null)
+                                log += "Ошибка получения идентификатора приложения. Требуется перезапуск приложения." + Environment.NewLine;
+
+                            if (groupId == null)
+                                log += "Идентификатор группы не получен." + Environment.NewLine;
+
+
+                            if (log.Length > 0)
                             {
                                 Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
-                                    tbLog.Text = "Нет прав администратора/модератора группы.";
-                                    bStartBot.IsEnabled = false;
+                                    tbLog.Text = log;
+                                    botBtn = false;
                                 }));
                             }
                         }
@@ -142,7 +151,7 @@ namespace AIRUS_Bot_Moderator
                             Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 tbLog.Text = "Ошибка получения id группы!";
-                                bStartBot.IsEnabled = false;
+                                botBtn = false;
                             }));
                         }
                     }
@@ -151,7 +160,7 @@ namespace AIRUS_Bot_Moderator
                         Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
                             tbLog.Text = (string)data["error"];
-                            bStartBot.IsEnabled = false;
+                            botBtn = false;
                         }));
                     }
                 }
@@ -160,18 +169,24 @@ namespace AIRUS_Bot_Moderator
                     Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
                         tbLog.Text = "Не указан идентификатор группы!";
-                        bStartBot.IsEnabled = false;
+                        botBtn = false;
                     }));
+
+                    if (open)
+                        Task.Factory.StartNew(() => OpenSettings()).Wait();
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
+            finally
             {
-                Task.Factory.StartNew(() => textLog(ex)).Wait();
-
                 Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
-                    tbLog.Text = "Ошибка обработки данных!\nПерезапустите приложение либо свяжитесь с разработчиком.";
-                    bStartBot.IsEnabled = false;
+                    bAuthorize.IsEnabled = true;
+                    bSettings.IsEnabled = true;
+                    bStartBot.IsEnabled = botBtn;
+
+                    if (tbLog.Text == "Загрузка данных...")
+                        tbLog.Text = "";
                 }));
             }
         }
@@ -212,10 +227,14 @@ namespace AIRUS_Bot_Moderator
 
         private void bAuthorize_Click(object sender, RoutedEventArgs e)
         {
-            new Authorization().ShowDialog();
+            try
+            {
+                new Authorization().ShowDialog();
+                tbLog.Text = "";
 
-            // Перезагружаем данные
-            Task.Factory.StartNew(() => LoadingData());
+                Task.Factory.StartNew(() => LoadingData(false));
+            }
+            catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
         }
 
         /// <summary>
@@ -233,7 +252,11 @@ namespace AIRUS_Bot_Moderator
                 Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
                 // Отправляем индикатор запуска
-                POST(Properties.Resources.API + "stats.trackVisitor", "&v=" + Properties.Resources.Version);
+                POST(Properties.Resources.API + "stats.trackVisitor",
+                        "&v=" + Properties.Resources.Version +
+                        "&https=1" +
+                        "&access_token=" + Data.Default.AccessToken
+                    );
 
                 // Запоминаем ID в настройки
                 if (
@@ -622,6 +645,7 @@ namespace AIRUS_Bot_Moderator
                 if (Data.Default.Group != "0")
                 {
                     string data =
+                         "&v=" + Properties.Resources.Version +
                          "&https=1" +
                          "&access_token=" + Data.Default.AccessToken +
                          "&group_ids=" + Data.Default.Group;
@@ -633,8 +657,7 @@ namespace AIRUS_Bot_Moderator
                     {
                         return new JObject(
                             new JProperty("id", "-" + (string)response["response"][0]["id"]),
-                            new JProperty("name", (string)response["response"][0]["name"]),
-                            new JProperty("admin", (int)response["response"][0]["is_admin"] == 1)
+                            new JProperty("name", (string)response["response"][0]["name"])
                         );
                     }
                     else
@@ -670,19 +693,20 @@ namespace AIRUS_Bot_Moderator
                     string text = ((string)token["text"]).ToLower().Trim();
 
                     // Проверяем текст на вхождение слов
-                    if (((JArray)JObject.Parse(Data.Default.Words)["words"]).Count > 0)
-                    {
-                        JArray words = (JArray)JObject.Parse(Data.Default.Words)["words"];
-                        foreach (string word in words)
-                            if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
-                            {
-                                // Отправляем пользователя в бан
-                                ToBan((string)token["from_id"]);
+                    if (Data.Default.Words.Length > 0)
+                        if (((JArray)JObject.Parse(Data.Default.Words)["words"]).Count > 0)
+                        {
+                            JArray words = (JArray)JObject.Parse(Data.Default.Words)["words"];
+                            foreach (string word in words)
+                                if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                                {
+                                    // Отправляем пользователя в бан
+                                    ToBan((string)token["from_id"]);
 
-                                // Возвращаем ответ на удаление комментария
-                                return true;
-                            }
-                    }
+                                    // Возвращаем ответ на удаление комментария
+                                    return true;
+                                }
+                        }
 
                     // Проверяем количество символов в комментарии
                     if (text.Length < Data.Default.Length)
@@ -896,16 +920,25 @@ namespace AIRUS_Bot_Moderator
 
         private void bSettings_Click(object sender, RoutedEventArgs e)
         {
-            new Settings().ShowDialog();
-            
-            // Перезагружаем данные
-            Task.Factory.StartNew(() => LoadingData());
+            Task.Factory.StartNew(() => OpenSettings());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             try { Data.Default.Save(); }
             catch (Exception) { }
+        }
+
+        private void OpenSettings()
+        {
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                // Открываем окно настроек
+                Nullable<bool> result = new Settings().ShowDialog();
+
+                // Перезагружаем данные
+                LoadingData(false);
+            }));
         }
     }
 }

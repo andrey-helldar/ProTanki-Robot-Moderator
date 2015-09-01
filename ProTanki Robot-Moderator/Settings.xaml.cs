@@ -38,7 +38,40 @@ namespace AIRUS_Bot_Moderator
 
         private void FormSettings_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Task.Factory.StartNew(() => SavingData());
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                try
+                {
+                    Data.Default.Group = tbGroup.Text.Trim();
+                    Data.Default.Deactivate = (bool)cbDeactivate.IsChecked;
+                    Data.Default.Posts = Convert.ToInt16(tbPosts.Text.Trim());
+                    Data.Default.Sleep = Convert.ToInt16(tbSleep.Text.Trim());
+                    Data.Default.Length = Convert.ToInt16(tbLength.Text.Trim());
+                    Data.Default.Ban = (bool)cbBan.IsChecked;
+                    Data.Default.BanPeriod = cbBanPeriod.SelectedIndex;
+                    Data.Default.Delete = (bool)cbDelete.IsChecked;
+                    Data.Default.DeleteDays = Convert.ToInt16(tbDeleteDays.Text.Trim());
+                    Data.Default.Likes = (bool)cbLikes.IsChecked;
+                    Data.Default.LikesCount = Convert.ToInt16(tbLikesCount.Text.Trim());
+                    Data.Default.LikesOld = Convert.ToInt16(tbLikesOld.Text.Trim());
+
+                    if (tbWords.Text.Trim().Length > 0)
+                    {
+                        JArray array = new JArray();
+
+                        for (int i = 0; i < tbWords.LineCount; i++)
+                            if (tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, "").Length > 0)
+                                array.Add(tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, ""));
+
+                        JObject obj = new JObject();
+                        obj["words"] = array;
+
+                        Data.Default.Words = obj.ToString();
+                        Data.Default.Save();
+                    }
+                }
+                catch (Exception) { }
+            }));
         }
 
         private void LoadingData()
@@ -73,44 +106,6 @@ namespace AIRUS_Bot_Moderator
                 {
                     tbWords.Text = String.Format("{0}\n\n{1}", ex.Message, ex.StackTrace);
                 }
-            }));
-        }
-
-        private void SavingData()
-        {
-            Dispatcher.BeginInvoke(new ThreadStart(delegate
-            {
-                try
-                {
-                    Data.Default.Group = tbGroup.Text.Trim();
-                    Data.Default.Deactivate = (bool)cbDeactivate.IsChecked;
-                    Data.Default.Posts = Convert.ToInt16(tbPosts.Text.Trim());
-                    Data.Default.Sleep = Convert.ToInt16(tbSleep.Text.Trim());
-                    Data.Default.Length = Convert.ToInt16(tbLength.Text.Trim());
-                    Data.Default.Ban = (bool)cbBan.IsChecked;
-                    Data.Default.BanPeriod = cbBanPeriod.SelectedIndex;
-                    Data.Default.Delete = (bool)cbDelete.IsChecked;
-                    Data.Default.DeleteDays = Convert.ToInt16(tbDeleteDays.Text.Trim());
-                    Data.Default.Likes = (bool)cbLikes.IsChecked;
-                    Data.Default.LikesCount = Convert.ToInt16(tbLikesCount.Text.Trim());
-                    Data.Default.LikesOld = Convert.ToInt16(tbLikesOld.Text.Trim());
-
-                    if (tbWords.Text.Trim().Length > 0)
-                    {
-                        JArray array = new JArray();
-
-                        for (int i = 0; i < tbWords.LineCount; i++)
-                            if (tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, "").Length > 0)
-                                array.Add(tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, ""));
-
-                        JObject obj = new JObject();
-                        obj["words"] = array;
-
-                        Data.Default.Words = obj.ToString();
-                    }
-                }
-                catch (Exception) { }
-                finally { Data.Default.Save(); }
             }));
         }
 
