@@ -96,7 +96,7 @@ namespace ProTanki_Robot_Moderator
                         this.Closing += delegate { APPSecret = null; };
 
                         // Получаем идентификатор группы
-                        JObject group = GetGroup(Data.Default.Group);
+                        JObject group = GetGroup();
 
                         if (group != null)
                         {
@@ -232,6 +232,9 @@ namespace ProTanki_Robot_Moderator
                 // Приступаем
                 Task.Factory.StartNew(() => SetStatus());
                 Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
+
+                // Отправляем индикатор запуска
+                POST(Properties.Resources.API + "stats.trackVisitor", "&v=" + Properties.Resources.Version);
 
                 // Запоминаем ID в настройки
                 if (
@@ -433,7 +436,7 @@ namespace ProTanki_Robot_Moderator
                     catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
                     finally
                     {
-                        if (Data.Default.Close)
+                        if (Data.Default.Deactivate)
                             Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 this.Close();
@@ -618,16 +621,16 @@ namespace ProTanki_Robot_Moderator
         /// </summary>
         /// <param name="name">Имя группы или сообщества</param>
         /// <returns>ID</returns>
-        private JObject GetGroup(string name = null)
+        private JObject GetGroup()
         {
             try
             {
-                if (name != null)
+                if (Data.Default.Group != "0")
                 {
                     string data =
                          "&https=1" +
                          "&access_token=" + Data.Default.AccessToken +
-                         "&group_ids=" + name;
+                         "&group_ids=" + Data.Default.Group;
 
                     JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.getById", data));
                     Thread.Sleep(350);
@@ -836,6 +839,17 @@ namespace ProTanki_Robot_Moderator
             }
 
             Task.Factory.StartNew(() => WallGet());
+        }
+
+        private void bSettings_Click(object sender, RoutedEventArgs e)
+        {
+            new Settings().ShowDialog();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try { Data.Default.Save(); }
+            catch (Exception) { }
         }
     }
 }

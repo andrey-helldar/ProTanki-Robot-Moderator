@@ -62,12 +62,12 @@ namespace ProTanki_Robot_Moderator {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Close {
+        public bool Deactivate {
             get {
-                return ((bool)(this["Close"]));
+                return ((bool)(this["Deactivate"]));
             }
             set {
-                this["Close"] = value;
+                this["Deactivate"] = value;
             }
         }
         
@@ -116,6 +116,54 @@ namespace ProTanki_Robot_Moderator {
             }
             set {
                 this["Length"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Ban {
+            get {
+                return ((bool)(this["Ban"]));
+            }
+            set {
+                this["Ban"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int BanPeriod {
+            get {
+                return ((int)(this["BanPeriod"]));
+            }
+            set {
+                this["BanPeriod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Delete {
+            get {
+                return ((bool)(this["Delete"]));
+            }
+            set {
+                this["Delete"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("365")]
+        public int DeleteDays {
+            get {
+                return ((int)(this["DeleteDays"]));
+            }
+            set {
+                this["DeleteDays"] = value;
             }
         }
     }
