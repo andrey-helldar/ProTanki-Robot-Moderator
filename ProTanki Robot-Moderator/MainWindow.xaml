@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AIRUS_Bot_Moderator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ProTanki Bot-Moderator" WindowStartupLocation="CenterScreen" Icon="Resources/PROTanks.ico" MinWidth="640" MinHeight="480" Width="640" Height="480" Closing="Window_Closing">
+        Title="AI RUS Bot-Moderator" WindowStartupLocation="CenterScreen" Icon="Resources/PROTanks.ico" MinWidth="640" MinHeight="480" Width="640" Height="480" Closing="Window_Closing">
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
