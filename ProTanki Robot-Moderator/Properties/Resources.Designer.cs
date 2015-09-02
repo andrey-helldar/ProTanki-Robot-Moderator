@@ -79,6 +79,24 @@ namespace AIRUS_Bot_Moderator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -24349046.
+        /// </summary>
+        internal static string AuthorGroup {
+            get {
+                return ResourceManager.GetString("AuthorGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 377.
+        /// </summary>
+        internal static string AuthorPost {
+            get {
+                return ResourceManager.GetString("AuthorPost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://oauth.vk.com/authorize.
         /// </summary>
         internal static string OAuth {

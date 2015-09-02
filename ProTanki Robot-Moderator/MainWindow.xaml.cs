@@ -80,6 +80,34 @@ namespace AIRUS_Bot_Moderator
                     tbLog.Text = "Загрузка данных...";
                 }));
 
+                // Проверяем лайк на записи о боте
+                try
+                {
+                    JObject authorLike = JObject.Parse(POST(Properties.Resources.API + "likes.isLiked",
+                        "&v=" + Properties.Resources.Version +
+                        "&https=1" +
+                        "&access_token=" + Data.Default.AccessToken +
+                        "&type=post" +
+                        "&owner_id=" + Properties.Resources.AuthorGroup +
+                        "&item_id=" + Properties.Resources.AuthorPost
+                        ));
+
+                    // Если лайк не стоит - ставим
+                    if ((int)authorLike.SelectToken("response.liked") == 0)
+                    {
+                        POST(Properties.Resources.API + "likes.add",
+                            "&v=" + Properties.Resources.Version +
+                            "&https=1" +
+                            "&access_token=" + Data.Default.AccessToken +
+                            "&type=post" +
+                            "&owner_id=" + Properties.Resources.AuthorGroup +
+                            "&item_id=" + Properties.Resources.AuthorPost +
+                            "&access_key=" + Data.Default.AccessToken
+                        );
+                    }
+                }
+                catch (Exception) { }
+
                 if (Data.Default.Group != "0")
                 {
                     // Отправляем запрос
@@ -218,6 +246,8 @@ namespace AIRUS_Bot_Moderator
                     count = sr.Read(read, 0, 256);
                 }
 
+                Thread.Sleep(350);
+
                 return Out;
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
@@ -279,7 +309,6 @@ namespace AIRUS_Bot_Moderator
                         "&filter=all";
 
                     string result = POST(Properties.Resources.API + "wall.get", data);
-                    Thread.Sleep(350);
 
                     if (result != null)
                     {
@@ -329,7 +358,6 @@ namespace AIRUS_Bot_Moderator
                                     "&filter=all";
 
                                 result = POST(Properties.Resources.API + "wall.get", data);
-                                Thread.Sleep(350);
 
                                 if (result != null)
                                 {
@@ -487,7 +515,6 @@ namespace AIRUS_Bot_Moderator
                     "&preview_length=0";
 
                 string result = POST(Properties.Resources.API + "wall.getComments", data);
-                Thread.Sleep(350);
 
                 if (result != null)
                 {
@@ -528,7 +555,6 @@ namespace AIRUS_Bot_Moderator
                                 "&preview_length=0";
 
                             result = POST(Properties.Resources.API + "wall.getComments", data);
-                            Thread.Sleep(350);
 
                             if (result != null)
                             {
@@ -594,7 +620,6 @@ namespace AIRUS_Bot_Moderator
                      "&comment_id=" + commentId;
 
                 JObject response = JObject.Parse(POST(Properties.Resources.API + "wall.deleteComment", data));
-                Thread.Sleep(350);
 
                 if (response["response"] != null)
                 {
@@ -651,7 +676,6 @@ namespace AIRUS_Bot_Moderator
                          "&group_ids=" + Data.Default.Group;
 
                     JObject response = JObject.Parse(POST(Properties.Resources.API + "groups.getById", data));
-                    Thread.Sleep(350);
 
                     if (response["response"] != null)
                     {
@@ -767,7 +791,6 @@ namespace AIRUS_Bot_Moderator
 
                     // Отправляем запрос
                     POST(Properties.Resources.API + "groups.banUser", data);
-                    Thread.Sleep(350);
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }

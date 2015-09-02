@@ -67,7 +67,7 @@ namespace AIRUS_Bot_Moderator {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Bot-Moderator;component/authorization.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/AI RUS Bot-Moderator;component/authorization.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\Authorization.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

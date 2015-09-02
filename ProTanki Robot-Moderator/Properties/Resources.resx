@@ -123,6 +123,13 @@
   <data name="Author" xml:space="preserve">
     <value>https://ai-rus.com/api/bot/</value>
   </data>
+  <data name="AuthorGroup" xml:space="preserve">
+    <value>-24349046</value>
+    <comment>ai_rus</comment>
+  </data>
+  <data name="AuthorPost" xml:space="preserve">
+    <value>377</value>
+  </data>
   <data name="OAuth" xml:space="preserve">
     <value>https://oauth.vk.com/authorize</value>
   </data>
