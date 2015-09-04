@@ -1,7 +1,7 @@
 ﻿<Window x:Name="FormSettings" x:Class="AIRUS_Bot_Moderator.Settings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings" Height="300" Width="300" Icon="Resources/PROTanks.ico" WindowStartupLocation="CenterScreen" MinWidth="800" MinHeight="600" Loaded="FormSettings_Loaded" Closing="FormSettings_Closing">
+        Title="Settings" Height="300" Width="300" WindowStartupLocation="CenterScreen" MinWidth="800" MinHeight="600" Loaded="FormSettings_Loaded" Icon="favicon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

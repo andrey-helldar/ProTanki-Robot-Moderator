@@ -77,7 +77,7 @@ namespace AIRUS_Bot_Moderator
                     bSettings.IsEnabled = false;
                     bStartBot.IsEnabled = false;
 
-                    tbLog.Text = "Загрузка данных...";
+                    tbStatusBar.Text = "Загрузка данных...";
                 }));
 
                 // Проверяем лайк на записи о боте
@@ -169,7 +169,7 @@ namespace AIRUS_Bot_Moderator
                             {
                                 Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
-                                    tbLog.Text = log;
+                                    tbStatusBar.Text = log;
                                     botBtn = false;
                                 }));
                             }
@@ -178,7 +178,7 @@ namespace AIRUS_Bot_Moderator
                         {
                             Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
-                                tbLog.Text = "Ошибка получения id группы!";
+                                tbStatusBar.Text = "Ошибка получения id группы!";
                                 botBtn = false;
                             }));
                         }
@@ -187,7 +187,7 @@ namespace AIRUS_Bot_Moderator
                     {
                         Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
-                            tbLog.Text = (string)data["error"];
+                            tbStatusBar.Text = (string)data["error"];
                             botBtn = false;
                         }));
                     }
@@ -196,7 +196,7 @@ namespace AIRUS_Bot_Moderator
                 {
                     Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
-                        tbLog.Text = "Не указан идентификатор группы!";
+                        tbStatusBar.Text = "Не указан идентификатор группы!";
                         botBtn = false;
                     }));
 
@@ -213,8 +213,8 @@ namespace AIRUS_Bot_Moderator
                     bSettings.IsEnabled = true;
                     bStartBot.IsEnabled = botBtn;
 
-                    if (tbLog.Text == "Загрузка данных...")
-                        tbLog.Text = "";
+                    if (tbStatusBar.Text == "Загрузка данных...")
+                        tbStatusBar.Text = "Готово";
                 }));
             }
         }

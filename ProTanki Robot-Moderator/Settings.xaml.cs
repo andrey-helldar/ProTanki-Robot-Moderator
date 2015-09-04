@@ -33,11 +33,6 @@ namespace AIRUS_Bot_Moderator
 
         private void bSaving_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
-        }
-
-        private void FormSettings_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
             Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 try
@@ -71,6 +66,7 @@ namespace AIRUS_Bot_Moderator
                     }
                 }
                 catch (Exception) { }
+                finally { this.Close(); }
             }));
         }
 
@@ -89,9 +85,13 @@ namespace AIRUS_Bot_Moderator
                     cbBanPeriod.SelectedIndex = Data.Default.BanPeriod; // Период бана
                     cbDelete.IsChecked = Data.Default.Delete; // Удалять старые сообщения
                     tbDeleteDays.Text = Data.Default.DeleteDays.ToString(); // Количество дней, по истечении которого сообщение будет считаться старым
+                    tbDeleteDays.IsEnabled = Data.Default.Delete; // Если стоит галка удаления сообщений - активируем поле
                     cbLikes.IsChecked = Data.Default.Likes; // Удалять сообщения по количеству лайков
                     tbLikesCount.Text = Data.Default.LikesCount.ToString(); // Минимальное количество лайков
                     tbLikesOld.Text = Data.Default.LikesOld.ToString(); // Время ожидания лайков
+                    // Активируем поля
+                    tbLikesCount.IsEnabled = Data.Default.Likes;
+                    tbLikesOld.IsEnabled = Data.Default.Likes;
 
                     // Загружаем слова
                     if (Data.Default.Words.Length > 2)
