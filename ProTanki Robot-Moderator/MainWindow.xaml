@@ -19,20 +19,20 @@
             <ColumnDefinition Width="140"/>
             <ColumnDefinition Width="37*"/>
         </Grid.ColumnDefinitions>
-        <Label Content="Статус:" HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center" Height="26" Width="47"/>
-        <TextBlock x:Name="tbStatus" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="Отдыхаю" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF055710" Height="16" Width="55"/>
-        <TextBlock x:Name="tbStartAt" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center" Height="16" Width="109"/>
-        <TextBlock x:Name="tbEndAt" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center" Height="16" Width="109"/>
-        <TextBlock x:Name="tbDiff" Grid.Column="4" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="00" VerticalAlignment="Center" Foreground="#FF4600FF" Height="16" Width="13"/>
+        <Label Content="Статус:" HorizontalAlignment="Left" Margin="10,5,0,5" VerticalAlignment="Center"/>
+        <TextBlock x:Name="tbStatus" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="Отдыхаю" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF055710"/>
+        <TextBlock x:Name="tbStartAt" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center"/>
+        <TextBlock x:Name="tbEndAt" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="0000-00-00 00:00:00" VerticalAlignment="Center"/>
+        <TextBlock x:Name="tbDiff" Grid.Column="4" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="00" VerticalAlignment="Center" Foreground="#FF4600FF"/>
         <ProgressBar x:Name="pbStatus" Grid.ColumnSpan="5" Height="10" Margin="10" VerticalAlignment="Center" Grid.Row="1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="Всего постов:" VerticalAlignment="Center" Grid.Row="2" Height="16" Width="74"/>
-        <TextBlock x:Name="logAllPosts" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="2" Height="16" Width="7"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" Grid.Row="3" TextWrapping="Wrap" Text="Всего комментов:" VerticalAlignment="Center" Height="16" Width="98"/>
-        <TextBlock x:Name="logAllComments" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="3" Height="16" Width="7"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="Ошибка удаления:" VerticalAlignment="Center" Grid.Column="2" Grid.Row="3" Height="16" Width="102"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="Удалено комментов:" VerticalAlignment="Center" Grid.Column="2" Grid.Row="2" Height="16" Width="113"/>
-        <TextBlock x:Name="logDeleted" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="2" Height="16" Width="7"/>
-        <TextBlock x:Name="logErrorDelete" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="3" Height="16" Width="7"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="Всего постов:" VerticalAlignment="Center" Grid.Row="2"/>
+        <TextBlock x:Name="logAllPosts" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="2"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" Grid.Row="3" TextWrapping="Wrap" Text="Всего комментов:" VerticalAlignment="Center"/>
+        <TextBlock x:Name="logAllComments" Grid.Column="1" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="Ошибка удаления:" VerticalAlignment="Center" Grid.Column="2" Grid.Row="3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="Удалено комментов:" VerticalAlignment="Center" Grid.Column="2" Grid.Row="2"/>
+        <TextBlock x:Name="logDeleted" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="2"/>
+        <TextBlock x:Name="logErrorDelete" Grid.Column="3" HorizontalAlignment="Left" Margin="10,5,0,5" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="3"/>
         <TextBox x:Name="tbLog" Grid.ColumnSpan="5" Margin="10" Grid.Row="5" TextWrapping="Wrap" IsReadOnly="True" AcceptsReturn="True" AcceptsTab="True"/>
         <StackPanel Margin="122,10" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="5" HorizontalAlignment="Center" Height="54" Width="388">
             <Grid>

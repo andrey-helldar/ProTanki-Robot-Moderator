@@ -1,0 +1,19 @@
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\bin\Debug\Newtonsoft.Json.dll
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\bin\Debug\Newtonsoft.Json.xml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AIRUS_Bot_Moderator_Demo.csprojResolveAssemblyReference.cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\Authorization.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\MainWindow.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\Settings.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\Authorization.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\MainWindow.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\Settings.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\App.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AIRUS_Bot_Moderator.Properties.Resources.resources
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AIRUS_Bot_Moderator_Demo.csproj.GenerateResource.Cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\bin\Debug\AI RUS Bot-Moderator Demo.exe.config
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\bin\Debug\AI RUS Bot-Moderator Demo.exe
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\bin\Debug\AI RUS Bot-Moderator Demo.pdb
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AI RUS Bot-Moderator Demo_MarkupCompile.cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AI RUS Bot-Moderator Demo.g.resources
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AI RUS Bot-Moderator Demo.exe
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Robot-Moderator Demo\obj\Debug\AI RUS Bot-Moderator Demo.pdb

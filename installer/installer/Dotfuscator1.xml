@@ -4,14 +4,14 @@
   <!--This is application generated code. Do not edit manually.-->
   <input>
     <asmlist>
-      <inputassembly refid="e59504f4-2fe8-4a26-90c2-88e29f5241b0">
+      <inputassembly refid="5810eb84-b7e5-475e-83c7-8ff28ce485d9">
         <option>honoroas</option>
         <option>stripoa</option>
         <option>library</option>
         <option>transformxaml</option>
         <file dir="F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\installer\installer" name="AI RUS Bot-Moderator.exe" />
       </inputassembly>
-      <inputassembly refid="ed97b2d2-b050-4cf7-8dee-5ec599078373">
+      <inputassembly refid="58252bfe-5ad0-4349-aac6-3155a853ccf9">
         <option>honoroas</option>
         <option>stripoa</option>
         <option>library</option>

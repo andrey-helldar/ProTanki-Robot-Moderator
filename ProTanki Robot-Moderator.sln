@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIRUS_Bot_Moderator", "ProT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VK BOT Clear Wall", "VK BOT Clear Wall\VK BOT Clear Wall.csproj", "{4EF0E5BE-07B9-4285-972A-D8B4B8211937}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIRUS_Bot_Moderator_Demo", "Robot-Moderator Demo\AIRUS_Bot_Moderator_Demo.csproj", "{B9808CBB-34F0-471C-A65B-6089543E5CDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4EF0E5BE-07B9-4285-972A-D8B4B8211937}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EF0E5BE-07B9-4285-972A-D8B4B8211937}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EF0E5BE-07B9-4285-972A-D8B4B8211937}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9808CBB-34F0-471C-A65B-6089543E5CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9808CBB-34F0-471C-A65B-6089543E5CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9808CBB-34F0-471C-A65B-6089543E5CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9808CBB-34F0-471C-A65B-6089543E5CDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
