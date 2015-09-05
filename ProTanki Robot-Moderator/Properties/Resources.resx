@@ -139,4 +139,7 @@
   <data name="Version" xml:space="preserve">
     <value>5.37</value>
   </data>
+  <data name="VK" xml:space="preserve">
+    <value>https://vk.com/id</value>
+  </data>
 </root>

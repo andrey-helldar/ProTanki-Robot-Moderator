@@ -281,6 +281,16 @@ namespace AIRUS_Bot_Moderator
                 Task.Factory.StartNew(() => SetStatus());
                 Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                {
+                    // Очищаем список заблокированных аккаунтов
+                    lbBannedUsers.Items.Clear();
+
+                    // Если стоит галка "банить", то:
+                    if (!Data.Default.Ban)
+                        lbBannedUsers.Items.Add("Отключено в настройках");
+                }));
+
                 // Отправляем индикатор запуска
                 POST(Properties.Resources.API + "stats.trackVisitor",
                         "&v=" + Properties.Resources.Version +
@@ -486,8 +496,19 @@ namespace AIRUS_Bot_Moderator
                     catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }
                     finally
                     {
+                        // Сохраняем ID забаненных
+                        string dir = @"banned\";
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        {
+                            File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
+                                lbBannedUsers.Items.ToString());
+                        }));
+
+                        // Ждем и повторяем
                         if (!Data.Default.Deactivate)
-                            // Ждем и повторяем
                             Task.Factory.StartNew(() => Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep));
                     }
                 }
@@ -522,7 +543,10 @@ namespace AIRUS_Bot_Moderator
                     {
                         Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
-                            tbLog.Text = String.Format("Error: {0}\n{1}", (string)JObject.Parse(result).SelectToken("error.error_code"), (string)JObject.Parse(result).SelectToken("error.error_msg"));
+                            tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID: {2}",
+                                (string)JObject.Parse(result).SelectToken("error.error_code"),
+                                (string)JObject.Parse(result).SelectToken("error.error_msg"),
+                                postId);
                         }));
                     }
                     else
@@ -580,7 +604,10 @@ namespace AIRUS_Bot_Moderator
                                 {
                                     Dispatcher.BeginInvoke(new ThreadStart(delegate
                                     {
-                                        tbLog.Text = String.Format("Error: {0}\n{1}", (string)JObject.Parse(result).SelectToken("error.error_code"), (string)JObject.Parse(result).SelectToken("error.error_msg"));
+                                        tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID:{2}",
+                                            (string)JObject.Parse(result).SelectToken("error.error_code"),
+                                            (string)JObject.Parse(result).SelectToken("error.error_msg"),
+                                            postId);
                                         bStartBot.IsEnabled = false;
                                     }));
 
@@ -591,7 +618,7 @@ namespace AIRUS_Bot_Moderator
                             {
                                 Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
-                                    tbLog.Text = "Ошибка получения комментариев!";
+                                    tbLog.Text = "Ошибка получения комментария " + postId + "!";
                                     bStartBot.IsEnabled = false;
                                 }));
 
@@ -791,6 +818,9 @@ namespace AIRUS_Bot_Moderator
 
                     // Отправляем запрос
                     POST(Properties.Resources.API + "groups.banUser", data);
+
+                    // Добавляем ID юзера в список
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => textLog(ex)).Wait(); }

@@ -94,13 +94,15 @@ namespace AIRUS_Bot_Moderator
                     tbLikesOld.IsEnabled = Data.Default.Likes;
 
                     // Загружаем слова
-                    if (Data.Default.Words.Length > 2)
-                    {
-                        JArray array = (JArray)JObject.Parse(Data.Default.Words)["words"];
+                    JArray array;
 
-                        foreach (string word in array)
-                            tbWords.Text += word + Environment.NewLine;
-                    }
+                    if (Data.Default.Words.Length > 2)
+                        array = (JArray)JObject.Parse(Data.Default.Words)["words"];
+                    else
+                        array = (JArray)JObject.Parse(Data.Default.WordsDefault)["words"];
+
+                    foreach (string word in array)
+                        tbWords.Text += word + Environment.NewLine;
                 }
                 catch (Exception ex)
                 {
