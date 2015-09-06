@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net;
+using System.Net.Http;
 using System.IO;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
@@ -65,20 +66,24 @@ namespace AIRUS_Bot_Moderator
             Task.Factory.StartNew(() => LoadingData());
         }
 
-        private void LoadingData(bool open = true)
+        //private void LoadingData(bool open = true)
+        async Task<bool> LoadingData(bool open = true)
         {
             bool botBtn = true;
 
             try
             {
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                Dispatcher.BeginInvoke(new Action(delegate()
                 {
+                    // Отключаем кнопки
                     bAuthorize.IsEnabled = false;
                     bSettings.IsEnabled = false;
                     bStartBot.IsEnabled = false;
 
+                    // Устанавливаем статус
                     tbStatusBar.Text = "Загрузка данных...";
                 }));
+
 
                 // Проверяем лайк на записи о боте
                 try
@@ -111,7 +116,7 @@ namespace AIRUS_Bot_Moderator
                 if (Data.Default.Group != "0")
                 {
                     // Отправляем запрос
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Resources.Author + Data.Default.Group);
+                    /*HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Resources.Author + Data.Default.Group);
                     request.Method = "GET";
                     request.Accept = "application/json";
 
@@ -120,10 +125,15 @@ namespace AIRUS_Bot_Moderator
                     StreamReader reader = new StreamReader(response.GetResponseStream());
                     StringBuilder output = new StringBuilder();
                     output.Append(reader.ReadToEnd());
-                    response.Close();
+                    response.Close();*/
+
+                    // Отправляем запрос
+                    HttpClient client = new HttpClient();
+                    Task<string> getAppID = client.GetStringAsync(Properties.Resources.Author + Data.Default.Group);
+                    
 
                     // Парсим ответ
-                    JObject data = JObject.Parse(output.ToString());
+                    JObject data = JObject.Parse(await getAppID);
 
                     if (data["error"] == null)
                     {
@@ -217,6 +227,8 @@ namespace AIRUS_Bot_Moderator
                         tbStatusBar.Text = "Готово";
                 }));
             }
+
+            return true;
         }
 
         public string POST(string Url, string Data)
