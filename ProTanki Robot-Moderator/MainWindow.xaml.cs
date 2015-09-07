@@ -229,7 +229,7 @@ namespace AIRUS_Bot_Moderator
             }
         }
 
-        public async Task<JObject> POST(string Url, JObject data = null)
+        public async Task<JObject> POST(string Url, JObject data = null, int errors = 0)
         {
             try
             {
@@ -261,7 +261,12 @@ namespace AIRUS_Bot_Moderator
                             if ((int)obj.SelectToken("error.error_code") == 100)
                             {
                                 Task.Delay(1050).Wait();
-                                return await POST(Url, data);
+
+                                if (errors < Data.Default.MaxPostErrors)
+                                {
+                                    errors++;
+                                    return await POST(Url, data, errors);
+                                }
                             }
                         }
 

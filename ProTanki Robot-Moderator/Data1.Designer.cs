@@ -314,5 +314,17 @@ namespace AIRUS_Bot_Moderator {
                 this["WordsDefault"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int MaxPostErrors {
+            get {
+                return ((int)(this["MaxPostErrors"]));
+            }
+            set {
+                this["MaxPostErrors"] = value;
+            }
+        }
     }
 }
