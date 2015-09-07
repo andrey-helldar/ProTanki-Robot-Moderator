@@ -68,13 +68,13 @@ namespace AIRUS_Bot_Moderator
         }
 
         //private void LoadingData(bool open = true)
-        private async Task<bool> LoadingData(bool open = true)
+        private async void LoadingData(bool open = true)
         {
             bool botBtn = true;
 
             try
             {
-                await Dispatcher.BeginInvoke(new Action(delegate()
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate()
                 {
                     // Отключаем кнопки
                     bAuthorize.IsEnabled = false;
@@ -110,7 +110,7 @@ namespace AIRUS_Bot_Moderator
                             groupId = (string)group["id"];
 
                             // Устанавливаем заголовок приложения
-                            await Dispatcher.BeginInvoke(new Action(delegate
+                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 this.Title = Application.Current.GetType().Assembly.GetName().Name +
                                     " v" + Application.Current.GetType().Assembly.GetName().Version.ToString() +
@@ -136,7 +136,7 @@ namespace AIRUS_Bot_Moderator
 
                             if (log.Length > 0)
                             {
-                                await Dispatcher.BeginInvoke(new Action(delegate
+                                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
                                     tbStatusBar.Text = log;
                                     botBtn = false;
@@ -145,7 +145,7 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            await Dispatcher.BeginInvoke(new Action(delegate
+                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 var qw = (string)group.SelectToken("error.error_code");
                                 tbStatusBar.Text = (string)ErrorCode((string)group.SelectToken("error.error_code"), true)["error"];
@@ -182,7 +182,7 @@ namespace AIRUS_Bot_Moderator
                                 }
                                 else
                                 {
-                                    await Dispatcher.BeginInvoke(new Action(delegate
+                                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
                                     {
                                         tbStatusBar.Text = (string)ErrorCode((string)authorLike.SelectToken("error.error_code"), true)["error"];
                                     }));
@@ -193,7 +193,7 @@ namespace AIRUS_Bot_Moderator
                     }
                     else
                     {
-                        await Dispatcher.BeginInvoke(new Action(delegate
+                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
                             tbStatusBar.Text = (string)ErrorCode((string)data.SelectToken("error.error_code"), true)["error"];
                             botBtn = false;
@@ -202,7 +202,7 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    await Dispatcher.BeginInvoke(new Action(delegate
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
                         tbStatusBar.Text = "Не указан идентификатор группы!";
                         botBtn = false;
@@ -215,7 +215,7 @@ namespace AIRUS_Bot_Moderator
             catch (Exception ex) { TextLog(ex); }
             finally
             {
-                Dispatcher.BeginInvoke(new Action(delegate
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     bAuthorize.IsEnabled = true;
                     bSettings.IsEnabled = true;
@@ -225,8 +225,6 @@ namespace AIRUS_Bot_Moderator
                         tbStatusBar.Text = "Готово";
                 }));
             }
-
-            return true;
         }
 
         public async Task<JObject> POST(string Url, JObject data = null)
@@ -241,11 +239,11 @@ namespace AIRUS_Bot_Moderator
                         data.Add(new JProperty("https", 1));
 
                         if (Data.Default.AccessToken.Length > 0)
-                        data.Add(new JProperty("access_token", Data.Default.AccessToken));
+                            data.Add(new JProperty("access_token", Data.Default.AccessToken));
 
                         Dictionary<string, string> content = new Dictionary<string, string>();
-                        
-                        foreach(JToken pair in (JToken)data)
+
+                        foreach (JToken pair in (JToken)data)
                             content.Add(pair.Path, (string)pair.First);
 
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
@@ -270,7 +268,7 @@ namespace AIRUS_Bot_Moderator
             return null;
         }
 
-        private async void bAuthorize_Click(object sender, RoutedEventArgs e)
+        private void bAuthorize_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -286,17 +284,18 @@ namespace AIRUS_Bot_Moderator
         /// Получаем список постов на странице. Перебираем все
         /// </summary>
         /// <returns></returns>
-        private void WallGet()
+        private async void WallGet()
         {
             bool error = false;
 
             try
             {
                 // Приступаем
-                SetStatus();
-                Log(null, 0, true);
+                await Task.Factory.StartNew(() => SetStatus());
+                await Task.Factory.StartNew(() => Log(null, 0, true));
 
-                Dispatcher.BeginInvoke(new Action(delegate
+
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     // Очищаем список заблокированных аккаунтов
                     lbBannedUsers.Items.Clear();
@@ -307,7 +306,7 @@ namespace AIRUS_Bot_Moderator
                 }));
 
                 // Отправляем индикатор запуска
-                POST(Properties.Resources.API + "stats.trackVisitor", null);
+                await POST(Properties.Resources.API + "stats.trackVisitor", null);
 
                 // Запоминаем ID в настройки
                 if (
@@ -320,7 +319,7 @@ namespace AIRUS_Bot_Moderator
                     // Устанавливаем переменную
                     int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
-                    JToken res = POST(Properties.Resources.API + "wall.get",
+                    JToken res = await POST(Properties.Resources.API + "wall.get",
                         new JObject(
                             new JProperty("owner_id", groupId),
                             new JProperty("offset", 0),
@@ -355,10 +354,10 @@ namespace AIRUS_Bot_Moderator
                         }
 
                         // Устанавливаем значение прогресс бара
-                        SetProgress(true, count);
+                        await Task.Factory.StartNew(() => SetProgress(true, count));
 
                         // Запоминаем статистику
-                        Log("AllPosts", (double)count);
+                        await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
@@ -370,17 +369,17 @@ namespace AIRUS_Bot_Moderator
                                     new JProperty("count", max_posts.ToString()),
                                     new JProperty("filter", "all")
                                 )
-                            );
+                            ).Result;
 
                             if (res["response"] != null)
                             {
-                                Log("AllPosts", (double)count);
+                                await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
 
                                 res = (JToken)res.SelectToken("response.items");
 
                                 for (int j = 0; j < res.Count(); j++)
                                 {
-                                    Log("CurrentPost");
+                                    await Task.Factory.StartNew(() => Log("CurrentPost"));
 
                                     // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                     if ((int)res[j]["comments"]["count"] > 0)
@@ -390,12 +389,12 @@ namespace AIRUS_Bot_Moderator
                                     }
 
                                     // Изменяем положение прогресс бара
-                                    SetProgress();
+                                    await Task.Factory.StartNew(() => SetProgress());
                                 }
                             }
                             else
                             {
-                                Dispatcher.BeginInvoke(new Action(delegate
+                                Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
                                     tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
                                     bStartBot.IsEnabled = false;
@@ -410,7 +409,7 @@ namespace AIRUS_Bot_Moderator
                     }
                     else
                     {
-                        Dispatcher.BeginInvoke(new Action(delegate
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
                             tbStatusBar.Text = (string)ErrorCode((string)res.SelectToken("error.error_code"), true)["error"];
                             bStartBot.IsEnabled = false;
@@ -421,7 +420,7 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    Dispatcher.BeginInvoke(new Action(delegate
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
                      {
                          tbStatusBar.Text = "Ошибка получения настроек! Перезапустите приложение.";
                          bStartBot.IsEnabled = false;
@@ -433,8 +432,8 @@ namespace AIRUS_Bot_Moderator
             catch (Exception ex) { TextLog(ex); }
             finally
             {
-                SetStatus("end");
-                Log("Circles");
+                Task.Factory.StartNew(() => SetStatus("end")).Wait();
+                Task.Factory.StartNew(() => Log("Circles")).Wait();
 
                 if (!error)
                 {
@@ -443,7 +442,7 @@ namespace AIRUS_Bot_Moderator
                     // Выводим статистику в блок
                     try
                     {
-                        Dispatcher.BeginInvoke(new Action(delegate
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
                           {
                               tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
                               tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
@@ -477,7 +476,7 @@ namespace AIRUS_Bot_Moderator
                             if (!Directory.Exists(dir))
                                 Directory.CreateDirectory(dir);
 
-                            Dispatcher.BeginInvoke(new Action(delegate
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
                                     lbBannedUsers.Items.ToString());
@@ -514,7 +513,7 @@ namespace AIRUS_Bot_Moderator
 
                 if (result["error"] != null)
                 {
-                    await Dispatcher.BeginInvoke(new Action(delegate
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
                       {
                           tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID: {2}",
                               (string)result.SelectToken("error.error_code"),
@@ -569,7 +568,7 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            await Dispatcher.BeginInvoke(new Action(delegate
+                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                              {
                                  tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID:{2}",
                                      (string)result.SelectToken("error.error_code"),
@@ -778,7 +777,7 @@ namespace AIRUS_Bot_Moderator
                     await POST(Properties.Resources.API + "groups.banUser", data);
 
                     // Добавляем ID юзера в список
-                    await Dispatcher.BeginInvoke(new Action(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
                 }
             }
             catch (Exception ex) { TextLog(ex); }
@@ -823,9 +822,9 @@ namespace AIRUS_Bot_Moderator
             return ErrorCode("1");
         }
 
-        private async void SetStatus(string block = "start")
+        private async Task<bool> SetStatus(string block = "start")
         {
-            await Dispatcher.BeginInvoke(new Action(delegate
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     try
                     {
@@ -854,6 +853,8 @@ namespace AIRUS_Bot_Moderator
                         TextLog(ex);
                     }
                 }));
+
+            return true;
         }
 
         private async void SetTimer()
@@ -862,7 +863,7 @@ namespace AIRUS_Bot_Moderator
 
             while (timer)
             {
-                await Dispatcher.BeginInvoke(new Action(delegate
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                  {
                      DateTime dt = new DateTime(1970, 1, 1).AddSeconds(i);
                      tbEndAt.Text = String.Format("0000-00-00 {0}:{1}:{2}", dt.ToString("HH"), dt.ToString("mm"), dt.ToString("ss"));
@@ -875,7 +876,7 @@ namespace AIRUS_Bot_Moderator
 
         private async void SetProgress(bool set = false, int value = 100)
         {
-            await Dispatcher.BeginInvoke(new Action(delegate
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 try
                 {
@@ -891,7 +892,7 @@ namespace AIRUS_Bot_Moderator
             }));
         }
 
-        private async void Log(string path = null, double key = 0, bool clear = false, bool time = false)
+        private async Task<bool> Log(string path = null, double key = 0, bool clear = false, bool time = false)
         {
             try
             {
@@ -926,7 +927,7 @@ namespace AIRUS_Bot_Moderator
                             log[path] = key;
 
                         // Выводим логи на экран
-                        await Dispatcher.BeginInvoke(new Action(delegate
+                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
                        {
                            logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
                            logAllComments.Text = (string)log.SelectToken("CurrentComment");
@@ -937,13 +938,15 @@ namespace AIRUS_Bot_Moderator
                 }
             }
             catch (Exception ex) { TextLog(ex); }
+
+            return true;
         }
 
         private async void TextLog(Exception ex = null, HttpRequestException hre = null)
         {
             try
             {
-                await Dispatcher.BeginInvoke(new Action(delegate
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     if (ex != null)
                         tbLog.Text = String.Format("{0}\n\n=============================\n\n{1}", ex.Message, ex.StackTrace);
@@ -958,7 +961,7 @@ namespace AIRUS_Bot_Moderator
         {
             for (int i = sec; i >= 0; i--)
             {
-                await Dispatcher.BeginInvoke(new Action(delegate
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     tbDiff.Text = String.Format("{0}", i.ToString());
                 }));
@@ -982,7 +985,7 @@ namespace AIRUS_Bot_Moderator
 
         private async void OpenSettings()
         {
-            await Dispatcher.BeginInvoke(new Action(delegate
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 // Открываем окно настроек
                 Nullable<bool> result = new Settings().ShowDialog();

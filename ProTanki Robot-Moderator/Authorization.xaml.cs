@@ -70,7 +70,7 @@ namespace AIRUS_Bot_Moderator
 
                     lStatus.Content = "Готово";
                 }
-                catch (Exception) { lStatus.Content = "err"; }
+                catch (Exception) { lStatus.Content = "Ожидание..."; }
             }));
         }
     }
