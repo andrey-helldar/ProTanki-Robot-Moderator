@@ -235,11 +235,11 @@ namespace AIRUS_Bot_Moderator
             {
                 using (var client = new HttpClient())
                 {
-                    data.Add(new JProperty("v", Properties.Resources.Version));
-                    data.Add(new JProperty("https", 1));
+                    if (data["v"] == null) data.Add(new JProperty("v", Properties.Resources.Version));
+                    if (data["https"] == null) data.Add(new JProperty("https", 1));
 
                     if (Data.Default.AccessToken.Length > 0)
-                        data.Add(new JProperty("access_token", Data.Default.AccessToken));
+                        if (data["access_token"] == null) data.Add(new JProperty("access_token", Data.Default.AccessToken));
 
                     Dictionary<string, string> content = new Dictionary<string, string>();
 
@@ -247,15 +247,24 @@ namespace AIRUS_Bot_Moderator
                         content.Add(pair.Path, (string)pair.First);
 
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
-                    //var response = client.PostAsync(Url, new StringContent(content.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded")).Result;
                     var response = client.PostAsync(Url, new FormUrlEncodedContent(content)).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
                         JObject obj = JObject.Parse(await response.Content.ReadAsStringAsync());
-
                         Task.Delay(350).Wait();
+
+                        if (obj["error"] == null)
+                            return obj;
+                        else
+                        {
+                            if ((int)obj.SelectToken("error.error_code") == 100)
+                            {
+                                Task.Delay(1050).Wait();
+                                return await POST(Url, data);
+                            }
+                        }
+
                         return obj;
                     }
                 }
@@ -264,7 +273,7 @@ namespace AIRUS_Bot_Moderator
             catch (Exception ex) { TextLog(ex); }
 
             Task.Delay(350).Wait();
-            return null;
+            return (JObject)ErrorCode("1");
         }
 
         private void bAuthorize_Click(object sender, RoutedEventArgs e)
@@ -290,6 +299,9 @@ namespace AIRUS_Bot_Moderator
                 // Приступаем
                 Task.Factory.StartNew(() => SetStatus());
                 Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
+
+                // Запускаем лог
+                Task.Factory.StartNew(() => ShowLog());
 
 
                 Dispatcher.BeginInvoke(new ThreadStart(delegate
@@ -439,60 +451,29 @@ namespace AIRUS_Bot_Moderator
                 {
                     first = false;
 
-                    // Выводим статистику в блок
-                    try
+                    // Разблокируем кнопку запуска бота
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
-                          {
-                              tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
-                              tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
+                        bStartBot.IsEnabled = true;
+                    }));
 
-                              tbLog.Text += "Начало цикла: " + tbStartAt.Text + Environment.NewLine;
-                              tbLog.Text += "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine;
-                              tbLog.Text += "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine;
-                              tbLog.Text += "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine;
-
-                              tbLog.Text += "Постов: " + (string)log["AllPosts"] + Environment.NewLine;
-                              tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
-                              tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
-                              tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
-
-                              log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
-                              log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
-                              log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
-
-                              tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
-                              tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
-                              tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
-                          }));
-                    }
-                    catch (Exception ex) { TextLog(ex); }
-                    finally
+                    if (Data.Default.Ban)
                     {
-                        // Разблокируем кнопку запуска бота
+                        // Сохраняем ID забаненных
+                        string dir = @"banned\";
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+
                         Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
-                            bStartBot.IsEnabled = true;
+                            File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
+                                lbBannedUsers.Items.ToString());
                         }));
-
-                        if (Data.Default.Ban)
-                        {
-                            // Сохраняем ID забаненных
-                            string dir = @"banned\";
-                            if (!Directory.Exists(dir))
-                                Directory.CreateDirectory(dir);
-
-                            Dispatcher.BeginInvoke(new ThreadStart(delegate
-                            {
-                                File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
-                                    lbBannedUsers.Items.ToString());
-                            }));
-                        }
-
-                        // Ждем и повторяем
-                        if (!Data.Default.Deactivate)
-                            Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep);
                     }
+
+                    // Ждем и повторяем
+                    if (!Data.Default.Deactivate)
+                        Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep);
                 }
             }
         }
@@ -1067,6 +1048,42 @@ namespace AIRUS_Bot_Moderator
                  ));
         }
 
+        /// <summary>
+        /// Выводим лог в динамике
+        /// </summary>
+        private void ShowLog()
+        {
+            while (true)
+            {
+                if (!error)
+                    try
+                    {
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        {
+                            tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
+                            tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
 
+                            tbLog.Text += "Начало цикла: " + tbStartAt.Text + Environment.NewLine;
+                            tbLog.Text += "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine;
+                            tbLog.Text += "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine;
+                            tbLog.Text += "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine;
+
+                            tbLog.Text += "Постов: " + (string)log["AllPosts"] + Environment.NewLine;
+                            tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
+                            tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
+                            tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
+
+                            log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
+                            log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
+                            log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
+
+                            tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
+                            tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
+                            tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
+                        }));
+                    }
+                    catch (Exception ex) { TextLog(ex); }
+            }
+        }
     }
 }
