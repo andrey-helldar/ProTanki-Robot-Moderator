@@ -277,7 +277,7 @@ namespace AIRUS_Bot_Moderator
                 new Authorization().ShowDialog();
                 tbLog.Text = "";
 
-                LoadingData(false);
+                Task.Factory.StartNew(() => LoadingData(false));
             }
             catch (Exception ex) { TextLog(ex); }
         }
@@ -286,7 +286,7 @@ namespace AIRUS_Bot_Moderator
         /// Получаем список постов на странице. Перебираем все
         /// </summary>
         /// <returns></returns>
-        private async void WallGet()
+        private void WallGet()
         {
             bool error = false;
 
@@ -296,7 +296,7 @@ namespace AIRUS_Bot_Moderator
                 SetStatus();
                 Log(null, 0, true);
 
-                await Dispatcher.BeginInvoke(new Action(delegate
+                Dispatcher.BeginInvoke(new Action(delegate
                 {
                     // Очищаем список заблокированных аккаунтов
                     lbBannedUsers.Items.Clear();
@@ -307,7 +307,7 @@ namespace AIRUS_Bot_Moderator
                 }));
 
                 // Отправляем индикатор запуска
-                await POST(Properties.Resources.API + "stats.trackVisitor", null);
+                POST(Properties.Resources.API + "stats.trackVisitor", null);
 
                 // Запоминаем ID в настройки
                 if (
@@ -320,7 +320,7 @@ namespace AIRUS_Bot_Moderator
                     // Устанавливаем переменную
                     int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
-                    JToken res = await POST(Properties.Resources.API + "wall.get",
+                    JToken res = POST(Properties.Resources.API + "wall.get",
                         new JObject(
                             new JProperty("owner_id", groupId),
                             new JProperty("offset", 0),
@@ -363,7 +363,7 @@ namespace AIRUS_Bot_Moderator
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
                         {
-                            res = await POST(Properties.Resources.API + "wall.get",
+                            res = POST(Properties.Resources.API + "wall.get",
                                 new JObject(
                                     new JProperty("owner_id", groupId),
                                     new JProperty("offset", (max_posts * i).ToString()),
@@ -395,7 +395,7 @@ namespace AIRUS_Bot_Moderator
                             }
                             else
                             {
-                                await Dispatcher.BeginInvoke(new Action(delegate
+                                Dispatcher.BeginInvoke(new Action(delegate
                                 {
                                     tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
                                     bStartBot.IsEnabled = false;
@@ -410,7 +410,7 @@ namespace AIRUS_Bot_Moderator
                     }
                     else
                     {
-                        await Dispatcher.BeginInvoke(new Action(delegate
+                        Dispatcher.BeginInvoke(new Action(delegate
                         {
                             tbStatusBar.Text = (string)ErrorCode((string)res.SelectToken("error.error_code"), true)["error"];
                             bStartBot.IsEnabled = false;
@@ -421,7 +421,7 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    await Dispatcher.BeginInvoke(new Action(delegate
+                    Dispatcher.BeginInvoke(new Action(delegate
                      {
                          tbStatusBar.Text = "Ошибка получения настроек! Перезапустите приложение.";
                          bStartBot.IsEnabled = false;
@@ -966,7 +966,7 @@ namespace AIRUS_Bot_Moderator
                 Task.Delay(1000).Wait();
             }
 
-            WallGet();
+            Task.Factory.StartNew(() => WallGet());
         }
 
         private async void bSettings_Click(object sender, RoutedEventArgs e)
@@ -983,13 +983,13 @@ namespace AIRUS_Bot_Moderator
         private async void OpenSettings()
         {
             await Dispatcher.BeginInvoke(new Action(delegate
-             {
-                 // Открываем окно настроек
-                 Nullable<bool> result = new Settings().ShowDialog();
+            {
+                // Открываем окно настроек
+                Nullable<bool> result = new Settings().ShowDialog();
 
-                 // Перезагружаем данные
-                 LoadingData(false);
-             }));
+                // Перезагружаем данные
+                Task.Factory.StartNew(() => LoadingData(false));
+            }));
         }
 
         private JToken ErrorCode(string code, bool str = false)
