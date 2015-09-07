@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Group" Type="System.String" Scope="User">
-      <Value Profile="(Default)">protanki</Value>
+      <Value Profile="(Default)">ai_rus</Value>
     </Setting>
     <Setting Name="Sleep" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
