@@ -52,6 +52,8 @@ namespace AIRUS_Bot_Moderator
         private bool timer = false;
         private bool first = true;
 
+        bool error = false;
+
         Stopwatch sWatch = new Stopwatch();
 
 
@@ -233,31 +235,28 @@ namespace AIRUS_Bot_Moderator
             {
                 using (var client = new HttpClient())
                 {
-                    if (data != null)
+                    data.Add(new JProperty("v", Properties.Resources.Version));
+                    data.Add(new JProperty("https", 1));
+
+                    if (Data.Default.AccessToken.Length > 0)
+                        data.Add(new JProperty("access_token", Data.Default.AccessToken));
+
+                    Dictionary<string, string> content = new Dictionary<string, string>();
+
+                    foreach (JToken pair in (JToken)data)
+                        content.Add(pair.Path, (string)pair.First);
+
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+
+                    //var response = client.PostAsync(Url, new StringContent(content.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded")).Result;
+                    var response = client.PostAsync(Url, new FormUrlEncodedContent(content)).Result;
+
+                    if (response.IsSuccessStatusCode)
                     {
-                        data.Add(new JProperty("v", Properties.Resources.Version));
-                        data.Add(new JProperty("https", 1));
+                        JObject obj = JObject.Parse(await response.Content.ReadAsStringAsync());
 
-                        if (Data.Default.AccessToken.Length > 0)
-                            data.Add(new JProperty("access_token", Data.Default.AccessToken));
-
-                        Dictionary<string, string> content = new Dictionary<string, string>();
-
-                        foreach (JToken pair in (JToken)data)
-                            content.Add(pair.Path, (string)pair.First);
-
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
-                        //var response = client.PostAsync(Url, new StringContent(content.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded")).Result;
-                        var response = client.PostAsync(Url, new FormUrlEncodedContent(content)).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            JObject obj = JObject.Parse(await response.Content.ReadAsStringAsync());
-
-                            Task.Delay(350).Wait();
-                            return obj;
-                        }
+                        Task.Delay(350).Wait();
+                        return obj;
                     }
                 }
             }
@@ -284,18 +283,16 @@ namespace AIRUS_Bot_Moderator
         /// Получаем список постов на странице. Перебираем все
         /// </summary>
         /// <returns></returns>
-        private async void WallGet()
+        private void WallGet()
         {
-            bool error = false;
-
             try
             {
                 // Приступаем
-                await Task.Factory.StartNew(() => SetStatus());
-                await Task.Factory.StartNew(() => Log(null, 0, true));
+                Task.Factory.StartNew(() => SetStatus());
+                Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
 
-                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     // Очищаем список заблокированных аккаунтов
                     lbBannedUsers.Items.Clear();
@@ -303,10 +300,13 @@ namespace AIRUS_Bot_Moderator
                     // Если стоит галка "банить", то:
                     if (!Data.Default.Ban)
                         lbBannedUsers.Items.Add("Отключено в настройках");
+
+                    // Отключаем кнопку запуска бота
+                    bStartBot.IsEnabled = false;
                 }));
 
                 // Отправляем индикатор запуска
-                await POST(Properties.Resources.API + "stats.trackVisitor", null);
+                Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null)).Wait();
 
                 // Запоминаем ID в настройки
                 if (
@@ -319,14 +319,14 @@ namespace AIRUS_Bot_Moderator
                     // Устанавливаем переменную
                     int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
-                    JToken res = await POST(Properties.Resources.API + "wall.get",
+                    JToken res = (JToken)POST(Properties.Resources.API + "wall.get",
                         new JObject(
                             new JProperty("owner_id", groupId),
                             new JProperty("offset", 0),
                             new JProperty("count", max_posts.ToString()),
                             new JProperty("filter", "all")
                         )
-                    );
+                    ).Result;
 
                     if (res["response"] != null)
                     {
@@ -354,10 +354,10 @@ namespace AIRUS_Bot_Moderator
                         }
 
                         // Устанавливаем значение прогресс бара
-                        await Task.Factory.StartNew(() => SetProgress(true, count));
+                        Task.Factory.StartNew(() => SetProgress(true, count));
 
                         // Запоминаем статистику
-                        await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
+                        Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
@@ -373,13 +373,13 @@ namespace AIRUS_Bot_Moderator
 
                             if (res["response"] != null)
                             {
-                                await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
+                                Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
                                 res = (JToken)res.SelectToken("response.items");
 
                                 for (int j = 0; j < res.Count(); j++)
                                 {
-                                    await Task.Factory.StartNew(() => Log("CurrentPost"));
+                                    Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
 
                                     // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                     if ((int)res[j]["comments"]["count"] > 0)
@@ -389,7 +389,7 @@ namespace AIRUS_Bot_Moderator
                                     }
 
                                     // Изменяем положение прогресс бара
-                                    await Task.Factory.StartNew(() => SetProgress());
+                                    Task.Factory.StartNew(() => SetProgress());
                                 }
                             }
                             else
@@ -432,7 +432,7 @@ namespace AIRUS_Bot_Moderator
             catch (Exception ex) { TextLog(ex); }
             finally
             {
-                Task.Factory.StartNew(() => SetStatus("end")).Wait();
+                Task.Factory.StartNew(() => SetStatus("end"));
                 Task.Factory.StartNew(() => Log("Circles")).Wait();
 
                 if (!error)
@@ -469,6 +469,12 @@ namespace AIRUS_Bot_Moderator
                     catch (Exception ex) { TextLog(ex); }
                     finally
                     {
+                        // Разблокируем кнопку запуска бота
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        {
+                            bStartBot.IsEnabled = true;
+                        }));
+
                         if (Data.Default.Ban)
                         {
                             // Сохраняем ID забаненных
@@ -681,7 +687,7 @@ namespace AIRUS_Bot_Moderator
 
         private void bStartBot_Click(object sender, RoutedEventArgs e)
         {
-            Task.Factory.StartNew(() => Log(null, 0, true, true));
+            Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
             Task.Factory.StartNew(() => WallGet());
         }
 
@@ -892,7 +898,7 @@ namespace AIRUS_Bot_Moderator
             }));
         }
 
-        private async Task<bool> Log(string path = null, double key = 0, bool clear = false, bool time = false)
+        private void Log(string path = null, double key = 0, bool clear = false, bool time = false)
         {
             try
             {
@@ -927,26 +933,24 @@ namespace AIRUS_Bot_Moderator
                             log[path] = key;
 
                         // Выводим логи на экран
-                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                       {
-                           logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
-                           logAllComments.Text = (string)log.SelectToken("CurrentComment");
-                           logDeleted.Text = String.Format("{0} / {1}%", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
-                           logErrorDelete.Text = String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
-                       }));
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        {
+                            logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
+                            logAllComments.Text = (string)log.SelectToken("CurrentComment");
+                            logDeleted.Text = String.Format("{0} / {1}%", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
+                            logErrorDelete.Text = String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
+                        }));
                     }
                 }
             }
             catch (Exception ex) { TextLog(ex); }
-
-            return true;
         }
 
-        private async void TextLog(Exception ex = null, HttpRequestException hre = null)
+        private void TextLog(Exception ex = null, HttpRequestException hre = null)
         {
             try
             {
-                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     if (ex != null)
                         tbLog.Text = String.Format("{0}\n\n=============================\n\n{1}", ex.Message, ex.StackTrace);
@@ -957,11 +961,11 @@ namespace AIRUS_Bot_Moderator
             catch (Exception) { }
         }
 
-        private async void Timer(int sec = 0)
+        private void Timer(int sec = 0)
         {
             for (int i = sec; i >= 0; i--)
             {
-                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     tbDiff.Text = String.Format("{0}", i.ToString());
                 }));
@@ -972,7 +976,7 @@ namespace AIRUS_Bot_Moderator
             Task.Factory.StartNew(() => WallGet());
         }
 
-        private async void bSettings_Click(object sender, RoutedEventArgs e)
+        private void bSettings_Click(object sender, RoutedEventArgs e)
         {
             OpenSettings();
         }
@@ -983,9 +987,9 @@ namespace AIRUS_Bot_Moderator
             catch (Exception) { }
         }
 
-        private async void OpenSettings()
+        private void OpenSettings()
         {
-            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 // Открываем окно настроек
                 Nullable<bool> result = new Settings().ShowDialog();
@@ -1062,5 +1066,7 @@ namespace AIRUS_Bot_Moderator
                      )
                  ));
         }
+
+
     }
 }
