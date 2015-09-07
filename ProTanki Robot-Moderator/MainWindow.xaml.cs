@@ -76,7 +76,7 @@ namespace AIRUS_Bot_Moderator
 
             try
             {
-                Dispatcher.BeginInvoke(new ThreadStart(delegate()
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate()
                 {
                     // Отключаем кнопки
                     bAuthorize.IsEnabled = false;
@@ -112,7 +112,7 @@ namespace AIRUS_Bot_Moderator
                             groupId = (string)group["id"];
 
                             // Устанавливаем заголовок приложения
-                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 this.Title = Application.Current.GetType().Assembly.GetName().Name +
                                     " v" + Application.Current.GetType().Assembly.GetName().Version.ToString() +
@@ -138,7 +138,7 @@ namespace AIRUS_Bot_Moderator
 
                             if (log.Length > 0)
                             {
-                                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
                                     tbStatusBar.Text = log;
                                     botBtn = false;
@@ -147,7 +147,7 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                            {
                                var qw = (string)group.SelectToken("error.error_code");
                                tbStatusBar.Text = (string)ErrorCode((string)group.SelectToken("error.error_code"), true)["error"];
@@ -184,18 +184,18 @@ namespace AIRUS_Bot_Moderator
                                 }
                                 else
                                 {
-                                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
                                    {
                                        tbStatusBar.Text = (string)ErrorCode((string)authorLike.SelectToken("error.error_code"), true)["error"];
                                    }));
                                 }
                             }
                         }
-                        catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+                        catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
                     }
                     else
                     {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
                        {
                            tbStatusBar.Text = (string)ErrorCode((string)data.SelectToken("error.error_code"), true)["error"];
                            botBtn = false;
@@ -204,17 +204,17 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
-                    {
-                        tbStatusBar.Text = "Не указан идентификатор группы!";
-                        botBtn = false;
-                    }));
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                      {
+                          tbStatusBar.Text = "Не указан идентификатор группы!";
+                          botBtn = false;
+                      }));
 
                     if (open)
                         OpenSettings();
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
             finally
             {
                 Dispatcher.BeginInvoke(new ThreadStart(delegate
@@ -225,7 +225,7 @@ namespace AIRUS_Bot_Moderator
 
                     if (tbStatusBar.Text == "Загрузка данных...")
                         tbStatusBar.Text = "Готово";
-                }));
+                })).Wait();
             }
         }
 
@@ -254,8 +254,8 @@ namespace AIRUS_Bot_Moderator
 
                     Dictionary<string, string> content = new Dictionary<string, string>();
 
-                        foreach (JToken pair in (JToken)data)
-                            content.Add(pair.Path, (string)pair.First);
+                    foreach (JToken pair in (JToken)data)
+                        content.Add(pair.Path, (string)pair.First);
 
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
                     var response = await client.PostAsync(Url, new FormUrlEncodedContent(content));
@@ -285,8 +285,8 @@ namespace AIRUS_Bot_Moderator
                     }
                 }
             }
-            catch (HttpRequestException hre) { Task.Factory.StartNew(() => TextLog(null, hre)); }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (HttpRequestException hre) { Task.Factory.StartNew(() => TextLog(null, hre)).Wait(); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
             Thread.Sleep(350);
             return (JObject)ErrorCode("1");
@@ -301,7 +301,7 @@ namespace AIRUS_Bot_Moderator
 
                 Task.Factory.StartNew(() => LoadingData(false));
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
         }
 
         /// <summary>
@@ -319,25 +319,25 @@ namespace AIRUS_Bot_Moderator
 
 
                 // Приступаем
-                Task.Factory.StartNew(() => SetStatus());
-                Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
+                await Task.Factory.StartNew(() => SetStatus());
+                await Task.Factory.StartNew(() => Log(null, 0, true));
 
                 // Запускаем лог
-                Task.Factory.StartNew(() => ShowLog());
+                await Task.Factory.StartNew(() => ShowLog());
 
 
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
-                {
-                    // Очищаем список заблокированных аккаунтов
-                    lbBannedUsers.Items.Clear();
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                 {
+                     // Очищаем список заблокированных аккаунтов
+                     lbBannedUsers.Items.Clear();
 
-                    // Если стоит галка "банить", то:
-                    if (!Data.Default.Ban)
-                        lbBannedUsers.Items.Add("Отключено в настройках");
+                     // Если стоит галка "банить", то:
+                     if (!Data.Default.Ban)
+                         lbBannedUsers.Items.Add("Отключено в настройках");
 
-                    // Отключаем кнопку запуска бота
-                    bStartBot.IsEnabled = false;
-                }));
+                     // Отключаем кнопку запуска бота
+                     bStartBot.IsEnabled = false;
+                 }));
 
                 // Отправляем индикатор запуска
                 Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null)).Wait();
@@ -388,10 +388,10 @@ namespace AIRUS_Bot_Moderator
                         }
 
                         // Устанавливаем значение прогресс бара
-                        Task.Factory.StartNew(() => SetProgress(true, count));
+                        await Task.Factory.StartNew(() => SetProgress(true, count));
 
                         // Запоминаем статистику
-                        Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+                        await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
@@ -423,12 +423,12 @@ namespace AIRUS_Bot_Moderator
                                     }
 
                                     // Изменяем положение прогресс бара
-                                    Task.Factory.StartNew(() => SetProgress());
+                                    await Task.Factory.StartNew(() => SetProgress());
                                 }
                             }
                             else
                             {
-                                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
                                     tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
                                     bStartBot.IsEnabled = false;
@@ -443,7 +443,7 @@ namespace AIRUS_Bot_Moderator
                     }
                     else
                     {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
                             tbStatusBar.Text = (string)ErrorCode((string)res.SelectToken("error.error_code"), true)["error"];
                             bStartBot.IsEnabled = false;
@@ -454,7 +454,7 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
                      {
                          tbStatusBar.Text = "Ошибка получения настроек! Перезапустите приложение.";
                          bStartBot.IsEnabled = false;
@@ -463,7 +463,7 @@ namespace AIRUS_Bot_Moderator
                     error = true;
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
             finally
             {
                 Task.Factory.StartNew(() => SetStatus("end")).Wait();
@@ -477,7 +477,7 @@ namespace AIRUS_Bot_Moderator
                     Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
                         bStartBot.IsEnabled = true;
-                    }));
+                    })).Wait();
 
                     if (Data.Default.Ban)
                     {
@@ -490,7 +490,7 @@ namespace AIRUS_Bot_Moderator
                         {
                             File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
                                 lbBannedUsers.Items.ToString());
-                        }));
+                        })).Wait();
                     }
 
                     // Обновляем статистику
@@ -527,7 +527,7 @@ namespace AIRUS_Bot_Moderator
 
                 if (result["error"] != null)
                 {
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
                       {
                           tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID: {2}",
                               (string)result.SelectToken("error.error_code"),
@@ -582,7 +582,7 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
                              {
                                  tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID:{2}",
                                      (string)result.SelectToken("error.error_code"),
@@ -596,7 +596,7 @@ namespace AIRUS_Bot_Moderator
                     }
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
         }
 
         /// <summary>
@@ -647,7 +647,7 @@ namespace AIRUS_Bot_Moderator
                     }
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
         }
 
 
@@ -688,7 +688,7 @@ namespace AIRUS_Bot_Moderator
                         return (JObject)ErrorCode((string)response.SelectToken("error.error_code"));
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
             return (JObject)ErrorCode("1");
         }
@@ -747,12 +747,12 @@ namespace AIRUS_Bot_Moderator
                             return true;
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
             return false;
         }
 
-        private void ToBan(string user_id)
+        private async void ToBan(string user_id)
         {
             try
             {
@@ -787,13 +787,13 @@ namespace AIRUS_Bot_Moderator
 
 
                     // Отправляем запрос
-                    POST(Properties.Resources.API + "groups.banUser", data);
+                    await POST(Properties.Resources.API + "groups.banUser", data);
 
                     // Добавляем ID юзера в список
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
         }
 
         /// <summary>
@@ -828,7 +828,7 @@ namespace AIRUS_Bot_Moderator
                     }
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
             return (JObject)ErrorCode("1");
         }
@@ -866,16 +866,16 @@ namespace AIRUS_Bot_Moderator
               }));
         }
 
-        private void SetTimer()
+        private async void SetTimer()
         {
             int i = 0;
 
             while (timer)
             {
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                  {
                      DateTime dt = new DateTime(1970, 1, 1).AddSeconds(i);
-                     tbEndAt.Text = String.Format("0000-00-00 {0}:{1}:{2}", dt.ToString("HH"), dt.ToString("mm"), dt.ToString("ss"));
+                     tbEndAt.Text = String.Format("0000-00-{0:00} {1}:{2}:{3}", (dt.Day-1).ToString(), dt.ToString("HH"), dt.ToString("mm"), dt.ToString("ss"));
                      i++;
                  }));
 
@@ -883,9 +883,9 @@ namespace AIRUS_Bot_Moderator
             }
         }
 
-        private void SetProgress(bool set = false, int value = 100)
+        private async void SetProgress(bool set = false, int value = 100)
         {
-            Dispatcher.BeginInvoke(new ThreadStart(delegate
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 try
                 {
@@ -897,11 +897,11 @@ namespace AIRUS_Bot_Moderator
                     else
                         pbStatus.Value += 1;
                 }
-                catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+                catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
             }));
         }
 
-        private void Log(string path = null, double key = 0, bool clear = false, bool time = false)
+        private async void Log(string path = null, double key = 0, bool clear = false, bool time = false)
         {
             try
             {
@@ -941,7 +941,7 @@ namespace AIRUS_Bot_Moderator
                         log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
 
                         // Выводим логи на экран
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
                             logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
                             logAllComments.Text = (string)log.SelectToken("CurrentComment");
@@ -951,14 +951,14 @@ namespace AIRUS_Bot_Moderator
                     }
                 }
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
         }
 
-        private void TextLog(Exception ex = null, HttpRequestException hre = null)
+        private async void TextLog(Exception ex = null, HttpRequestException hre = null)
         {
             try
             {
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     if (ex != null)
                         tbLog.Text = String.Format("{0}\n\n=============================\n\n{1}", ex.Message, ex.StackTrace);
@@ -969,11 +969,11 @@ namespace AIRUS_Bot_Moderator
             catch (Exception) { }
         }
 
-        private void Timer(int sec = 0)
+        private async void Timer(int sec = 0)
         {
             for (int i = sec; i >= 0; i--)
             {
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
+                await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
                     tbDiff.Text = String.Format("{0}", i.ToString());
                 }));
@@ -1057,7 +1057,7 @@ namespace AIRUS_Bot_Moderator
                          )
                      ));
             }
-            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
             if (str)
                 return new JObject(
@@ -1087,8 +1087,12 @@ namespace AIRUS_Bot_Moderator
                     {
                         await Dispatcher.BeginInvoke(new ThreadStart(delegate
                          {
+                             TimeSpan ts = sWatch.Elapsed;
+
                              tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
-                             tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
+                             tbLog.Text += "Общее время работы: " +
+                                 String.Format("{0}d {1:00}:{2:00}:{3:00}", ts.Days, ts.Hours, ts.Minutes, ts.Seconds) +
+                                 Environment.NewLine + Environment.NewLine;
 
                              tbLog.Text += "Начало цикла: " + tbStartAt.Text + Environment.NewLine;
                              tbLog.Text += "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine;
@@ -1099,13 +1103,13 @@ namespace AIRUS_Bot_Moderator
                              tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
                              tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
                              tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
-                            
+
                              tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
                              tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
                              tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
                          }));
                     }
-                    catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+                    catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
                 await Task.Delay(1000);
             }
