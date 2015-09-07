@@ -28,16 +28,21 @@ namespace AIRUS_Bot_Moderator
 
         private void FormSettings_Loaded(object sender, RoutedEventArgs e)
         {
-            Task.Factory.StartNew(() => LoadingData());
+            LoadingData();
         }
 
-        private void bSaving_Click(object sender, RoutedEventArgs e)
+        private async void bSaving_Click(object sender, RoutedEventArgs e)
         {
             Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 try
                 {
-                    Data.Default.Group = tbGroup.Text.Trim();
+                    // Сохраняем ID группы
+                    if (tbGroup.Text.Trim().IndexOf("/") == -1)
+                        Data.Default.Group = tbGroup.Text.Trim();
+                    else
+                        Data.Default.Group = tbGroup.Text.Trim().Split('/').Last();
+
                     Data.Default.Deactivate = (bool)cbDeactivate.IsChecked;
                     Data.Default.Posts = Convert.ToInt16(tbPosts.Text.Trim());
                     Data.Default.Sleep = Convert.ToInt16(tbSleep.Text.Trim());
@@ -70,13 +75,13 @@ namespace AIRUS_Bot_Moderator
             }));
         }
 
-        private void LoadingData()
+        private async void LoadingData()
         {
-            Dispatcher.BeginInvoke(new ThreadStart(delegate
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 try
                 {
-                    tbGroup.Text = Data.Default.Group; // Имя группы
+                    tbGroup.Text = Data.Default.Group; // Выводим имя группы
                     cbDeactivate.IsChecked = Data.Default.Deactivate; // Деактивация бота
                     tbPosts.Text = Data.Default.Posts.ToString(); // Количество постов
                     tbSleep.Text = Data.Default.Sleep.ToString(); // Ожидание между циклами
@@ -111,17 +116,17 @@ namespace AIRUS_Bot_Moderator
             }));
         }
 
-        private void cbBan_Click(object sender, RoutedEventArgs e)
+        private async void cbBan_Click(object sender, RoutedEventArgs e)
         {
             cbBanPeriod.IsEnabled = (bool)cbBan.IsChecked;
         }
 
-        private void cbDelete_Click(object sender, RoutedEventArgs e)
+        private async void cbDelete_Click(object sender, RoutedEventArgs e)
         {
             tbDeleteDays.IsEnabled = (bool)cbDelete.IsChecked;
         }
 
-        private void cbLikes_Click(object sender, RoutedEventArgs e)
+        private async void cbLikes_Click(object sender, RoutedEventArgs e)
         {
             tbLikesCount.IsEnabled = (bool)cbLikes.IsChecked;
             tbLikesOld.IsEnabled = (bool)cbLikes.IsChecked;

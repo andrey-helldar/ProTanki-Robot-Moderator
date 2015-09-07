@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="AccessToken" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Group" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Sleep" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>

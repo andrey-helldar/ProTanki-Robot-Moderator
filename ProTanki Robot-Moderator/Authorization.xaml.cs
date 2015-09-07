@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Threading.Tasks;
 
 namespace AIRUS_Bot_Moderator
 {
@@ -47,14 +48,12 @@ namespace AIRUS_Bot_Moderator
 
         private void wbAuth_LoadCompleted(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
-            lStatus.Content = "Готово";
-
-            System.Threading.Tasks.Task.Factory.StartNew(() => GetToken());
+            GetToken();
         }
 
-        private void GetToken()
+        private async void GetToken()
         {
-            Dispatcher.BeginInvoke(new System.Threading.ThreadStart(delegate
+            await Dispatcher.BeginInvoke(new System.Threading.ThreadStart(delegate
             {
                 try
                 {
@@ -68,6 +67,8 @@ namespace AIRUS_Bot_Moderator
                             this.Close();
                             break;
                         }
+
+                    lStatus.Content = "Готово";
                 }
                 catch (Exception) { lStatus.Content = "err"; }
             }));
