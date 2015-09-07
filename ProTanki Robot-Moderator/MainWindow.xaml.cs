@@ -76,7 +76,7 @@ namespace AIRUS_Bot_Moderator
 
             try
             {
-                await Dispatcher.BeginInvoke(new ThreadStart(delegate()
+                Dispatcher.BeginInvoke(new ThreadStart(delegate()
                 {
                     // Отключаем кнопки
                     bAuthorize.IsEnabled = false;
@@ -105,14 +105,14 @@ namespace AIRUS_Bot_Moderator
                         this.Closing += delegate { APPSecret = null; };
 
                         // Получаем идентификатор группы
-                        JObject group = await GetGroup();
+                        JObject group = GetGroup();
 
                         if (group["error"] == null)
                         {
                             groupId = (string)group["id"];
 
                             // Устанавливаем заголовок приложения
-                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
                             {
                                 this.Title = Application.Current.GetType().Assembly.GetName().Name +
                                     " v" + Application.Current.GetType().Assembly.GetName().Version.ToString() +
@@ -138,7 +138,7 @@ namespace AIRUS_Bot_Moderator
 
                             if (log.Length > 0)
                             {
-                                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
                                     tbStatusBar.Text = log;
                                     botBtn = false;
@@ -147,12 +147,12 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                            {
-                                var qw = (string)group.SelectToken("error.error_code");
-                                tbStatusBar.Text = (string)ErrorCode((string)group.SelectToken("error.error_code"), true)["error"];
-                                botBtn = false;
-                            }));
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
+                           {
+                               var qw = (string)group.SelectToken("error.error_code");
+                               tbStatusBar.Text = (string)ErrorCode((string)group.SelectToken("error.error_code"), true)["error"];
+                               botBtn = false;
+                           }));
                         }
 
 
@@ -161,7 +161,7 @@ namespace AIRUS_Bot_Moderator
                         {
                             if (Data.Default.AccessToken.Length > 0)
                             {
-                                JObject authorLike = await POST(Properties.Resources.API + "likes.isLiked",
+                                JObject authorLike = POST(Properties.Resources.API + "likes.isLiked",
                                     new JObject(
                                         new JProperty("type", "post"),
                                         new JProperty("owner_id", Properties.Resources.AuthorGroup),
@@ -173,21 +173,21 @@ namespace AIRUS_Bot_Moderator
                                 {
                                     if ((int)authorLike.SelectToken("response.liked") == 0)
                                     {
-                                        await POST(Properties.Resources.API + "likes.add",
-                                         new JObject(
-                                             new JProperty("type", "post"),
-                                             new JProperty("owner_id", Properties.Resources.AuthorGroup),
-                                             new JProperty("item_id", Properties.Resources.AuthorPost),
-                                             new JProperty("access_key", Data.Default.AccessToken)
-                                     ));
+                                        POST(Properties.Resources.API + "likes.add",
+                                        new JObject(
+                                            new JProperty("type", "post"),
+                                            new JProperty("owner_id", Properties.Resources.AuthorGroup),
+                                            new JProperty("item_id", Properties.Resources.AuthorPost),
+                                            new JProperty("access_key", Data.Default.AccessToken)
+                                    ));
                                     }
                                 }
                                 else
                                 {
-                                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                                    {
-                                        tbStatusBar.Text = (string)ErrorCode((string)authorLike.SelectToken("error.error_code"), true)["error"];
-                                    }));
+                                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                   {
+                                       tbStatusBar.Text = (string)ErrorCode((string)authorLike.SelectToken("error.error_code"), true)["error"];
+                                   }));
                                 }
                             }
                         }
@@ -195,16 +195,16 @@ namespace AIRUS_Bot_Moderator
                     }
                     else
                     {
-                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                        {
-                            tbStatusBar.Text = (string)ErrorCode((string)data.SelectToken("error.error_code"), true)["error"];
-                            botBtn = false;
-                        }));
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                       {
+                           tbStatusBar.Text = (string)ErrorCode((string)data.SelectToken("error.error_code"), true)["error"];
+                           botBtn = false;
+                       }));
                     }
                 }
                 else
                 {
-                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
                         tbStatusBar.Text = "Не указан идентификатор группы!";
                         botBtn = false;
@@ -229,7 +229,7 @@ namespace AIRUS_Bot_Moderator
             }
         }
 
-        public async Task<JObject> POST(string Url, JObject data = null, int errors = 0)
+        public JObject POST(string Url, JObject data = null, int errors = 0)
         {
             try
             {
@@ -251,7 +251,7 @@ namespace AIRUS_Bot_Moderator
 
                     if (response.IsSuccessStatusCode)
                     {
-                        JObject obj = JObject.Parse(await response.Content.ReadAsStringAsync());
+                        JObject obj = JObject.Parse(response.Content.ReadAsStringAsync().Result);
                         Task.Delay(350).Wait();
 
                         if (obj["error"] == null)
@@ -265,7 +265,7 @@ namespace AIRUS_Bot_Moderator
                                 if (errors < Data.Default.MaxPostErrors)
                                 {
                                     errors++;
-                                    return await POST(Url, data, errors);
+                                    return POST(Url, data, errors);
                                 }
                             }
                         }
@@ -297,156 +297,163 @@ namespace AIRUS_Bot_Moderator
         /// Получаем список постов на странице. Перебираем все
         /// </summary>
         /// <returns></returns>
-        private void WallGet()
+        private void WallGet(bool firstStart = false)
         {
             try
             {
-                // Приступаем
-                Task.Factory.StartNew(() => SetStatus());
-                Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
+                // Первый запуск?
+                if (firstStart)
+                    // Обнуляем логи
+                    Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
+                
 
-                // Запускаем лог
-                Task.Factory.StartNew(() => ShowLog());
+                                // Приступаем
+                                Task.Factory.StartNew(() => SetStatus()).Wait();
+                /*          Task.Factory.StartNew(() => Log(null, 0, true));
 
+                          // Запускаем лог
+                          Task.Factory.StartNew(() => ShowLog());
 
-                Dispatcher.BeginInvoke(new ThreadStart(delegate
-                {
-                    // Очищаем список заблокированных аккаунтов
-                    lbBannedUsers.Items.Clear();
+                
+                                          Dispatcher.BeginInvoke(new Action(delegate
+                                          {
+                                              // Очищаем список заблокированных аккаунтов
+                                              lbBannedUsers.Items.Clear();
 
-                    // Если стоит галка "банить", то:
-                    if (!Data.Default.Ban)
-                        lbBannedUsers.Items.Add("Отключено в настройках");
+                                              // Если стоит галка "банить", то:
+                                              if (!Data.Default.Ban)
+                                                  lbBannedUsers.Items.Add("Отключено в настройках");
 
-                    // Отключаем кнопку запуска бота
-                    bStartBot.IsEnabled = false;
-                }));
+                                              // Отключаем кнопку запуска бота
+                                              bStartBot.IsEnabled = false;
+                                          }));
 
-                // Отправляем индикатор запуска
-                Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null)).Wait();
+                                          // Отправляем индикатор запуска
+                                          Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null)).Wait();
 
-                // Запоминаем ID в настройки
-                if (
-                    Data.Default.AccessToken.Length > 0 &&
-                    appId != null &&
-                    appSecret != null &&
-                    groupId != null
-                    )
-                {
-                    // Устанавливаем переменную
-                    int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
+                                          // Запоминаем ID в настройки
+                                          if (
+                                              Data.Default.AccessToken.Length > 0 &&
+                                              appId != null &&
+                                              appSecret != null &&
+                                              groupId != null
+                                              )
+                                          {
+                                              // Устанавливаем переменную
+                                              int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
-                    JToken res = (JToken)POST(Properties.Resources.API + "wall.get",
-                        new JObject(
-                            new JProperty("owner_id", groupId),
-                            new JProperty("offset", 0),
-                            new JProperty("count", max_posts.ToString()),
-                            new JProperty("filter", "all")
-                        )
-                    ).Result;
+                                              JToken res = (JToken)POST(Properties.Resources.API + "wall.get",
+                                                  new JObject(
+                                                      new JProperty("owner_id", groupId),
+                                                      new JProperty("offset", 0),
+                                                      new JProperty("count", max_posts.ToString()),
+                                                      new JProperty("filter", "all")
+                                                  )
+                                              );
 
-                    if (res["response"] != null)
-                    {
-                        res = (JToken)res.SelectToken("response");
+                                              if (res["response"] != null)
+                                              {
+                                                  res = (JToken)res.SelectToken("response");
 
-                        //  Получаем общее количество записей
-                        int count = (int)res["count"];
+                                                  //  Получаем общее количество записей
+                                                  int count = (int)res["count"];
 
-                        // Вычисляем количество шагов для поста
-                        int step = 0;
+                                                  // Вычисляем количество шагов для поста
+                                                  int step = 0;
 
-                        if (count <= 100)
-                        {
-                            step = 1;
-                        }
-                        else
-                        {
-                            if (Data.Default.Posts > 0 && !first)
-                                count = Data.Default.Posts;
+                                                  if (count <= 100)
+                                                  {
+                                                      step = 1;
+                                                  }
+                                                  else
+                                                  {
+                                                      if (Data.Default.Posts > 0 && !first)
+                                                          count = Data.Default.Posts;
 
-                            if (count % max_posts == 0)
-                                step = count / max_posts;
-                            else
-                                step = (count / max_posts) + 1;
-                        }
+                                                      if (count % max_posts == 0)
+                                                          step = count / max_posts;
+                                                      else
+                                                          step = (count / max_posts) + 1;
+                                                  }
 
-                        // Устанавливаем значение прогресс бара
-                        Task.Factory.StartNew(() => SetProgress(true, count));
+                                                  // Устанавливаем значение прогресс бара
+                                                  Task.Factory.StartNew(() => SetProgress(true, count));
 
-                        // Запоминаем статистику
-                        Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+                                                  // Запоминаем статистику
+                                                  Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
-                        // Перебираем записи по шагам
-                        for (int i = 0; i < step; i++)
-                        {
-                            res = POST(Properties.Resources.API + "wall.get",
-                                new JObject(
-                                    new JProperty("owner_id", groupId),
-                                    new JProperty("offset", (max_posts * i).ToString()),
-                                    new JProperty("count", max_posts.ToString()),
-                                    new JProperty("filter", "all")
-                                )
-                            ).Result;
+                                                  // Перебираем записи по шагам
+                                                  for (int i = 0; i < step; i++)
+                                                  {
+                                                      res = POST(Properties.Resources.API + "wall.get",
+                                                          new JObject(
+                                                              new JProperty("owner_id", groupId),
+                                                              new JProperty("offset", (max_posts * i).ToString()),
+                                                              new JProperty("count", max_posts.ToString()),
+                                                              new JProperty("filter", "all")
+                                                          )
+                                                      );
 
-                            if (res["response"] != null)
-                            {
-                                Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+                                                      if (res["response"] != null)
+                                                      {
+                                                          Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
-                                res = (JToken)res.SelectToken("response.items");
+                                                          res = (JToken)res.SelectToken("response.items");
 
-                                for (int j = 0; j < res.Count(); j++)
-                                {
-                                    Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
+                                                          for (int j = 0; j < res.Count(); j++)
+                                                          {
+                                                              Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
 
-                                    // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
-                                    if ((int)res[j]["comments"]["count"] > 0)
-                                    {
-                                        // Читаем комменты к записи
-                                        WallGetComments((string)res[j]["id"]);
-                                    }
+                                                              // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
+                                                              if ((int)res[j]["comments"]["count"] > 0)
+                                                              {
+                                                                  // Читаем комменты к записи
+                                                                  WallGetComments((string)res[j]["id"]);
+                                                              }
 
-                                    // Изменяем положение прогресс бара
-                                    Task.Factory.StartNew(() => SetProgress());
-                                }
-                            }
-                            else
-                            {
-                                Dispatcher.BeginInvoke(new ThreadStart(delegate
-                                {
-                                    tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
-                                    bStartBot.IsEnabled = false;
-                                }));
+                                                              // Изменяем положение прогресс бара
+                                                              Task.Factory.StartNew(() => SetProgress());
+                                                          }
+                                                      }
+                                                      else
+                                                      {
+                                                          Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                                          {
+                                                              tbLog.Text = String.Format("Error: {0}\n{1}", (string)res.SelectToken("error.error_code"), (string)res.SelectToken("error.error_msg"));
+                                                              bStartBot.IsEnabled = false;
+                                                          }));
 
-                                error = true;
+                                                          error = true;
 
-                                // Принудительно выходим из цикла
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
-                        {
-                            tbStatusBar.Text = (string)ErrorCode((string)res.SelectToken("error.error_code"), true)["error"];
-                            bStartBot.IsEnabled = false;
-                        }));
+                                                          // Принудительно выходим из цикла
+                                                          break;
+                                                      }
+                                                  }
+                                              }
+                                              else
+                                              {
+                                                  Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                                  {
+                                                      tbStatusBar.Text = (string)ErrorCode((string)res.SelectToken("error.error_code"), true)["error"];
+                                                      bStartBot.IsEnabled = false;
+                                                  }));
 
-                        error = true;
-                    }
-                }
-                else
-                {
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
-                     {
-                         tbStatusBar.Text = "Ошибка получения настроек! Перезапустите приложение.";
-                         bStartBot.IsEnabled = false;
-                     }));
+                                                  error = true;
+                                              }
+                                          }
+                                          else
+                                          {
+                                              Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                               {
+                                                   tbStatusBar.Text = "Ошибка получения настроек! Перезапустите приложение.";
+                                                   bStartBot.IsEnabled = false;
+                                               }));
 
-                    error = true;
-                }
+                                              error = true;
+                                          }
+                                          */
             }
-            catch (Exception ex) { TextLog(ex); }
+            catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
             finally
             {
                 Task.Factory.StartNew(() => SetStatus("end"));
@@ -480,18 +487,20 @@ namespace AIRUS_Bot_Moderator
                     if (!Data.Default.Deactivate)
                         Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep);
                 }
+                string qw = "";
             }
+
         }
 
         /// <summary>
         /// Получаем комменты к конкретной записи и проверяем дату жизни и лайки)))
         /// </summary>
         /// <param name="postId"></param>
-        private async void WallGetComments(string postId)
+        private void WallGetComments(string postId)
         {
             try
             {
-                JObject result = await POST(Properties.Resources.API + "wall.getComments",
+                JObject result = POST(Properties.Resources.API + "wall.getComments",
                     new JObject(
                         new JProperty("owner_id", groupId),
                         new JProperty("post_id", postId),
@@ -505,7 +514,7 @@ namespace AIRUS_Bot_Moderator
 
                 if (result["error"] != null)
                 {
-                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
                       {
                           tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID: {2}",
                               (string)result.SelectToken("error.error_code"),
@@ -530,7 +539,7 @@ namespace AIRUS_Bot_Moderator
                     // Перебираем записи по шагам
                     for (int i = 0; i < step; i++)
                     {
-                        res = await POST(Properties.Resources.API + "wall.getComments",
+                        res = POST(Properties.Resources.API + "wall.getComments",
                             new JObject(
                                 new JProperty("owner_id", groupId),
                                 new JProperty("post_id", postId),
@@ -560,7 +569,7 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                            Dispatcher.BeginInvoke(new ThreadStart(delegate
                              {
                                  tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID:{2}",
                                      (string)result.SelectToken("error.error_code"),
@@ -581,11 +590,11 @@ namespace AIRUS_Bot_Moderator
         /// Удаляем коммент, если он не прошел отбор
         /// </summary>
         /// <param name="commentId"></param>
-        private async void WallDeleteComment(string commentId, JToken token = null, string postId = null)
+        private void WallDeleteComment(string commentId, JToken token = null, string postId = null)
         {
             try
             {
-                JObject response = await POST(Properties.Resources.API + "wall.deleteComment",
+                JObject response = POST(Properties.Resources.API + "wall.deleteComment",
                     new JObject(
                         new JProperty("owner_id", groupId),
                         new JProperty("comment_id", commentId)
@@ -621,7 +630,7 @@ namespace AIRUS_Bot_Moderator
                             Directory.CreateDirectory(dir);
 
                         // Записываем лог
-                        File.WriteAllText(dir + commentId + ".json", token.ToString());
+                        File.WriteAllText(dir + commentId + ".json", String.Format("{0}\n\n{1}", token.ToString(), response.ToString()));
                     }
                 }
             }
@@ -634,13 +643,13 @@ namespace AIRUS_Bot_Moderator
         /// </summary>
         /// <param name="name">Имя группы или сообщества</param>
         /// <returns>ID</returns>
-        private async Task<JObject> GetGroup()
+        private JObject GetGroup()
         {
             try
             {
                 if (Data.Default.Group.Length > 0)
                 {
-                    JObject response = await POST(Properties.Resources.API + "groups.getById",
+                    JObject response = POST(Properties.Resources.API + "groups.getById",
                         new JObject(
                             new JProperty("group_ids", Data.Default.Group)
                         )
@@ -649,7 +658,7 @@ namespace AIRUS_Bot_Moderator
                     if (response["response"] != null)
                     {
                         // Получаем ответ
-                        JToken token = await CheckModerAccess((string)response["response"][0]["id"]);
+                        JToken token = (JToken)CheckModerAccess((string)response["response"][0]["id"]);
 
                         // Проверяем имеет ли юзер права модера группы
                         if (token == null)
@@ -673,8 +682,7 @@ namespace AIRUS_Bot_Moderator
 
         private void bStartBot_Click(object sender, RoutedEventArgs e)
         {
-            Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
-            Task.Factory.StartNew(() => WallGet());
+            Task.Factory.StartNew(() => WallGet(true));
         }
 
         /// <summary>
@@ -731,7 +739,7 @@ namespace AIRUS_Bot_Moderator
             return false;
         }
 
-        private async void ToBan(string user_id)
+        private void ToBan(string user_id)
         {
             try
             {
@@ -766,10 +774,10 @@ namespace AIRUS_Bot_Moderator
 
 
                     // Отправляем запрос
-                    await POST(Properties.Resources.API + "groups.banUser", data);
+                    POST(Properties.Resources.API + "groups.banUser", data);
 
                     // Добавляем ID юзера в список
-                    await Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
                 }
             }
             catch (Exception ex) { TextLog(ex); }
@@ -778,7 +786,7 @@ namespace AIRUS_Bot_Moderator
         /// <summary>
         /// Проверяем является ли юзер модератором группы
         /// </summary>
-        private async Task<JToken> CheckModerAccess(string id = null)
+        private JObject CheckModerAccess(string id = null)
         {
             try
             {
@@ -786,7 +794,7 @@ namespace AIRUS_Bot_Moderator
                 {
                     if (Data.Default.Group.Length > 0)
                     {
-                        JObject response = await POST(Properties.Resources.API + "groups.get",
+                        JObject response = POST(Properties.Resources.API + "groups.get",
                             new JObject(
                                 new JProperty("extended", 1),
                                 new JProperty("filter", "moder"),
@@ -803,59 +811,60 @@ namespace AIRUS_Bot_Moderator
                                         return null;
                         }
                         else
-                        {
-                            return ErrorCode((string)response.SelectToken("error.error_code"));
-                        }
+                            return (JObject)ErrorCode((string)response.SelectToken("error.error_code"));
                     }
                 }
             }
             catch (Exception ex) { TextLog(ex); }
 
-            return ErrorCode("1");
+            return (JObject)ErrorCode("1");
         }
 
-        private async Task<bool> SetStatus(string block = "start")
+        private void SetStatus(string block = "start")
         {
-            await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                {
-                    try
+            try
+            {
+                string qwe = "";
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
-                        switch (block)
+                        try
                         {
-                            case "end":
-                                tbStatus.Text = "Отдыхаем";
-                                bStartBot.IsEnabled = true;
+                            switch (block)
+                            {
+                                case "end":
+                                    tbStatus.Text = "Отдыхаем";
+                                    bStartBot.IsEnabled = true;
 
-                                timer = false;
-                                break;
+                                    timer = false;
+                                    break;
 
-                            default:
-                                tbStartAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-                                tbStatus.Text = "Работаем...";
-                                bStartBot.IsEnabled = false;
+                                default:
+                                    tbStartAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+                                    tbStatus.Text = "Работаем...";
+                                    bStartBot.IsEnabled = false;
 
-                                timer = true;
-                                SetTimer();
-                                break;
+                                    timer = true;
+                                    SetTimer();
+                                    break;
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        bStartBot.IsEnabled = true;
-                        TextLog(ex);
-                    }
-                }));
-
-            return true;
+                        catch (Exception ex)
+                        {
+                            bStartBot.IsEnabled = true;
+                            TextLog(ex);
+                        }
+                    }));
+            }
+            catch (Exception) { }
         }
 
-        private async void SetTimer()
+        private void SetTimer()
         {
             int i = 0;
 
             while (timer)
             {
-                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                  {
                      DateTime dt = new DateTime(1970, 1, 1).AddSeconds(i);
                      tbEndAt.Text = String.Format("0000-00-00 {0}:{1}:{2}", dt.ToString("HH"), dt.ToString("mm"), dt.ToString("ss"));
@@ -866,9 +875,9 @@ namespace AIRUS_Bot_Moderator
             }
         }
 
-        private async void SetProgress(bool set = false, int value = 100)
+        private void SetProgress(bool set = false, int value = 100)
         {
-            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
             {
                 try
                 {
@@ -997,7 +1006,7 @@ namespace AIRUS_Bot_Moderator
                     case "2": error = "Приложение выключено."; break;
                     case "3": error = "Передан неизвестный метод."; break;
                     case "4": error = "Неверная подпись."; break;
-                    case "5": error = "Авторизация пользователя не удалась."; break;
+                    case "5": error = "Требуется авторизация пользователя."; break;
                     case "6": error = "Слишком много запросов в секунду."; break;
                     case "7": error = "Нет прав для выполнения этого действия."; break;
                     case "8": error = "Неверный запрос."; break;
@@ -1058,37 +1067,39 @@ namespace AIRUS_Bot_Moderator
         /// </summary>
         private void ShowLog()
         {
-            while (true)
-            {
-                if (!error)
-                    try
-                    {
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
-                        {
-                            tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
-                            tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
+            /* while (true)
+             {
+                 if (!error)
+                     try
+                     {
+                         Dispatcher.BeginInvoke(new ThreadStart(delegate
+                         {
+                             tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
+                             tbLog.Text += "Общее время работы: " + sWatch.Elapsed.ToString() + Environment.NewLine + Environment.NewLine;
 
-                            tbLog.Text += "Начало цикла: " + tbStartAt.Text + Environment.NewLine;
-                            tbLog.Text += "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine;
-                            tbLog.Text += "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine;
-                            tbLog.Text += "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine;
+                             tbLog.Text += "Начало цикла: " + tbStartAt.Text + Environment.NewLine;
+                             tbLog.Text += "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine;
+                             tbLog.Text += "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine;
+                             tbLog.Text += "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine;
 
-                            tbLog.Text += "Постов: " + (string)log["AllPosts"] + Environment.NewLine;
-                            tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
-                            tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
-                            tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
+                             tbLog.Text += "Постов: " + (string)log["AllPosts"] + Environment.NewLine;
+                             tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
+                             tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
+                             tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
 
-                            log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
-                            log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
-                            log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
+                             log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
+                             log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
+                             log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
 
-                            tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
-                            tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
-                            tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
-                        }));
-                    }
-                    catch (Exception ex) { TextLog(ex); }
-            }
+                             tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
+                             tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
+                             tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
+                         }));
+                     }
+                     catch (Exception ex) { TextLog(ex); }
+
+                 Task.Delay(1000);
+             }*/
         }
     }
 }
