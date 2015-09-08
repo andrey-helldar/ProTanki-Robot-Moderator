@@ -58,6 +58,9 @@ namespace AIRUS_Bot_Moderator
 
         Stopwatch sWatch = new Stopwatch();
 
+        // Иконка в трее
+        private System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
+
 
         public MainWindow()
         {
@@ -67,8 +70,28 @@ namespace AIRUS_Bot_Moderator
             this.Title = Application.Current.GetType().Assembly.GetName().Name +
                 " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
 
+            // Выводим иконку в трее
+            Task.Factory.StartNew(() => ShowIcon());
+
             // Загружаем данные
             Task.Factory.StartNew(() => LoadingData());
+        }
+
+        private async void ShowNotify(string text)
+        {
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                try
+                {
+                    notifyIcon.ShowBalloonTip(
+                        5000,
+                        Application.Current.GetType().Assembly.GetName().Name,
+                        text,
+                        System.Windows.Forms.ToolTipIcon.Info
+                    );
+                }
+                catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            }));
         }
 
         //private void LoadingData(bool open = true)
@@ -105,6 +128,7 @@ namespace AIRUS_Bot_Moderator
 
                         this.Closing += delegate { APPId = null; };
                         this.Closing += delegate { APPSecret = null; };
+                        this.Closing += delegate { notifyIcon = null; };
 
                         // Получаем идентификатор группы
                         JObject group = await GetGroup();
