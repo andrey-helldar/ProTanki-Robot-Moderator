@@ -71,10 +71,47 @@ namespace AIRUS_Bot_Moderator
                 " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
 
             // Выводим иконку в трее
-            Task.Factory.StartNew(() => ShowIcon());
+            Task.Factory.StartNew(() => NotifyIcon(true));
 
             // Загружаем данные
             Task.Factory.StartNew(() => LoadingData());
+        }
+
+        private async void NotifyIcon(bool first = false)
+        {
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                try
+                {
+                    Stream iconStream = Application.GetResourceStream(new Uri(String.Format(@"pack://application:,,,/{0};component/Resources/favicon.ico", Application.Current.GetType().Assembly.GetName().Name))).Stream;
+                    if (iconStream != null) notifyIcon.Icon = new System.Drawing.Icon(iconStream);
+                    notifyIcon.Visible = true;
+                    notifyIcon.Text = Application.Current.GetType().Assembly.GetName().Name + " v" + Application.Current.GetType().Assembly.GetName().Version.ToString();
+                    notifyIcon.Click += delegate(object sender, EventArgs args)
+                    {
+                        this.Show();
+                        this.WindowState = WindowState.Normal;
+                    };
+                }
+                catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            }));
+
+
+            string mess = "Приветствую тебя";
+
+            if (Data.Default.AccessToken.Length > 0)
+            {
+                JObject obj = await POST(Properties.Resources.API + "users.get", null);
+
+                if (obj["response"] != null)
+                    mess += String.Format(", {0}!", (string)obj["response"].First["first_name"]);
+                else
+                    mess += "!";
+            }
+            else
+                mess += "!";
+
+            Task.Factory.StartNew(() => ShowNotify(mess));
         }
 
         private async void ShowNotify(string text)
@@ -510,6 +547,28 @@ namespace AIRUS_Bot_Moderator
 
                     Task.Factory.StartNew(() => Log("Circles")).Wait();
                     Task.Factory.StartNew(() => SetStatus("end"));
+
+                    string time = "";
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        {
+                            time = tbEndAt.Text;
+                        })).Wait();
+
+                    // Выводим инфу в иконку
+                    Task.Factory.StartNew(() => ShowNotify(String.Format(
+                        "Общее количество циклов: {0}\n" +
+                        "Продолжительность: {1}\n" +
+                        "Постов: {2}\n" +
+                        "Комментариев: {3}\n" +
+                        "Удалено комментариев: {4} / {5}%",
+                        (string)log["Circles"],
+                        time,
+                        (string)log["AllPosts"],
+                        (string)log["CurrentComment"],
+                        (string)log["Deleted"],
+                        (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString()
+                        )));
+
 
                     // Ждем и повторяем
                     if (!Data.Default.Deactivate)
