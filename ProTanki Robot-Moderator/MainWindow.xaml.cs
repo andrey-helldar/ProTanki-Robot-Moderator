@@ -555,19 +555,22 @@ namespace AIRUS_Bot_Moderator
                         })).Wait();
 
                     // Выводим инфу в иконку
-                    Task.Factory.StartNew(() => ShowNotify(String.Format(
-                        "Общее количество циклов: {0}\n" +
-                        "Продолжительность: {1}\n" +
-                        "Постов: {2}\n" +
-                        "Комментариев: {3}\n" +
-                        "Удалено комментариев: {4} / {5}%",
-                        (string)log["Circles"],
-                        time,
-                        (string)log["AllPosts"],
-                        (string)log["CurrentComment"],
-                        (string)log["Deleted"],
-                        (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString()
-                        )));
+                    if (Data.Default.Notify)
+                    {
+                        Task.Factory.StartNew(() => ShowNotify(String.Format(
+                            "Общее количество циклов: {0}\n" +
+                            "Продолжительность: {1}\n" +
+                            "Постов: {2}\n" +
+                            "Комментариев: {3}\n" +
+                            "Удалено комментариев: {4} / {5}%",
+                            (string)log["Circles"],
+                            time,
+                            (string)log["AllPosts"],
+                            (string)log["CurrentComment"],
+                            (string)log["Deleted"],
+                            (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString()
+                            )));
+                    }
 
 
                     // Ждем и повторяем

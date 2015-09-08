@@ -354,5 +354,17 @@ namespace AIRUS_Bot_Moderator {
                 this["WordsBanDefault"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Notify {
+            get {
+                return ((bool)(this["Notify"]));
+            }
+            set {
+                this["Notify"] = value;
+            }
+        }
     }
 }

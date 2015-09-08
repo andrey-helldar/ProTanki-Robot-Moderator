@@ -44,6 +44,7 @@ namespace AIRUS_Bot_Moderator
                          Data.Default.Group = tbGroup.Text.Trim().Split('/').Last();
 
                      Data.Default.Deactivate = (bool)cbDeactivate.IsChecked;
+                     Data.Default.Notify = (bool)cbNotify.IsChecked;
                      Data.Default.Posts = Convert.ToInt16(tbPosts.Text.Trim());
                      Data.Default.Sleep = Convert.ToInt16(tbSleep.Text.Trim());
                      Data.Default.Length = Convert.ToInt16(tbLength.Text.Trim());
@@ -104,6 +105,7 @@ namespace AIRUS_Bot_Moderator
                 {
                     tbGroup.Text = Data.Default.Group; // Выводим имя группы
                     cbDeactivate.IsChecked = Data.Default.Deactivate; // Деактивация бота
+                    cbNotify.IsChecked = Data.Default.Notify; // Уведомлять ли юзера всплывающими сообщениями
                     tbPosts.Text = Data.Default.Posts.ToString(); // Количество постов
                     tbSleep.Text = Data.Default.Sleep.ToString(); // Ожидание между циклами
                     tbLength.Text = Data.Default.Length.ToString(); // Минимальное количество символов в комментарии

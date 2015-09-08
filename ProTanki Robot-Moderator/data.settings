@@ -163,5 +163,8 @@
 	]
 }</Value>
     </Setting>
+    <Setting Name="Notify" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
