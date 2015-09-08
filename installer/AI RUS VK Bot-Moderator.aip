@@ -20,10 +20,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="https://ai-rus.com"/>
     <ROW Property="CTRLS" Value="3"/>
     <ROW Property="Manufacturer" Value="AI RUS - Professional IT support"/>
-    <ROW Property="ProductCode" Value="1033:{9DE54A60-38CA-4CDE-8C5A-3FEB62DB3C2A} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{E8C09EE8-05D5-4EB4-AA96-878939C3BB0C} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="AI RUS VK Bot-Moderator"/>
-    <ROW Property="ProductVersion" Value="2.23.5726.38841" Type="32"/>
+    <ROW Property="ProductVersion" Value="3.26.5729.40304" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{A0EE2729-3562-499A-8FEE-50976DDFF061}"/>
@@ -56,7 +56,7 @@
     <ROW Component="airus.ico" ComponentId="{3D50E085-349C-4E32-918E-A06633D7B23C}" Directory_="APPDIR" Attributes="0" KeyPath="airus.ico" Type="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="C046B66AD422FACB3E9EFCC48928A" Title="Adobe Reader XI" Description="Adobe Reader XI" Display="3" Level="1" Attributes="0" Components="C046B66AD422FACB3E9EFCC48928A"/>
+    <ROW Feature="C046B66AD422FACB3E9EFCC48928A" Title="Adobe Reader XI" Description="Adobe Reader XI" Display="3" Level="1" Attributes="0" Components="AI_ExePath C046B66AD422FACB3E9EFCC48928A"/>
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AIRUSBotModerator.exe AIRUSProfessionalITsupport AI_ExePath InstructionAIRUSVKBotModerator.pdf Newtonsoft.Json.dll ProductInformation airus.ico"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>

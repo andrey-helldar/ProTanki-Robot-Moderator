@@ -37,7 +37,7 @@ namespace AIRUS_Bot_Moderator {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ai_rus")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Group {
             get {
                 return ((string)(this["Group"]));
