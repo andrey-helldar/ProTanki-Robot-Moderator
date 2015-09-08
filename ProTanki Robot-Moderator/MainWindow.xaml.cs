@@ -54,6 +54,8 @@ namespace AIRUS_Bot_Moderator
 
         bool error = false;
 
+        Task wallGet = null;
+
         Stopwatch sWatch = new Stopwatch();
 
 
@@ -221,6 +223,16 @@ namespace AIRUS_Bot_Moderator
                 {
                     bAuthorize.IsEnabled = true;
                     bSettings.IsEnabled = true;
+
+                    // Если процесс запущен, запрещаем активацию кнопки старта бота
+                    if ((wallGet != null) && (
+                        wallGet.IsCompleted == false ||
+                        wallGet.Status == TaskStatus.Running ||
+                        wallGet.Status == TaskStatus.WaitingToRun ||
+                        wallGet.Status == TaskStatus.WaitingForActivation
+                        ))
+                        botBtn = false;
+
                     bStartBot.IsEnabled = botBtn;
 
                     if (tbStatusBar.Text == "Загрузка данных...")
@@ -675,7 +687,7 @@ namespace AIRUS_Bot_Moderator
 
         private void bStartBot_Click(object sender, RoutedEventArgs e)
         {
-            Task.Factory.StartNew(() => WallGet(true));
+            wallGet = Task.Factory.StartNew(() => WallGet(true));
         }
 
         /// <summary>
