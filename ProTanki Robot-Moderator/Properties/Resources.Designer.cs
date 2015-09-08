@@ -122,14 +122,5 @@ namespace AIRUS_Bot_Moderator.Properties {
                 return ResourceManager.GetString("Version", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://vk.com/id.
-        /// </summary>
-        internal static string VK {
-            get {
-                return ResourceManager.GetString("VK", resourceCulture);
-            }
-        }
     }
 }

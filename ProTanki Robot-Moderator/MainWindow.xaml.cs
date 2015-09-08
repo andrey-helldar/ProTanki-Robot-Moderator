@@ -467,24 +467,6 @@ namespace AIRUS_Bot_Moderator
                 {
                     first = false;
 
-                    if (Data.Default.Ban)
-                    {
-                        // Сохраняем ID забаненных
-                        string dir = @"banned\";
-                        if (!Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
-
-                        Dispatcher.BeginInvoke(new ThreadStart(delegate
-                        {
-                            string output = "";
-                            foreach (var line in lbBannedUsers.Items)
-                                output += line.ToString() + Environment.NewLine;
-
-                            File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
-                                output);
-                        })).Wait();
-                    }
-
                     // Обновляем статистику
                     log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
                     log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
@@ -745,7 +727,7 @@ namespace AIRUS_Bot_Moderator
                             if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
                             {
                                 // Отправляем пользователя в бан
-                                ToBan((string)token["from_id"]);
+                                ToBan(token);
 
                                 // Возвращаем ответ на удаление комментария
                                 return true;
@@ -769,7 +751,7 @@ namespace AIRUS_Bot_Moderator
             return false;
         }
 
-        private async void ToBan(string user_id)
+        private async void ToBan(JToken token)
         {
             try
             {
@@ -777,7 +759,12 @@ namespace AIRUS_Bot_Moderator
                 {
                     JObject data = new JObject(
                         new JProperty("group_id", groupId),
-                        new JProperty("user_id", user_id)
+                        new JProperty("user_id", (string)token["from_id"]),
+                        new JProperty("reason", 1),
+                        new JProperty("comment", String.Format("{0} :: {1}",
+                            Application.Current.GetType().Assembly.GetName().Name,
+                            (string)token["text"]
+                        ))
                     );
 
                     // Определяем срок бана
@@ -806,8 +793,16 @@ namespace AIRUS_Bot_Moderator
                     // Отправляем запрос
                     await POST(Properties.Resources.API + "groups.banUser", data);
 
-                    // Добавляем ID юзера в список
-                    await Dispatcher.BeginInvoke(new ThreadStart(delegate { lbBannedUsers.Items.Add(Properties.Resources.VK + user_id); }));
+                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                    {
+                        // Добавляем ID юзера в список
+                        lbBannedUsers.Items.Add("id" + (string)token["from_id"]);
+
+                        string dir = @"banned";
+                        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+                        File.AppendAllText(String.Format(@"{0}\id{1}.json", dir, (string)token["from_id"]), token.ToString() + Environment.NewLine + Environment.NewLine);
+                    }));
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
