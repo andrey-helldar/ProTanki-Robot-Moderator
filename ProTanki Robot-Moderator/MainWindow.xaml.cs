@@ -713,25 +713,44 @@ namespace AIRUS_Bot_Moderator
                 {
                     string text = ((string)token["text"]).ToLower().Trim();
 
-                    // Проверяем текст на вхождение слов
-                    if (Data.Default.Words.Length > 0)
-                        if (((JArray)JObject.Parse(Data.Default.Words)["words"]).Count > 0)
-                        {
-                            JArray words = (JArray)JObject.Parse(Data.Default.Words)["words"];
-                            foreach (string word in words)
-                                if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
-                                {
-                                    // Отправляем пользователя в бан
-                                    ToBan((string)token["from_id"]);
-
-                                    // Возвращаем ответ на удаление комментария
-                                    return true;
-                                }
-                        }
-
                     // Проверяем количество символов в комментарии
                     if (text.Length < Data.Default.Length)
                         return true;
+
+                    // Если список слов пуст - заполняем дефолтным
+                    if (Data.Default.WordsDelete.Length == 0)
+                        Data.Default.WordsDelete = Data.Default.WordsDeleteDefault;
+
+                    // Проверяем текст на вхождение слов для удаления
+                    if (((JArray)JObject.Parse(Data.Default.WordsDelete)["words"]).Count > 0)
+                    {
+                        JArray words = (JArray)JObject.Parse(Data.Default.WordsDelete)["words"];
+                        foreach (string word in words)
+                            if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                            {
+                                // Возвращаем ответ на удаление комментария
+                                return true;
+                            }
+                    }
+
+                    // Если список слов пуст - заполняем дефолтным
+                    if (Data.Default.WordsBan.Length == 0)
+                        Data.Default.WordsBan = Data.Default.WordsBanDefault;
+
+                    // Проверяем текст на вхождение слов для БАНА
+                    if (((JArray)JObject.Parse(Data.Default.WordsBan)["words"]).Count > 0)
+                    {
+                        JArray wordsBan = (JArray)JObject.Parse(Data.Default.WordsBan)["words"];
+                        foreach (string word in wordsBan)
+                            if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                            {
+                                // Отправляем пользователя в бан
+                                ToBan((string)token["from_id"]);
+
+                                // Возвращаем ответ на удаление комментария
+                                return true;
+                            }
+                    }
 
                     // Проверяем возраст комментария
                     if (Data.Default.Delete)
@@ -1101,10 +1120,6 @@ namespace AIRUS_Bot_Moderator
                              tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
                              tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
                              tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
-
-                             tbLog.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
-                             foreach (JToken line in (JToken)log)
-                                 tbLog.Text += String.Format("{0} = {1}\n", line.Path, (string)line.First);
                          }));
                     }
                     catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }

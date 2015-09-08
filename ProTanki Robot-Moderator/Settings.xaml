@@ -3,16 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Settings" Height="300" Width="300" WindowStartupLocation="CenterScreen" MinWidth="800" MinHeight="600" Loaded="FormSettings_Loaded" Icon="favicon.ico">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <GroupBox Margin="5,5,5,0" VerticalAlignment="Top" Header="Группа">
+        <GroupBox Margin="5,5,5,0" VerticalAlignment="Top" Header="Группа" Grid.ColumnSpan="2">
             <TextBox x:Name="tbGroup" Margin="5" TextWrapping="Wrap" VerticalAlignment="Top"/>
         </GroupBox>
-        <GroupBox Header="Настройки" Margin="5,5,5,0" VerticalAlignment="Top" Grid.Row="1">
+        <GroupBox Header="Настройки" Margin="5,5,5,0" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35*"/>
@@ -62,10 +66,13 @@
                 <Label Content="минут" Grid.Column="4" HorizontalAlignment="Center" Margin="5" Grid.Row="3" VerticalAlignment="Center"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Стоп-слова для удаления комментария (одно слово на строку)" Margin="5" Grid.Row="2">
+        <GroupBox Header="Стоп-слова для удаления комментария (одно слово на строку)" Margin="5,5,5,0" Grid.Row="2">
             <TextBox x:Name="tbWords" Margin="5" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
         </GroupBox>
-        <Button x:Name="bSaving" Content="Сохранить и закрыть" HorizontalAlignment="Center" Margin="10" Grid.Row="3" VerticalAlignment="Center" Padding="25,5" Click="bSaving_Click"/>
+        <Button x:Name="bSaving" Content="Сохранить и закрыть" HorizontalAlignment="Center" Margin="10" Grid.Row="3" VerticalAlignment="Center" Padding="25,5" Click="bSaving_Click" Grid.ColumnSpan="2"/>
+        <GroupBox Grid.Column="1" Header="Стоп-слова для удаления комментария и БАНА аккаунта" Margin="5,5,5,0" Grid.Row="2">
+            <TextBox x:Name="tbWordsBan" Margin="5" TextWrapping="Wrap"/>
+        </GroupBox>
 
     </Grid>
 </Window>

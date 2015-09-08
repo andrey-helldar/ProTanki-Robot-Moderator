@@ -33,46 +33,67 @@ namespace AIRUS_Bot_Moderator
 
         private async void bSaving_Click(object sender, RoutedEventArgs e)
         {
-            Dispatcher.BeginInvoke(new ThreadStart(delegate
-            {
-                try
-                {
-                    // Сохраняем ID группы
-                    if (tbGroup.Text.Trim().IndexOf("/") == -1)
-                        Data.Default.Group = tbGroup.Text.Trim();
-                    else
-                        Data.Default.Group = tbGroup.Text.Trim().Split('/').Last();
+            await Dispatcher.BeginInvoke(new ThreadStart(delegate
+             {
+                 try
+                 {
+                     // Сохраняем ID группы
+                     if (tbGroup.Text.Trim().IndexOf("/") == -1)
+                         Data.Default.Group = tbGroup.Text.Trim();
+                     else
+                         Data.Default.Group = tbGroup.Text.Trim().Split('/').Last();
 
-                    Data.Default.Deactivate = (bool)cbDeactivate.IsChecked;
-                    Data.Default.Posts = Convert.ToInt16(tbPosts.Text.Trim());
-                    Data.Default.Sleep = Convert.ToInt16(tbSleep.Text.Trim());
-                    Data.Default.Length = Convert.ToInt16(tbLength.Text.Trim());
-                    Data.Default.Ban = (bool)cbBan.IsChecked;
-                    Data.Default.BanPeriod = cbBanPeriod.SelectedIndex;
-                    Data.Default.Delete = (bool)cbDelete.IsChecked;
-                    Data.Default.DeleteDays = Convert.ToInt16(tbDeleteDays.Text.Trim());
-                    Data.Default.Likes = (bool)cbLikes.IsChecked;
-                    Data.Default.LikesCount = Convert.ToInt16(tbLikesCount.Text.Trim());
-                    Data.Default.LikesOld = Convert.ToInt16(tbLikesOld.Text.Trim());
+                     Data.Default.Deactivate = (bool)cbDeactivate.IsChecked;
+                     Data.Default.Posts = Convert.ToInt16(tbPosts.Text.Trim());
+                     Data.Default.Sleep = Convert.ToInt16(tbSleep.Text.Trim());
+                     Data.Default.Length = Convert.ToInt16(tbLength.Text.Trim());
+                     Data.Default.Ban = (bool)cbBan.IsChecked;
+                     Data.Default.BanPeriod = cbBanPeriod.SelectedIndex;
+                     Data.Default.Delete = (bool)cbDelete.IsChecked;
+                     Data.Default.DeleteDays = Convert.ToInt16(tbDeleteDays.Text.Trim());
+                     Data.Default.Likes = (bool)cbLikes.IsChecked;
+                     Data.Default.LikesCount = Convert.ToInt16(tbLikesCount.Text.Trim());
+                     Data.Default.LikesOld = Convert.ToInt16(tbLikesOld.Text.Trim());
 
-                    if (tbWords.Text.Trim().Length > 0)
-                    {
-                        JArray array = new JArray();
+                     // Сохраняем список слов для удаления
+                     if (tbWords.Text.Trim().Length > 0)
+                     {
+                         JArray array = new JArray();
 
-                        for (int i = 0; i < tbWords.LineCount; i++)
-                            if (tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, "").Length > 0)
-                                array.Add(tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, ""));
+                         for (int i = 0; i < tbWords.LineCount; i++)
+                             if (tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, "").Length > 0)
+                                 array.Add(tbWords.GetLineText(i).Trim().Replace(Environment.NewLine, ""));
 
-                        JObject obj = new JObject();
-                        obj["words"] = array;
+                         JObject obj = new JObject();
+                         obj["words"] = array;
 
-                        Data.Default.Words = obj.ToString();
-                        Data.Default.Save();
-                    }
-                }
-                catch (Exception) { }
-                finally { this.Close(); }
-            }));
+                         Data.Default.WordsDelete = obj.ToString();
+                     }
+                     else
+                         Data.Default.WordsDelete = Data.Default.WordsDeleteDefault;
+
+                     // Сохраняем список слов для удаления и БАНА
+                     if (tbWordsBan.Text.Trim().Length > 0)
+                     {
+                         JArray array = new JArray();
+
+                         for (int i = 0; i < tbWordsBan.LineCount; i++)
+                             if (tbWordsBan.GetLineText(i).Trim().Replace(Environment.NewLine, "").Length > 0)
+                                 array.Add(tbWordsBan.GetLineText(i).Trim().Replace(Environment.NewLine, ""));
+
+                         JObject obj = new JObject();
+                         obj["words"] = array;
+
+                         Data.Default.WordsBan = obj.ToString();
+                     }
+                     else
+                         Data.Default.WordsBan = Data.Default.WordsBanDefault;
+
+                     Data.Default.Save();
+                 }
+                 catch (Exception) { }
+                 finally { this.Close(); }
+             }));
         }
 
         private async void LoadingData()
@@ -98,35 +119,29 @@ namespace AIRUS_Bot_Moderator
                     tbLikesCount.IsEnabled = Data.Default.Likes;
                     tbLikesOld.IsEnabled = Data.Default.Likes;
 
-                    // Загружаем слова
-                    JArray array;
+                    // Загружаем слова для удаления
+                    JArray array = (JArray)JObject.Parse(Data.Default.WordsDelete.Length > 2 ? Data.Default.WordsDelete : Data.Default.WordsDeleteDefault)["words"];
+                    foreach (string word in array) tbWords.Text += word + Environment.NewLine;
 
-                    if (Data.Default.Words.Length > 2)
-                        array = (JArray)JObject.Parse(Data.Default.Words)["words"];
-                    else
-                        array = (JArray)JObject.Parse(Data.Default.WordsDefault)["words"];
-
-                    foreach (string word in array)
-                        tbWords.Text += word + Environment.NewLine;
+                    // Загружаем слова для удаления и БАНА
+                    array = (JArray)JObject.Parse(Data.Default.WordsBan.Length > 2 ? Data.Default.WordsBan : Data.Default.WordsBanDefault)["words"];
+                    foreach (string word in array) tbWordsBan.Text += word + Environment.NewLine;
                 }
-                catch (Exception ex)
-                {
-                    tbWords.Text = String.Format("{0}\n\n{1}", ex.Message, ex.StackTrace);
-                }
+                catch (Exception ex) { tbWords.Text = String.Format("{0}\n\n{1}", ex.Message, ex.StackTrace); }
             }));
         }
 
-        private async void cbBan_Click(object sender, RoutedEventArgs e)
+        private void cbBan_Click(object sender, RoutedEventArgs e)
         {
             cbBanPeriod.IsEnabled = (bool)cbBan.IsChecked;
         }
 
-        private async void cbDelete_Click(object sender, RoutedEventArgs e)
+        private void cbDelete_Click(object sender, RoutedEventArgs e)
         {
             tbDeleteDays.IsEnabled = (bool)cbDelete.IsChecked;
         }
 
-        private async void cbLikes_Click(object sender, RoutedEventArgs e)
+        private void cbLikes_Click(object sender, RoutedEventArgs e)
         {
             tbLikesCount.IsEnabled = (bool)cbLikes.IsChecked;
             tbLikesOld.IsEnabled = (bool)cbLikes.IsChecked;

@@ -86,12 +86,12 @@ namespace AIRUS_Bot_Moderator {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Words {
+        public string WordsDelete {
             get {
-                return ((string)(this["Words"]));
+                return ((string)(this["WordsDelete"]));
             }
             set {
-                this["Words"] = value;
+                this["WordsDelete"] = value;
             }
         }
         
@@ -206,112 +206,59 @@ namespace AIRUS_Bot_Moderator {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"{
-""words"":[
-""акки"",
-""акка"",
-""продам"",
-""продажа"",
-""продаю акк"",
-""купить аккаунт"",
-""cTене"",
-""cTeHe"",
-""хуй"",
-""ебать"",
-""пиздец"",
-""пизда"",
-""сука"",
-""иди на х**"",
-""обсосок"",
-""ебучий"",
-""гандон"",
-""гондон"",
-""три бонус кода"",
-""продам акк"",
-""раздача бонус кодов"",
-""х*йня"",
-""б*я"",
-""стеночке могу подарить"",
-""раздача баттлефиелд"",
-""нужны бонус-коды"",
-""хорошие аккаунты"",
-""заходите ко мне"",
-""по выгодным ценам"",
-""никакого обмана"",
-""нашел продавца"",
-""продавец"",
-""заебись"",
-""заебали"",
-""картошкакаквсегда"",
-""программа которая дала"",
-""игра которая покорила"",
-""реально ли это?да"",
-""подробная информация на сайте"",
-""gbpplj,jkmcndj"",
-""лохотрон"",
-""пиздо"",
-""ARMORED"",
-""купил и без акции"",
-""Где купил"",
-""сделать приобретение"",
-""покупке акка"",
-""имею крутой акк"",
-""Всем советую"",
-""blogspot"",
-""Пиз*а"",
-""твари"",
-""бабской"",
-""бабы"",
-""РАЗДАЧА КОДОВ"",
-""СКИДКИ И ПОДАРКИ"",
-""ВСТУПАЙТЕ"",
-""Продаётся"",
-""Продается"",
-""лс не дорого"",
-""продажа аккаунтов"",
-""рукожопый"",
-""херня"",
-""worldoftanks."",
-""Vanomas"",
-""батлфилд"",
-""BONUS KODI"",
-""NA STENE"",
-""Y MENY"",
-""f7 f7 f7"",
-""еба"",
-""тварь"",
-""пиздит"",
-""пиздеть"",
-""спизди"",
-""нахуя"",
-""Зайдите ко мне"",
-""ебё*"",
-""ебе*"",
-""ебет"",
-""ебёт"",
-""наёб"",
-""наеб"",
-""nvworld.ru"",
-""ёбывать"",
-""Отдаю просто"",
-""себя на стене"",
-""хуям"",
-""золото"",
-""на страничку"",
-""зарабатывать"",
-""Серб"",
-""Шторм"",
-""Кейсы"",
-""раздам"",
-""роздам"",
-""на стенке""
-]
+	""words"" : [
+		""акки"",
+		""акка"",
+		""хуй"",
+		""ебать"",
+		""пиздец"",
+		""пизда"",
+		""сука"",
+		""иди на х**"",
+		""х*йня"",
+		""заебись"",
+		""заебали"",
+		""картошкакаквсегда"",
+		""реально ли это?да"",
+		""подробная информация на сайте"",
+		""лохотрон"",
+		""пиздо"",
+		""Где купил"",
+		""сделать приобретение"",
+		""Всем советую"",
+		""бабской"",
+		""бабы"",
+		""Продаётся"",
+		""Продается"",
+		""рукожопый"",
+		""херня"",
+		""worldoftanks."",
+		""Vanomas"",
+		""батлфилд"",
+		""пиздит"",
+		""пиздеть"",
+		""спизди"",
+		""нахуя"",
+		""наёб"",
+		""наеб"",
+		""nvworld.ru"",
+		""ёбывать"",
+		""хуям"",
+		""золото"",
+		""Серб"",
+		""Шторм"",
+		""Кейсы"",
+		""раздам"",
+		""роздам"",
+		""на стенке""
+	]
 }")]
-        public string WordsDefault {
+        public string WordsDeleteDefault {
             get {
-                return ((string)(this["WordsDefault"]));
+                return ((string)(this["WordsDeleteDefault"]));
             }
             set {
-                this["WordsDefault"] = value;
+                this["WordsDeleteDefault"] = value;
             }
         }
         
@@ -324,6 +271,87 @@ namespace AIRUS_Bot_Moderator {
             }
             set {
                 this["MaxPostErrors"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WordsBan {
+            get {
+                return ((string)(this["WordsBan"]));
+            }
+            set {
+                this["WordsBan"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{
+	""words"" : [
+		""продам"",
+		""продажа"",
+		""продаю акк"",
+		""купить аккаунт"",
+		""cTене"",
+		""cTeHe"",
+		""обсосок"",
+		""ебучий"",
+		""гандон"",
+		""гондон"",
+		""три бонус кода"",
+		""продам акк"",
+		""раздача бонус кодов"",
+		""б*я"",
+		""стеночке могу подарить"",
+		""раздача баттлефиелд"",
+		""нужны бонус-коды"",
+		""хорошие аккаунты"",
+		""заходите ко мне"",
+		""по выгодным ценам"",
+		""никакого обмана"",
+		""нашел продавца"",
+		""продавец"",
+		""программа которая дала"",
+		""игра которая покорила"",
+		""ARMORED"",
+		""купил и без акции"",
+		""покупке акка"",
+		""имею крутой акк"",
+		""blogspot"",
+		""Пиз*а"",
+		""твари"",
+		""РАЗДАЧА КОДОВ"",
+		""СКИДКИ И ПОДАРКИ"",
+		""ВСТУПАЙТЕ"",
+		""лс не дорого"",
+		""продажа аккаунтов"",
+		""BONUS KODI"",
+		""NA STENE"",
+		""Y MENY"",
+		""f7 f7 f7"",
+		""еба"",
+		""тварь"",
+		""Зайдите ко мне"",
+		""ебё*"",
+		""ебе*"",
+		""ебет"",
+		""ебёт"",
+		""Отдаю просто"",
+		""себя на стене"",
+		""на страничку"",
+		""зарабатывать"",
+		""запилил летсплей"",
+		""захуярил"",
+	]
+}")]
+        public string WordsBanDefault {
+            get {
+                return ((string)(this["WordsBanDefault"]));
+            }
+            set {
+                this["WordsBanDefault"] = value;
             }
         }
     }
