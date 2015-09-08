@@ -120,27 +120,27 @@ namespace AIRUS_Bot_Moderator
                             }));
 
                             // Проверяем идентификаторы
-                            string log = "";
+                            string log_err = "";
 
                             // Если нет идентификаторов - запрещаем запуск
                             if (Data.Default.AccessToken.Length == 0)
-                                log += "Авторизуйтесь в приложении." + Environment.NewLine;
+                                log_err += "Авторизуйтесь в приложении." + Environment.NewLine;
 
                             if (Data.Default.Group.Length == 0)
-                                log += "Не указано имя группы. Перейдите в настройки приложения." + Environment.NewLine;
+                                log_err += "Не указано имя группы. Перейдите в настройки приложения." + Environment.NewLine;
 
                             if (appId == null || appSecret == null)
-                                log += "Ошибка получения идентификатора приложения. Требуется перезапуск приложения." + Environment.NewLine;
+                                log_err += "Ошибка получения идентификатора приложения. Требуется перезапуск приложения." + Environment.NewLine;
 
                             if (groupId == null)
-                                log += "Идентификатор группы не получен." + Environment.NewLine;
+                                log_err += "Идентификатор группы не получен." + Environment.NewLine;
 
 
-                            if (log.Length > 0)
+                            if (log_err.Length > 0)
                             {
                                 await Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
-                                    tbStatusBar.Text = log;
+                                    tbStatusBar.Text = log_err;
                                     botBtn = false;
                                 }));
                             }
@@ -315,15 +315,12 @@ namespace AIRUS_Bot_Moderator
                 // Первый запуск?
                 if (firstStart)
                     // Обнуляем логи
-                    Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
+                    await Task.Factory.StartNew(() => Log(null, 0, true, true));
 
 
                 // Приступаем
                 await Task.Factory.StartNew(() => SetStatus());
                 await Task.Factory.StartNew(() => Log(null, 0, true));
-
-                // Запускаем лог
-                await Task.Factory.StartNew(() => ShowLog());
 
 
                 await Dispatcher.BeginInvoke(new ThreadStart(delegate
@@ -340,7 +337,7 @@ namespace AIRUS_Bot_Moderator
                  }));
 
                 // Отправляем индикатор запуска
-                Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null)).Wait();
+                await Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null));
 
                 // Запоминаем ID в настройки
                 if (
@@ -407,13 +404,13 @@ namespace AIRUS_Bot_Moderator
 
                             if (res["response"] != null)
                             {
-                                Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+                                await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
 
                                 res = (JToken)res.SelectToken("response.items");
 
                                 for (int j = 0; j < res.Count(); j++)
                                 {
-                                    Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
+                                    await Task.Factory.StartNew(() => Log("CurrentPost"));
 
                                     // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                     if ((int)res[j]["comments"]["count"] > 0)
@@ -466,18 +463,9 @@ namespace AIRUS_Bot_Moderator
             catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
             finally
             {
-                Task.Factory.StartNew(() => SetStatus("end")).Wait();
-                Task.Factory.StartNew(() => Log("Circles")).Wait();
-
                 if (!error)
                 {
                     first = false;
-
-                    // Разблокируем кнопку запуска бота
-                    Dispatcher.BeginInvoke(new ThreadStart(delegate
-                    {
-                        bStartBot.IsEnabled = true;
-                    })).Wait();
 
                     if (Data.Default.Ban)
                     {
@@ -488,8 +476,12 @@ namespace AIRUS_Bot_Moderator
 
                         Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
+                            string output = "";
+                            foreach (var line in lbBannedUsers.Items)
+                                output += line.ToString() + Environment.NewLine;
+
                             File.WriteAllText(dir + String.Format("{0}_circle_{1}.txt", DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss"), (string)log["Circles"]),
-                                lbBannedUsers.Items.ToString());
+                                output);
                         })).Wait();
                     }
 
@@ -497,6 +489,9 @@ namespace AIRUS_Bot_Moderator
                     log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
                     log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
                     log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
+
+                    Task.Factory.StartNew(() => Log("Circles")).Wait();
+                    Task.Factory.StartNew(() => SetStatus("end"));
 
                     // Ждем и повторяем
                     if (!Data.Default.Deactivate)
@@ -542,56 +537,59 @@ namespace AIRUS_Bot_Moderator
                     //  Получаем общее количество комментов
                     int count = (int)res["count"];
 
-                    // Вычисляем количество шагов для комментов
-                    int step = 0;
-                    if (count % 100 == 0)
-                        step = count / 100;
-                    else
-                        step = (count / 100) + 1;
-
-                    // Перебираем записи по шагам
-                    for (int i = 0; i < step; i++)
+                    if (count > 0)
                     {
-                        res = await POST(Properties.Resources.API + "wall.getComments",
-                            new JObject(
-                                new JProperty("owner_id", groupId),
-                                new JProperty("post_id", postId),
-                                new JProperty("offset", (100 * i).ToString()),
-                                new JProperty("count", 100),
-                                new JProperty("need_likes", 0),
-                                new JProperty("sort", "desc"),
-                                new JProperty("preview_length", 0)
-                            )
-                        );
-
-                        if (res["response"] != null)
-                        {
-                            res = (JToken)res.SelectToken("response.items");
-
-                            for (int j = 0; j < res.Count(); j++)
-                            {
-                                // Проверяем наличие слов для бана
-                                if (ToDelete((JToken)res[j]))
-                                {
-                                    // Удаляем коммент
-                                    WallDeleteComment((string)res[j]["id"], (JToken)res[j], postId);
-                                }
-
-                                Log("CurrentComment");
-                            }
-                        }
+                        // Вычисляем количество шагов для комментов
+                        int step = 0;
+                        if (count % 100 == 0)
+                            step = count / 100;
                         else
-                        {
-                            await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                             {
-                                 tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID:{2}",
-                                     (string)result.SelectToken("error.error_code"),
-                                     (string)result.SelectToken("error.error_msg"),
-                                     postId);
-                                 bStartBot.IsEnabled = false;
-                             }));
+                            step = (count / 100) + 1;
 
-                            break;
+                        // Перебираем записи по шагам
+                        for (int i = 0; i < step; i++)
+                        {
+                            res = await POST(Properties.Resources.API + "wall.getComments",
+                                new JObject(
+                                    new JProperty("owner_id", groupId),
+                                    new JProperty("post_id", postId),
+                                    new JProperty("offset", (100 * i).ToString()),
+                                    new JProperty("count", 100),
+                                    new JProperty("need_likes", 0),
+                                    new JProperty("sort", "desc"),
+                                    new JProperty("preview_length", 0)
+                                )
+                            );
+
+                            if (res["response"] != null)
+                            {
+                                res = (JToken)res.SelectToken("response.items");
+
+                                for (int j = 0; j < res.Count(); j++)
+                                {
+                                    // Проверяем наличие слов для бана
+                                    if (ToDelete((JToken)res[j]))
+                                    {
+                                        // Удаляем коммент
+                                        WallDeleteComment((string)res[j]["id"], (JToken)res[j], postId);
+                                    }
+
+                                    await Task.Factory.StartNew(() => Log("CurrentComment"));
+                                }
+                            }
+                            else
+                            {
+                                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                 {
+                                     tbLog.Text = String.Format("Error: {0}\n{1}\nPost ID:{2}",
+                                         (string)result.SelectToken("error.error_code"),
+                                         (string)result.SelectToken("error.error_msg"),
+                                         postId);
+                                     bStartBot.IsEnabled = false;
+                                 }));
+
+                                break;
+                            }
                         }
                     }
                 }
@@ -616,7 +614,7 @@ namespace AIRUS_Bot_Moderator
 
                 if (response["response"] != null)
                 {
-                    Log("Deleted");
+                    await Task.Factory.StartNew(() => Log("Deleted"));
 
                     if (token != null)
                     {
@@ -632,7 +630,7 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    Log("ErrorDelete");
+                    await Task.Factory.StartNew(() => Log("ErrorDelete"));
 
                     if (token != null)
                     {
@@ -855,6 +853,7 @@ namespace AIRUS_Bot_Moderator
 
                               timer = true;
                               Task.Factory.StartNew(() => SetTimer());
+                              Task.Factory.StartNew(() => ShowLog());
                               break;
                       }
                   }
@@ -875,7 +874,7 @@ namespace AIRUS_Bot_Moderator
                 await Dispatcher.BeginInvoke(new ThreadStart(delegate
                  {
                      DateTime dt = new DateTime(1970, 1, 1).AddSeconds(i);
-                     tbEndAt.Text = String.Format("0000-00-{0:00} {1}:{2}:{3}", (dt.Day-1).ToString(), dt.ToString("HH"), dt.ToString("mm"), dt.ToString("ss"));
+                     tbEndAt.Text = String.Format("0000-00-{0:00} {1}:{2}:{3}", (dt.Day - 1).ToString(), dt.ToString("HH"), dt.ToString("mm"), dt.ToString("ss"));
                      i++;
                  }));
 
@@ -934,11 +933,6 @@ namespace AIRUS_Bot_Moderator
                             log[path] = (double)log.SelectToken(path) + 1;
                         else if (path != null && key != 0)
                             log[path] = key;
-
-
-                        log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
-                        log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
-                        log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
 
                         // Выводим логи на экран
                         await Dispatcher.BeginInvoke(new ThreadStart(delegate
@@ -1080,7 +1074,7 @@ namespace AIRUS_Bot_Moderator
         /// </summary>
         private async void ShowLog()
         {
-            while (true)
+            while (timer)
             {
                 if (!error)
                     try
@@ -1107,6 +1101,10 @@ namespace AIRUS_Bot_Moderator
                              tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
                              tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
                              tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
+
+                             tbLog.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                             foreach (JToken line in (JToken)log)
+                                 tbLog.Text += String.Format("{0} = {1}\n", line.Path, (string)line.First);
                          }));
                     }
                     catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
