@@ -738,8 +738,10 @@ namespace AIRUS_Bot_Moderator
                         foreach (string word in wordsBan)
                             if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
                             {
-                                // Отправляем пользователя в бан
-                                ToBan(token);
+                                // Если коммент младше 1 месяца, то
+                                if ((Int32)token["date"] > (Int32)(DateTime.UtcNow.AddMonths(-1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds)
+                                    // Отправляем пользователя в бан
+                                    ToBan(token);
 
                                 // Возвращаем ответ на удаление комментария
                                 return true;
