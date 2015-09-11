@@ -101,7 +101,7 @@ namespace AIRUS_Bot_Moderator
 
             if (Data.Default.AccessToken.Length > 0)
             {
-                JObject obj = await POST(Properties.Resources.API + "users.get", null);
+                JObject obj = POST(Properties.Resources.API + "users.get", null);
 
                 if (obj["response"] != null)
                     mess += String.Format(", {0}!", (string)obj["response"].First["first_name"]);
@@ -111,7 +111,7 @@ namespace AIRUS_Bot_Moderator
             else
                 mess += "!";
 
-            Task.Factory.StartNew(() => ShowNotify(mess));
+            Task.Factory.StartNew(() => ShowNotify(mess)).Wait();
         }
 
         private async void ShowNotify(string text)
@@ -224,7 +224,7 @@ namespace AIRUS_Bot_Moderator
                         {
                             if (Data.Default.AccessToken.Length > 0)
                             {
-                                JObject authorLike = await POST(Properties.Resources.API + "likes.isLiked",
+                                JObject authorLike = POST(Properties.Resources.API + "likes.isLiked",
                                     new JObject(
                                         new JProperty("type", "post"),
                                         new JProperty("owner_id", Properties.Resources.AuthorGroup),
@@ -236,7 +236,7 @@ namespace AIRUS_Bot_Moderator
                                 {
                                     if ((int)authorLike.SelectToken("response.liked") == 0)
                                     {
-                                        await POST(Properties.Resources.API + "likes.add",
+                                        POST(Properties.Resources.API + "likes.add",
                                         new JObject(
                                             new JProperty("type", "post"),
                                             new JProperty("owner_id", Properties.Resources.AuthorGroup),
@@ -302,7 +302,7 @@ namespace AIRUS_Bot_Moderator
             }
         }
 
-        public async Task<JObject> POST(string Url, JObject data = null, int errors = 0)
+        public JObject POST(string Url, JObject data = null, int errors = 0)
         {
             try
             {
@@ -331,25 +331,22 @@ namespace AIRUS_Bot_Moderator
                         content.Add(pair.Path, (string)pair.First);
 
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-                    var response = await client.PostAsync(Url, new FormUrlEncodedContent(content));
+                    var response = client.PostAsync(Url, new FormUrlEncodedContent(content)).Result;
+                    Thread.Sleep(350);
 
                     if (response.IsSuccessStatusCode)
                     {
                         JObject obj = JObject.Parse(response.Content.ReadAsStringAsync().Result);
-                        Thread.Sleep(350);
 
-                        if (obj["error"] == null)
-                            return obj;
-                        else
+                        if (obj["error"] != null)
                         {
                             if ((int)obj.SelectToken("error.error_code") == 100)
                             {
-                                Thread.Sleep(1050);
-
                                 if (errors < Data.Default.MaxPostErrors)
                                 {
+                                    Thread.Sleep(1050);
                                     errors++;
-                                    return await POST(Url, data, errors);
+                                    return POST(Url, data, errors);
                                 }
                             }
                         }
@@ -361,7 +358,6 @@ namespace AIRUS_Bot_Moderator
             catch (HttpRequestException hre) { Task.Factory.StartNew(() => TextLog(null, hre)).Wait(); }
             catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
-            Thread.Sleep(350);
             return (JObject)ErrorCode("1");
         }
 
@@ -388,15 +384,15 @@ namespace AIRUS_Bot_Moderator
                 // Первый запуск?
                 if (firstStart)
                     // Обнуляем логи
-                    await Task.Factory.StartNew(() => Log(null, 0, true, true));
+                    Task.Factory.StartNew(() => Log(null, 0, true, true)).Wait();
 
 
                 // Приступаем
-                await Task.Factory.StartNew(() => SetStatus());
-                await Task.Factory.StartNew(() => Log(null, 0, true));
+                Task.Factory.StartNew(() => SetStatus());
+                Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
 
-                await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                Dispatcher.BeginInvoke(new ThreadStart(delegate
                  {
                      // Очищаем список заблокированных аккаунтов
                      lbBannedUsers.Items.Clear();
@@ -405,12 +401,13 @@ namespace AIRUS_Bot_Moderator
                      if (!Data.Default.Ban)
                          lbBannedUsers.Items.Add("Отключено в настройках");
 
-                     // Отключаем кнопку запуска бота
+                     // Отключаем кнопку запуска бота и авторизации
                      bStartBot.IsEnabled = false;
+                     bAuthorize.IsEnabled = false;
                  }));
 
                 // Отправляем индикатор запуска
-                await Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null));
+                Task.Factory.StartNew(() => POST(Properties.Resources.API + "stats.trackVisitor", null)).Wait();
 
                 // Запоминаем ID в настройки
                 if (
@@ -423,7 +420,7 @@ namespace AIRUS_Bot_Moderator
                     // Устанавливаем переменную
                     int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
-                    JToken res = await POST(Properties.Resources.API + "wall.get",
+                    JToken res = POST(Properties.Resources.API + "wall.get",
                         new JObject(
                             new JProperty("owner_id", groupId),
                             new JProperty("offset", 0),
@@ -458,15 +455,15 @@ namespace AIRUS_Bot_Moderator
                         }
 
                         // Устанавливаем значение прогресс бара
-                        await Task.Factory.StartNew(() => SetProgress(true, count));
+                        Task.Factory.StartNew(() => SetProgress(true, count)).Wait();
 
                         // Запоминаем статистику
-                        await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
+                        Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
                         {
-                            res = await POST(Properties.Resources.API + "wall.get",
+                            res = POST(Properties.Resources.API + "wall.get",
                                 new JObject(
                                     new JProperty("owner_id", groupId),
                                     new JProperty("offset", (max_posts * i).ToString()),
@@ -477,23 +474,23 @@ namespace AIRUS_Bot_Moderator
 
                             if (res["response"] != null)
                             {
-                                await Task.Factory.StartNew(() => Log("AllPosts", (double)count));
+                                Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
 
                                 res = (JToken)res.SelectToken("response.items");
 
                                 for (int j = 0; j < res.Count(); j++)
                                 {
-                                    await Task.Factory.StartNew(() => Log("CurrentPost"));
+                                    Task.Factory.StartNew(() => Log("CurrentPost")).Wait();
 
                                     // Если в посте есть комменты - читаем его, иначе нафиг время тратить)))
                                     if ((int)res[j]["comments"]["count"] > 0)
                                     {
                                         // Читаем комменты к записи
-                                        WallGetComments((string)res[j]["id"]);
+                                        Task.Factory.StartNew(() => WallGetComments((string)res[j]["id"])).Wait();
                                     }
 
                                     // Изменяем положение прогресс бара
-                                    await Task.Factory.StartNew(() => SetProgress());
+                                    Task.Factory.StartNew(() => SetProgress()).Wait();
                                 }
                             }
                             else
@@ -546,7 +543,7 @@ namespace AIRUS_Bot_Moderator
                     log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
 
                     Task.Factory.StartNew(() => Log("Circles")).Wait();
-                    Task.Factory.StartNew(() => SetStatus("end"));
+                    Task.Factory.StartNew(() => SetStatus("end")).Wait();
 
                     string time = "";
                     Dispatcher.BeginInvoke(new ThreadStart(delegate
@@ -569,7 +566,7 @@ namespace AIRUS_Bot_Moderator
                             (string)log["CurrentComment"],
                             (string)log["Deleted"],
                             (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString()
-                            )));
+                            ))).Wait();
                     }
 
 
@@ -588,7 +585,7 @@ namespace AIRUS_Bot_Moderator
         {
             try
             {
-                JObject result = await POST(Properties.Resources.API + "wall.getComments",
+                JObject result = POST(Properties.Resources.API + "wall.getComments",
                     new JObject(
                         new JProperty("owner_id", groupId),
                         new JProperty("post_id", postId),
@@ -629,7 +626,7 @@ namespace AIRUS_Bot_Moderator
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
                         {
-                            res = await POST(Properties.Resources.API + "wall.getComments",
+                            res = POST(Properties.Resources.API + "wall.getComments",
                                 new JObject(
                                     new JProperty("owner_id", groupId),
                                     new JProperty("post_id", postId),
@@ -648,13 +645,9 @@ namespace AIRUS_Bot_Moderator
                                 for (int j = 0; j < res.Count(); j++)
                                 {
                                     // Проверяем наличие слов для бана
-                                    if (ToDelete((JToken)res[j]))
-                                    {
-                                        // Удаляем коммент
-                                        WallDeleteComment((string)res[j]["id"], (JToken)res[j], postId);
-                                    }
+                                    ToDelete((JToken)res[j], postId);
 
-                                    await Task.Factory.StartNew(() => Log("CurrentComment"));
+                                    Task.Factory.StartNew(() => Log("CurrentComment")).Wait();
                                 }
                             }
                             else
@@ -685,7 +678,7 @@ namespace AIRUS_Bot_Moderator
         {
             try
             {
-                JObject response = await POST(Properties.Resources.API + "wall.deleteComment",
+                JObject response = POST(Properties.Resources.API + "wall.deleteComment",
                     new JObject(
                         new JProperty("owner_id", groupId),
                         new JProperty("comment_id", commentId)
@@ -694,7 +687,7 @@ namespace AIRUS_Bot_Moderator
 
                 if (response["response"] != null)
                 {
-                    await Task.Factory.StartNew(() => Log("Deleted"));
+                    Task.Factory.StartNew(() => Log("Deleted")).Wait();
 
                     if (token != null)
                     {
@@ -710,7 +703,7 @@ namespace AIRUS_Bot_Moderator
                 }
                 else
                 {
-                    await Task.Factory.StartNew(() => Log("ErrorDelete"));
+                    Task.Factory.StartNew(() => Log("ErrorDelete")).Wait();
 
                     if (token != null)
                     {
@@ -740,7 +733,7 @@ namespace AIRUS_Bot_Moderator
             {
                 if (Data.Default.Group.Length > 0)
                 {
-                    JObject response = await POST(Properties.Resources.API + "groups.getById",
+                    JObject response = POST(Properties.Resources.API + "groups.getById",
                         new JObject(
                             new JProperty("group_ids", Data.Default.Group)
                         )
@@ -773,7 +766,7 @@ namespace AIRUS_Bot_Moderator
 
         private void bStartBot_Click(object sender, RoutedEventArgs e)
         {
-            wallGet = Task.Factory.StartNew(() => WallGet(true));
+            Task.Factory.StartNew(() => WallGet(true));
         }
 
         /// <summary>
@@ -785,8 +778,10 @@ namespace AIRUS_Bot_Moderator
         ///     0           Бессрочный бан
         ///     timestamp   дата разблокировки
         /// </returns>
-        private bool ToDelete(JToken token = null)
+        private void ToDelete(JToken token = null, string postId = null)
         {
+            bool delete = false;
+
             try
             {
                 if (token != null)
@@ -795,60 +790,70 @@ namespace AIRUS_Bot_Moderator
 
                     // Проверяем количество символов в комментарии
                     if (text.Length < Data.Default.Length)
-                        return true;
+                        delete = true;
 
-                    // Если список слов пуст - заполняем дефолтным
-                    if (Data.Default.WordsDelete.Length == 0)
-                        Data.Default.WordsDelete = Data.Default.WordsDeleteDefault;
-
-                    // Проверяем текст на вхождение слов для удаления
-                    if (((JArray)JObject.Parse(Data.Default.WordsDelete)["words"]).Count > 0)
+                    if (!delete)
                     {
-                        JArray words = (JArray)JObject.Parse(Data.Default.WordsDelete)["words"];
-                        foreach (string word in words)
-                            if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
-                            {
-                                // Возвращаем ответ на удаление комментария
-                                return true;
-                            }
+                        // Если список слов пуст - заполняем дефолтным
+                        if (Data.Default.WordsDelete.Length == 0)
+                            Data.Default.WordsDelete = Data.Default.WordsDeleteDefault;
+
+                        // Проверяем текст на вхождение слов для удаления
+                        if (((JArray)JObject.Parse(Data.Default.WordsDelete)["words"]).Count > 0)
+                        {
+                            JArray words = (JArray)JObject.Parse(Data.Default.WordsDelete)["words"];
+                            foreach (string word in words)
+                                if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                                {
+                                    // Возвращаем ответ на удаление комментария
+                                    delete = true;
+                                }
+                        }
                     }
 
-                    // Если список слов пуст - заполняем дефолтным
-                    if (Data.Default.WordsBan.Length == 0)
-                        Data.Default.WordsBan = Data.Default.WordsBanDefault;
-
-                    // Проверяем текст на вхождение слов для БАНА
-                    if (((JArray)JObject.Parse(Data.Default.WordsBan)["words"]).Count > 0)
+                    if (!delete)
                     {
-                        JArray wordsBan = (JArray)JObject.Parse(Data.Default.WordsBan)["words"];
-                        foreach (string word in wordsBan)
-                            if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
-                            {
-                                // Если коммент младше 1 месяца, то
-                                if ((Int32)token["date"] > (Int32)(DateTime.UtcNow.AddMonths(-1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds)
-                                    // Отправляем пользователя в бан
-                                    ToBan(token);
+                        // Если список слов пуст - заполняем дефолтным
+                        if (Data.Default.WordsBan.Length == 0)
+                            Data.Default.WordsBan = Data.Default.WordsBanDefault;
 
-                                // Возвращаем ответ на удаление комментария
-                                return true;
-                            }
+                        // Проверяем текст на вхождение слов для БАНА
+                        if (((JArray)JObject.Parse(Data.Default.WordsBan)["words"]).Count > 0)
+                        {
+                            JArray wordsBan = (JArray)JObject.Parse(Data.Default.WordsBan)["words"];
+                            foreach (string word in wordsBan)
+                                if (text.IndexOf(word.ToLower()) > -1 || text.Length < Data.Default.Length)
+                                {
+                                    // Если коммент младше 1 месяца, то
+                                    if ((Int32)token["date"] > (Int32)(DateTime.UtcNow.AddMonths(-1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds)
+                                        // Отправляем пользователя в бан
+                                        ToBan(token);
+
+                                    // Возвращаем ответ на удаление комментария
+                                    delete = true;
+                                }
+                        }
                     }
 
-                    // Проверяем возраст комментария
-                    if (Data.Default.Delete)
-                        if ((Int32)token["date"] < (Int32)(DateTime.UtcNow.AddDays(Data.Default.DeleteDays * -1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds)
-                            return true;
+                    if (!delete)
+                        // Проверяем возраст комментария
+                        if (Data.Default.Delete)
+                            if ((Int32)token["date"] < (Int32)(DateTime.UtcNow.AddDays(Data.Default.DeleteDays * -1).Subtract(new DateTime(1970, 1, 1))).TotalSeconds)
+                                delete = true;
 
-                    // Проверяем лайки
-                    if (Data.Default.Likes)
-                        if ((int)token.SelectToken("likes.count") < Data.Default.LikesCount &&
-                            (Int32)token["date"] < (Int32)(DateTime.UtcNow.AddMinutes(Data.Default.LikesOld * -1).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds)
-                            return true;
+                    if (!delete)
+                        // Проверяем лайки
+                        if (Data.Default.Likes)
+                            if ((int)token.SelectToken("likes.count") < Data.Default.LikesCount &&
+                                (Int32)token["date"] < (Int32)(DateTime.UtcNow.AddMinutes(Data.Default.LikesOld * -1).Subtract(new DateTime(1970, 1, 1, 0, 0, 0))).TotalSeconds)
+                                delete = true;
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
 
-            return false;
+            if (delete)
+                // Удаляем коммент
+                WallDeleteComment((string)token["id"], (JToken)token, postId);
         }
 
         private async void ToBan(JToken token)
@@ -858,7 +863,7 @@ namespace AIRUS_Bot_Moderator
                 if (Data.Default.Ban)
                 {
                     JObject data = new JObject(
-                        new JProperty("group_id", groupId),
+                        new JProperty("group_id", (Convert.ToInt32(groupId) * -1).ToString()),
                         new JProperty("user_id", (string)token["from_id"]),
                         new JProperty("reason", 1),
                         new JProperty("comment", String.Format("{0} :: {1}",
@@ -891,7 +896,7 @@ namespace AIRUS_Bot_Moderator
 
 
                     // Отправляем запрос
-                    await POST(Properties.Resources.API + "groups.banUser", data);
+                    JObject response = POST(Properties.Resources.API + "groups.banUser", data);
 
                     await Dispatcher.BeginInvoke(new ThreadStart(delegate
                     {
@@ -901,7 +906,7 @@ namespace AIRUS_Bot_Moderator
                         string dir = @"banned";
                         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-                        File.AppendAllText(String.Format(@"{0}\id{1}.json", dir, (string)token["from_id"]), token.ToString() + Environment.NewLine + Environment.NewLine);
+                        File.AppendAllText(String.Format(@"{0}\id{1}.json", dir, (string)token["from_id"]), token.ToString() + Environment.NewLine + Environment.NewLine + response.ToString());
                     }));
                 }
             }
@@ -919,7 +924,7 @@ namespace AIRUS_Bot_Moderator
                 {
                     if (Data.Default.Group.Length > 0)
                     {
-                        JObject response = await POST(Properties.Resources.API + "groups.get",
+                        JObject response = POST(Properties.Resources.API + "groups.get",
                             new JObject(
                                 new JProperty("extended", 1),
                                 new JProperty("filter", "moder"),
