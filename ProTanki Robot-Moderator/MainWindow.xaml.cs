@@ -31,6 +31,7 @@ namespace AIRUS_Bot_Moderator
         private JObject log = new JObject(
             new JProperty("CurrentPost", 0),
             new JProperty("CurrentComment", 0),
+            new JProperty("CurrentBanned", 0),
             new JProperty("AllPosts", 0),
             new JProperty("Deleted", 0),
             new JProperty("ErrorDelete", 0),
@@ -38,7 +39,8 @@ namespace AIRUS_Bot_Moderator
             new JProperty("Starting", 0),
             new JProperty("AllComments", 0),
             new JProperty("AllDeleted", 0),
-            new JProperty("AllErrorDelete", 0)
+            new JProperty("AllErrorDelete", 0),
+            new JProperty("AllBanned", 0)
         );
 
         public static string appId { get { return APPId; } }
@@ -285,6 +287,9 @@ namespace AIRUS_Bot_Moderator
                     bAuthorize.IsEnabled = true;
                     bSettings.IsEnabled = true;
 
+                    // Проверяем первый ли запуск
+                    botBtn = botBtn ? first : false;
+
                     // Если процесс запущен, запрещаем активацию кнопки старта бота
                     if ((wallGet != null) && (
                         wallGet.IsCompleted == false ||
@@ -445,7 +450,7 @@ namespace AIRUS_Bot_Moderator
                         }
                         else
                         {
-                            if (Data.Default.Posts > 0 && !first)
+                            if (Data.Default.Posts > 0)
                                 count = Data.Default.Posts;
 
                             if (count % max_posts == 0)
@@ -538,9 +543,10 @@ namespace AIRUS_Bot_Moderator
                     first = false;
 
                     // Обновляем статистику
-                    log["AllComments"] = Math.Round((double)log["AllComments"] + (double)log["CurrentComment"], 0);
-                    log["AllDeleted"] = Math.Round((double)log["AllDeleted"] + (double)log["Deleted"], 0);
-                    log["AllErrorDelete"] = Math.Round((double)log["AllErrorDelete"] + (double)log["ErrorDelete"], 0);
+                    log["AllComments"] = (int)log["AllComments"] + (int)log["CurrentComment"];
+                    log["AllDeleted"] = (int)log["AllDeleted"] + (int)log["Deleted"];
+                    log["AllErrorDelete"] = (int)log["AllErrorDelete"] + (int)log["ErrorDelete"];
+                    log["AllBanned"] = (int)log["AllBanned"] + (int)log["CurrentBanned"];
 
                     Task.Factory.StartNew(() => Log("Circles")).Wait();
                     Task.Factory.StartNew(() => SetStatus("end")).Wait();
@@ -911,6 +917,8 @@ namespace AIRUS_Bot_Moderator
                 }
             }
             catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
+
+            Task.Factory.StartNew(() => Log("CurrentBanned")).Wait();
         }
 
         /// <summary>
@@ -1033,6 +1041,7 @@ namespace AIRUS_Bot_Moderator
                     log["AllComments"] = 0;
                     log["AllDeleted"] = 0;
                     log["AllErrorDelete"] = 0;
+                    log["AllBanned"] = 0;
                 }
                 else
                 {
@@ -1041,6 +1050,7 @@ namespace AIRUS_Bot_Moderator
                     {
                         log["CurrentPost"] = 0;
                         log["CurrentComment"] = 0;
+                        log["CurrentBanned"] = 0;
                         log["AllPosts"] = 0;
                         log["Deleted"] = 0;
                         log["ErrorDelete"] = 0;
@@ -1202,24 +1212,26 @@ namespace AIRUS_Bot_Moderator
                          {
                              TimeSpan ts = sWatch.Elapsed;
 
-                             tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine;
-                             tbLog.Text += "Общее время работы: " +
+                             tbLog.Text = "Начало работы: " + (string)log["Starting"] + Environment.NewLine +
+                                 "Общее время работы: " +
                                  String.Format("{0}d {1:00}:{2:00}:{3:00}", ts.Days, ts.Hours, ts.Minutes, ts.Seconds) +
-                                 Environment.NewLine + Environment.NewLine;
+                                 Environment.NewLine + Environment.NewLine +
 
-                             tbLog.Text += "Начало цикла: " + tbStartAt.Text + Environment.NewLine;
-                             tbLog.Text += "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine;
-                             tbLog.Text += "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine;
-                             tbLog.Text += "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine;
+                                 "Начало цикла: " + tbStartAt.Text + Environment.NewLine +
+                                 "Завершение цикла: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + Environment.NewLine +
+                                 "Продолжительность цикла: " + tbEndAt.Text + Environment.NewLine +
+                                 "Общее количество циклов: " + (string)log["Circles"] + Environment.NewLine + Environment.NewLine +
 
-                             tbLog.Text += "Постов: " + (string)log["AllPosts"] + Environment.NewLine;
-                             tbLog.Text += "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine;
-                             tbLog.Text += "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
-                             tbLog.Text += "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine + Environment.NewLine;
+                                 "Постов: " + (string)log["AllPosts"] + Environment.NewLine +
+                                 "Комментариев: " + (string)log["CurrentComment"] + Environment.NewLine +
+                                 "Удалено комментариев: " + String.Format("{0} / {1}%\n", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) +
+                                 "Ошибок удаления: " + String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString()) + Environment.NewLine +
+                                 "Заблокировано аккаунтов: " + (string)log["CurrentBanned"] + Environment.NewLine + Environment.NewLine +
 
-                             tbLog.Text += "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine;
-                             tbLog.Text += "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString());
-                             tbLog.Text += "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString());
+                                 "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine +
+                                 "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString()) +
+                                 "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString()) +
+                                 "Всего заблокировано аккаунтов: " + (string)log["AllBanned"];
                          }));
                     }
                     catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)).Wait(); }
