@@ -591,6 +591,15 @@ namespace AIRUS_Bot_Moderator
                     // Ждем и повторяем
                     if (!Data.Default.Deactivate)
                         Timer(Data.Default.Sleep == 0 ? Data.Default.SleepDefault : Data.Default.Sleep);
+                    else
+                    {
+                        Dispatcher.BeginInvoke(new ThreadStart(delegate
+                        {
+                            // Включаем кнопку запуска бота и авторизации
+                            bStartBot.IsEnabled = true;
+                            bAuthorize.IsEnabled = true;
+                        }));
+                    }
                 }
             }
         }
