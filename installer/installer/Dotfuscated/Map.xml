@@ -2,15 +2,15 @@
 <!DOCTYPE dotfuscatorMap SYSTEM "http://www.preemptive.com/dotfuscator/dtd/dotfuscatorMap_v1.2.dtd">
 <dotfuscatorMap version="1.1">
     <header>
-        <timestamp>2015-09-14T21:58:17</timestamp>
+        <timestamp>2015-09-15T19:33:39</timestamp>
         <product version="5.5.4954.46574" user="Unregistered " serial="000-00-000-391">Dotfuscator and Analytics Community Edition</product>
     </header>
     <mapping>
         <module>
             <name>AI RUS Bot-Moderator.exe</name>
             <type>
-                <name>&lt;PrivateImplementationDetails&gt;{F7C29B42-592F-48E9-8BF5-1B85BD75EA8F}</name>
-                <newname>bm</newname>
+                <name>&lt;PrivateImplementationDetails&gt;{44A0B8CB-CB49-4CC0-A585-78C2CCBB762D}</name>
+                <newname>s</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -423,27 +423,27 @@
                     <method>
                         <signature>void()</signature>
                         <name>&lt;.ctor&gt;b__0</name>
-                        <newname>x</newname>
+                        <newname>y</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;.ctor&gt;b__1</name>
-                        <newname>w</newname>
+                        <newname>x</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;bAuthorize_Click&gt;b__4b</name>
-                        <newname>t</newname>
+                        <newname>u</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;bStartBot_Click&gt;b__a7</name>
-                        <newname>f</newname>
+                        <name>&lt;bStartBot_Click&gt;b__a9</name>
+                        <newname>g</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;LoadingData&gt;b__19</name>
-                        <newname>u</newname>
+                        <newname>v</newname>
                     </method>
                     <method>
                         <signature>void(object, System.ComponentModel.CancelEventArgs)</signature>
@@ -462,13 +462,13 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;Log&gt;b__da</name>
+                        <name>&lt;Log&gt;b__dd</name>
                         <newname>e</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;NotifyIcon&gt;b__4</name>
-                        <newname>v</newname>
+                        <newname>w</newname>
                     </method>
                     <method>
                         <signature>void(object, System.EventArgs)</signature>
@@ -477,88 +477,93 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;OpenSettings&gt;b__f1</name>
+                        <name>&lt;OpenSettings&gt;b__f4</name>
                         <newname>c</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;OpenSettings&gt;b__f2</name>
+                        <name>&lt;OpenSettings&gt;b__f5</name>
                         <newname>b</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;ShowLog&gt;b__f6</name>
+                        <name>&lt;ShowLog&gt;b__f9</name>
                         <newname>a</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;Timer&gt;b__ea</name>
+                        <name>&lt;Timer&gt;b__ed</name>
                         <newname>d</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallDeleteComment&gt;b__96</name>
+                        <name>&lt;ToBan&gt;b__af</name>
+                        <newname>f</newname>
+                    </method>
+                    <method>
+                        <signature>void()</signature>
+                        <name>&lt;WallDeleteComment&gt;b__98</name>
+                        <newname>i</newname>
+                    </method>
+                    <method>
+                        <signature>void()</signature>
+                        <name>&lt;WallDeleteComment&gt;b__99</name>
                         <newname>h</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallDeleteComment&gt;b__97</name>
-                        <newname>g</newname>
-                    </method>
-                    <method>
-                        <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__50</name>
-                        <newname>s</newname>
+                        <newname>t</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__51</name>
-                        <newname>r</newname>
+                        <newname>s</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__52</name>
-                        <newname>q</newname>
+                        <newname>r</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__53</name>
-                        <newname>p</newname>
+                        <newname>q</newname>
                     </method>
                     <method>
                         <signature>Newtonsoft.Json.Linq.JObject()</signature>
                         <name>&lt;WallGet&gt;b__54</name>
-                        <newname>o</newname>
+                        <newname>p</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__58</name>
-                        <newname>n</newname>
+                        <newname>o</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__5a</name>
-                        <newname>m</newname>
+                        <newname>n</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__5d</name>
-                        <newname>l</newname>
+                        <newname>m</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__5f</name>
-                        <newname>k</newname>
+                        <newname>l</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>&lt;WallGet&gt;b__60</name>
-                        <newname>j</newname>
+                        <newname>k</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallGetComments&gt;b__83</name>
-                        <newname>i</newname>
+                        <name>&lt;WallGetComments&gt;b__85</name>
+                        <newname>j</newname>
                     </method>
                     <method>
                         <signature>void(object, System.Windows.RoutedEventArgs)</signature>
@@ -596,7 +601,7 @@
                     <method>
                         <signature>System.Threading.Tasks.Task`1&lt;Newtonsoft.Json.Linq.JObject&gt;()</signature>
                         <name>GetGroup</name>
-                        <newname>ab</newname>
+                        <newname>ac</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
@@ -620,7 +625,7 @@
                     <method>
                         <signature>void()</signature>
                         <name>OpenSettings</name>
-                        <newname>z</newname>
+                        <newname>aa</newname>
                     </method>
                     <method>
                         <signature>Newtonsoft.Json.Linq.JObject(string, Newtonsoft.Json.Linq.JObject, int32)</signature>
@@ -639,12 +644,12 @@
                     <method>
                         <signature>void()</signature>
                         <name>SetTimer</name>
-                        <newname>aa</newname>
+                        <newname>ab</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
                         <name>ShowLog</name>
-                        <newname>y</newname>
+                        <newname>z</newname>
                     </method>
                     <method>
                         <signature>void(string)</signature>
@@ -852,7 +857,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass12</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ai</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ag</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -881,7 +886,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass12/&lt;&gt;c__DisplayClass14</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ai/a</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ag/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -910,7 +915,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass2c</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/af</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ad</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -944,7 +949,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass2f</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/h</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/j</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -973,7 +978,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass33</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/an</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/al</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1012,7 +1017,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass36</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/z</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/v</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1051,7 +1056,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass39</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/r</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/m</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1090,7 +1095,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass3b</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/u</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/q</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1129,7 +1134,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass3d</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ay</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/aw</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1158,7 +1163,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass47</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/s</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/p</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1187,7 +1192,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass49</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/f</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/h</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1245,7 +1250,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass6f</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/a</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1279,7 +1284,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass72</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/v</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/r</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1318,7 +1323,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass75</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/as</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ap</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1352,7 +1357,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass77</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/y</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/u</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1381,7 +1386,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass7a</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/e</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/f</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1415,7 +1420,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/az</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ax</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1443,8 +1448,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass87</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ar</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass89</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ah</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1467,8 +1472,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8b</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ak</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8d</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/l</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1476,19 +1481,19 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallGetComments&gt;b__82</name>
+                        <name>&lt;WallGetComments&gt;b__84</name>
                         <newname>c</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallGetComments&gt;b__84</name>
+                        <name>&lt;WallGetComments&gt;b__86</name>
                         <newname>d</newname>
                     </method>
                 </methodlist>
                 <fieldlist>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass87</signature>
-                        <name>CS$&lt;&gt;8__locals88</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass89</signature>
+                        <name>CS$&lt;&gt;8__locals8a</name>
                         <newname>a</newname>
                     </field>
                     <field>
@@ -1501,8 +1506,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8d</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/m</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8f</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ac</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1510,14 +1515,14 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallGetComments&gt;b__85</name>
+                        <name>&lt;WallGetComments&gt;b__87</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
                 <fieldlist>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass87</signature>
-                        <name>CS$&lt;&gt;8__locals88</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass89</signature>
+                        <name>CS$&lt;&gt;8__locals8a</name>
                         <newname>a</newname>
                     </field>
                     <field>
@@ -1530,7 +1535,7 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass9b</name>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass9d</name>
                 <newname>AIRUS_Bot_Moderator.MainWindow/aq</newname>
                 <methodlist>
                     <method>
@@ -1539,7 +1544,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;WallDeleteComment&gt;b__98</name>
+                        <name>&lt;WallDeleteComment&gt;b__9a</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1559,8 +1564,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassa0</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/i</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassa2</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/g</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1568,7 +1573,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;GetGroup&gt;b__9f</name>
+                        <name>&lt;GetGroup&gt;b__a1</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1588,8 +1593,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassa9</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/q</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassab</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ai</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1597,7 +1602,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;ToDelete&gt;b__a8</name>
+                        <name>&lt;ToDelete&gt;b__aa</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1611,59 +1616,6 @@
                         <signature>System.Exception</signature>
                         <name>ex</name>
                         <newname>a</newname>
-                    </field>
-                </fieldlist>
-                <propertylist />
-                <eventlist />
-            </type>
-            <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassad</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/l</newname>
-                <methodlist>
-                    <method>
-                        <signature>void()</signature>
-                        <name>.ctor</name>
-                    </method>
-                </methodlist>
-                <fieldlist>
-                    <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow</signature>
-                        <name>&lt;&gt;4__this</name>
-                        <newname>a</newname>
-                    </field>
-                    <field>
-                        <signature>Newtonsoft.Json.Linq.JToken</signature>
-                        <name>token</name>
-                        <newname>b</newname>
-                    </field>
-                </fieldlist>
-                <propertylist />
-                <eventlist />
-            </type>
-            <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassaf</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ad</newname>
-                <methodlist>
-                    <method>
-                        <signature>void()</signature>
-                        <name>.ctor</name>
-                    </method>
-                    <method>
-                        <signature>void()</signature>
-                        <name>&lt;ToBan&gt;b__ab</name>
-                        <newname>c</newname>
-                    </method>
-                </methodlist>
-                <fieldlist>
-                    <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassad</signature>
-                        <name>CS$&lt;&gt;8__localsae</name>
-                        <newname>a</newname>
-                    </field>
-                    <field>
-                        <signature>Newtonsoft.Json.Linq.JObject</signature>
-                        <name>response</name>
-                        <newname>b</newname>
                     </field>
                 </fieldlist>
                 <propertylist />
@@ -1671,7 +1623,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/at</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/as</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1699,8 +1651,32 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb1</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/k</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb0</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ay</newname>
+                <methodlist>
+                    <method>
+                        <signature>void()</signature>
+                        <name>.ctor</name>
+                    </method>
+                </methodlist>
+                <fieldlist>
+                    <field>
+                        <signature>AIRUS_Bot_Moderator.MainWindow</signature>
+                        <name>&lt;&gt;4__this</name>
+                        <newname>a</newname>
+                    </field>
+                    <field>
+                        <signature>Newtonsoft.Json.Linq.JToken</signature>
+                        <name>token</name>
+                        <newname>b</newname>
+                    </field>
+                </fieldlist>
+                <propertylist />
+                <eventlist />
+            </type>
+            <type>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb2</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1708,14 +1684,43 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;ToBan&gt;b__ac</name>
+                        <name>&lt;ToBan&gt;b__ad</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
                 <fieldlist>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassad</signature>
-                        <name>CS$&lt;&gt;8__localsae</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb0</signature>
+                        <name>CS$&lt;&gt;8__localsb1</name>
+                        <newname>a</newname>
+                    </field>
+                    <field>
+                        <signature>Newtonsoft.Json.Linq.JObject</signature>
+                        <name>response</name>
+                        <newname>b</newname>
+                    </field>
+                </fieldlist>
+                <propertylist />
+                <eventlist />
+            </type>
+            <type>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb4</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ar</newname>
+                <methodlist>
+                    <method>
+                        <signature>void()</signature>
+                        <name>.ctor</name>
+                    </method>
+                    <method>
+                        <signature>void()</signature>
+                        <name>&lt;ToBan&gt;b__ae</name>
+                        <newname>c</newname>
+                    </method>
+                </methodlist>
+                <fieldlist>
+                    <field>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb0</signature>
+                        <name>CS$&lt;&gt;8__localsb1</name>
                         <newname>a</newname>
                     </field>
                     <field>
@@ -1728,8 +1733,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb9</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/t</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassbc</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ae</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1737,7 +1742,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;CheckModerAccess&gt;b__b8</name>
+                        <name>&lt;CheckModerAccess&gt;b__bb</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1757,8 +1762,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc1</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/o</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc4</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/av</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1766,17 +1771,17 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetStatus&gt;b__bd</name>
+                        <name>&lt;SetStatus&gt;b__c0</name>
                         <newname>e</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetStatus&gt;b__be</name>
+                        <name>&lt;SetStatus&gt;b__c1</name>
                         <newname>d</newname>
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetStatus&gt;b__bf</name>
+                        <name>&lt;SetStatus&gt;b__c2</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1796,8 +1801,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc1/&lt;&gt;c__DisplayClassc5</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/o/a</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc4/&lt;&gt;c__DisplayClassc8</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/av/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1805,14 +1810,14 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetStatus&gt;b__c0</name>
+                        <name>&lt;SetStatus&gt;b__c3</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
                 <fieldlist>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc1</signature>
-                        <name>CS$&lt;&gt;8__localsc2</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc4</signature>
+                        <name>CS$&lt;&gt;8__localsc5</name>
                         <newname>a</newname>
                     </field>
                     <field>
@@ -1825,8 +1830,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasscc</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ag</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasscf</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/w</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1834,7 +1839,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetTimer&gt;b__ca</name>
+                        <name>&lt;SetTimer&gt;b__cd</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1854,8 +1859,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd3</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/av</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd6</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/s</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1863,7 +1868,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetProgress&gt;b__d1</name>
+                        <name>&lt;SetProgress&gt;b__d4</name>
                         <newname>d</newname>
                     </method>
                 </methodlist>
@@ -1888,8 +1893,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd3/&lt;&gt;c__DisplayClassd5</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/av/a</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd6/&lt;&gt;c__DisplayClassd8</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/s/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1897,14 +1902,14 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;SetProgress&gt;b__d2</name>
+                        <name>&lt;SetProgress&gt;b__d5</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
                 <fieldlist>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd3</signature>
-                        <name>CS$&lt;&gt;8__localsd4</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd6</signature>
+                        <name>CS$&lt;&gt;8__localsd7</name>
                         <newname>a</newname>
                     </field>
                     <field>
@@ -1917,8 +1922,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassdd</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/aw</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasse0</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/o</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1926,7 +1931,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;Log&gt;b__db</name>
+                        <name>&lt;Log&gt;b__de</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -1946,8 +1951,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasse4</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/w</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasse7</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/an</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1955,7 +1960,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;TextLog&gt;b__e2</name>
+                        <name>&lt;TextLog&gt;b__e5</name>
                         <newname>d</newname>
                     </method>
                 </methodlist>
@@ -1980,8 +1985,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassec</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/aj</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassef</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/n</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -1989,7 +1994,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;Timer&gt;b__e9</name>
+                        <name>&lt;Timer&gt;b__ec</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -2009,8 +2014,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassf4</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ap</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassf7</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ab</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2018,7 +2023,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;ErrorCode&gt;b__f3</name>
+                        <name>&lt;ErrorCode&gt;b__f6</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -2038,8 +2043,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassf9</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/n</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassfc</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/z</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2047,7 +2052,7 @@
                     </method>
                     <method>
                         <signature>void()</signature>
-                        <name>&lt;ShowLog&gt;b__f7</name>
+                        <name>&lt;ShowLog&gt;b__fa</name>
                         <newname>c</newname>
                     </method>
                 </methodlist>
@@ -2067,8 +2072,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;CheckModerAccess&gt;d__bb</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/d</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;CheckModerAccess&gt;d__be</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/aj</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2107,8 +2112,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;GetGroup&gt;d__a2</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ao</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;GetGroup&gt;d__a4</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/i</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2144,17 +2149,17 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter`1&lt;Newtonsoft.Json.Linq.JObject&gt;</signature>
-                        <name>&lt;&gt;u__$awaitera5</name>
+                        <name>&lt;&gt;u__$awaitera7</name>
                         <newname>f</newname>
                     </field>
                     <field>
                         <signature>Newtonsoft.Json.Linq.JObject</signature>
-                        <name>&lt;response&gt;5__a3</name>
+                        <name>&lt;response&gt;5__a5</name>
                         <newname>d</newname>
                     </field>
                     <field>
                         <signature>Newtonsoft.Json.Linq.JToken</signature>
-                        <name>&lt;token&gt;5__a4</name>
+                        <name>&lt;token&gt;5__a6</name>
                         <newname>e</newname>
                     </field>
                 </fieldlist>
@@ -2163,7 +2168,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;LoadingData&gt;d__3f</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/b</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/d</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2297,8 +2302,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;Log&gt;d__df</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/am</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;Log&gt;d__e2</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/e</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2334,7 +2339,7 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaitere0</name>
+                        <name>&lt;&gt;u__$awaitere3</name>
                         <newname>i</newname>
                     </field>
                     <field>
@@ -2344,7 +2349,7 @@
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatedc</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatedf</name>
                         <newname>h</newname>
                     </field>
                     <field>
@@ -2368,7 +2373,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;NotifyIcon&gt;d__d</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ah</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/af</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2417,8 +2422,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;SetProgress&gt;d__d7</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ae</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;SetProgress&gt;d__da</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/az</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2454,12 +2459,12 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiterd8</name>
+                        <name>&lt;&gt;u__$awaiterdb</name>
                         <newname>g</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd3</signature>
-                        <name>CS$&lt;&gt;8__localsd4</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassd6</signature>
+                        <name>CS$&lt;&gt;8__localsd7</name>
                         <newname>f</newname>
                     </field>
                     <field>
@@ -2477,8 +2482,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;SetStatus&gt;d__c7</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ax</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;SetStatus&gt;d__ca</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/at</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2514,7 +2519,7 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiterc8</name>
+                        <name>&lt;&gt;u__$awaitercb</name>
                         <newname>f</newname>
                     </field>
                     <field>
@@ -2523,8 +2528,8 @@
                         <newname>d</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc1</signature>
-                        <name>CS$&lt;&gt;8__localsc2</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassc4</signature>
+                        <name>CS$&lt;&gt;8__localsc5</name>
                         <newname>e</newname>
                     </field>
                 </fieldlist>
@@ -2532,8 +2537,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;SetTimer&gt;d__ce</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ab</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;SetTimer&gt;d__d1</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/am</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2569,17 +2574,17 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaitercf</name>
+                        <name>&lt;&gt;u__$awaiterd2</name>
                         <newname>f</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasscc</signature>
-                        <name>CS$&lt;&gt;8__localscd</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasscf</signature>
+                        <name>CS$&lt;&gt;8__localsd0</name>
                         <newname>e</newname>
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatecb</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatece</name>
                         <newname>d</newname>
                     </field>
                 </fieldlist>
@@ -2587,8 +2592,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;ShowLog&gt;d__fb</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/ac</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;ShowLog&gt;d__fe</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/aa</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2624,12 +2629,12 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiterfc</name>
+                        <name>&lt;&gt;u__$awaiterff</name>
                         <newname>e</newname>
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatef8</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatefb</name>
                         <newname>d</newname>
                     </field>
                 </fieldlist>
@@ -2638,7 +2643,7 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;ShowNotify&gt;d__16</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/al</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ak</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2692,8 +2697,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;TextLog&gt;d__e6</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/j</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;TextLog&gt;d__e9</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/k</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2729,17 +2734,17 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaitere7</name>
+                        <name>&lt;&gt;u__$awaiterea</name>
                         <newname>h</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasse4</signature>
-                        <name>CS$&lt;&gt;8__localse5</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClasse7</signature>
+                        <name>CS$&lt;&gt;8__localse8</name>
                         <newname>g</newname>
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatee3</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegatee6</name>
                         <newname>f</newname>
                     </field>
                     <field>
@@ -2757,8 +2762,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;Timer&gt;d__ee</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/p</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;Timer&gt;d__f1</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/c</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2794,17 +2799,17 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiteref</name>
+                        <name>&lt;&gt;u__$awaiterf2</name>
                         <newname>g</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassec</signature>
-                        <name>CS$&lt;&gt;8__localsed</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassef</signature>
+                        <name>CS$&lt;&gt;8__localsf0</name>
                         <newname>f</newname>
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegateeb</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegateee</name>
                         <newname>e</newname>
                     </field>
                     <field>
@@ -2817,8 +2822,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;ToBan&gt;d__b3</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/aa</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;ToBan&gt;d__b6</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/y</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2854,27 +2859,27 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiterb6</name>
+                        <name>&lt;&gt;u__$awaiterb9</name>
                         <newname>i</newname>
                     </field>
                     <field>
                         <signature>Newtonsoft.Json.Linq.JObject</signature>
-                        <name>&lt;data&gt;5__b4</name>
+                        <name>&lt;data&gt;5__b7</name>
                         <newname>e</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
-                        <name>&lt;time&gt;5__b5</name>
+                        <name>&lt;time&gt;5__b8</name>
                         <newname>f</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassad</signature>
-                        <name>CS$&lt;&gt;8__localsae</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb0</signature>
+                        <name>CS$&lt;&gt;8__localsb1</name>
                         <newname>h</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassaf</signature>
-                        <name>CS$&lt;&gt;8__localsb0</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClassb2</signature>
+                        <name>CS$&lt;&gt;8__localsb3</name>
                         <newname>g</newname>
                     </field>
                     <field>
@@ -2887,8 +2892,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;WallDeleteComment&gt;d__9d</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/c</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;WallDeleteComment&gt;d__9f</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/ao</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -2938,17 +2943,17 @@
             </type>
             <type>
                 <name>AIRUS_Bot_Moderator.MainWindow/&lt;WallGet&gt;d__7c</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/x</newname>
+                <newname>AIRUS_Bot_Moderator.MainWindow/t</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
                         <name>MoveNext</name>
-                        <newname>w</newname>
+                        <newname>y</newname>
                     </method>
                     <method>
                         <signature>void(System.Runtime.CompilerServices.IAsyncStateMachine)</signature>
                         <name>SetStateMachine</name>
-                        <newname>w</newname>
+                        <newname>y</newname>
                     </method>
                 </methodlist>
                 <fieldlist>
@@ -2970,22 +2975,32 @@
                     <field>
                         <signature>object</signature>
                         <name>&lt;&gt;t__stack</name>
-                        <newname>x</newname>
+                        <newname>z</newname>
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiter80</name>
-                        <newname>w</newname>
+                        <name>&lt;&gt;u__$awaiter82</name>
+                        <newname>y</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
-                        <name>&lt;i&gt;5__7f</name>
-                        <newname>g</newname>
+                        <name>&lt;i&gt;5__80</name>
+                        <newname>h</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
                         <name>&lt;max_posts&gt;5__7d</name>
                         <newname>e</newname>
+                    </field>
+                    <field>
+                        <signature>int32</signature>
+                        <name>&lt;scan_posts&gt;5__7f</name>
+                        <newname>g</newname>
+                    </field>
+                    <field>
+                        <signature>int32</signature>
+                        <name>&lt;scan&gt;5__81</name>
+                        <newname>i</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
@@ -2995,77 +3010,77 @@
                     <field>
                         <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass6f</signature>
                         <name>CS$&lt;&gt;8__locals70</name>
-                        <newname>l</newname>
+                        <newname>n</newname>
                     </field>
                     <field>
                         <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass72</signature>
                         <name>CS$&lt;&gt;8__locals73</name>
-                        <newname>i</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate63</name>
-                        <newname>m</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate64</name>
-                        <newname>n</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate65</name>
-                        <newname>o</newname>
-                    </field>
-                    <field>
-                        <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate66</name>
-                        <newname>p</newname>
-                    </field>
-                    <field>
-                        <signature>System.Func`1&lt;Newtonsoft.Json.Linq.JObject&gt;</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate67</name>
-                        <newname>q</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate68</name>
-                        <newname>r</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate69</name>
-                        <newname>s</newname>
-                    </field>
-                    <field>
-                        <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6a</name>
-                        <newname>t</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6b</name>
-                        <newname>u</newname>
-                    </field>
-                    <field>
-                        <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6c</name>
-                        <newname>v</newname>
-                    </field>
-                    <field>
-                        <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6d</name>
-                        <newname>j</newname>
-                    </field>
-                    <field>
-                        <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6e</name>
                         <newname>k</newname>
                     </field>
                     <field>
                         <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate63</name>
+                        <newname>o</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate64</name>
+                        <newname>p</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate65</name>
+                        <newname>q</newname>
+                    </field>
+                    <field>
+                        <signature>System.Threading.ThreadStart</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate66</name>
+                        <newname>r</newname>
+                    </field>
+                    <field>
+                        <signature>System.Func`1&lt;Newtonsoft.Json.Linq.JObject&gt;</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate67</name>
+                        <newname>s</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate68</name>
+                        <newname>t</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate69</name>
+                        <newname>u</newname>
+                    </field>
+                    <field>
+                        <signature>System.Threading.ThreadStart</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6a</name>
+                        <newname>v</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6b</name>
+                        <newname>w</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6c</name>
+                        <newname>x</newname>
+                    </field>
+                    <field>
+                        <signature>System.Threading.ThreadStart</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6d</name>
+                        <newname>l</newname>
+                    </field>
+                    <field>
+                        <signature>System.Threading.ThreadStart</signature>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate6e</name>
+                        <newname>m</newname>
+                    </field>
+                    <field>
+                        <signature>System.Action</signature>
                         <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate71</name>
-                        <newname>h</newname>
+                        <newname>j</newname>
                     </field>
                     <field>
                         <signature>bool</signature>
@@ -3077,8 +3092,8 @@
                 <eventlist />
             </type>
             <type>
-                <name>AIRUS_Bot_Moderator.MainWindow/&lt;WallGetComments&gt;d__8f</name>
-                <newname>AIRUS_Bot_Moderator.MainWindow/g</newname>
+                <name>AIRUS_Bot_Moderator.MainWindow/&lt;WallGetComments&gt;d__91</name>
+                <newname>AIRUS_Bot_Moderator.MainWindow/x</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -3114,52 +3129,52 @@
                     </field>
                     <field>
                         <signature>System.Runtime.CompilerServices.TaskAwaiter</signature>
-                        <name>&lt;&gt;u__$awaiter94</name>
+                        <name>&lt;&gt;u__$awaiter96</name>
                         <newname>n</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
-                        <name>&lt;count&gt;5__91</name>
+                        <name>&lt;count&gt;5__93</name>
                         <newname>f</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
-                        <name>&lt;i&gt;5__93</name>
+                        <name>&lt;i&gt;5__95</name>
                         <newname>h</newname>
                     </field>
                     <field>
                         <signature>Newtonsoft.Json.Linq.JToken</signature>
-                        <name>&lt;res&gt;5__90</name>
+                        <name>&lt;res&gt;5__92</name>
                         <newname>e</newname>
                     </field>
                     <field>
                         <signature>int32</signature>
-                        <name>&lt;step&gt;5__92</name>
+                        <name>&lt;step&gt;5__94</name>
                         <newname>g</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass87</signature>
-                        <name>CS$&lt;&gt;8__locals88</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass89</signature>
+                        <name>CS$&lt;&gt;8__locals8a</name>
                         <newname>m</newname>
                     </field>
                     <field>
-                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8b</signature>
-                        <name>CS$&lt;&gt;8__locals8c</name>
+                        <signature>AIRUS_Bot_Moderator.MainWindow/&lt;&gt;c__DisplayClass8d</signature>
+                        <name>CS$&lt;&gt;8__locals8e</name>
                         <newname>k</newname>
                     </field>
                     <field>
                         <signature>System.Action</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate86</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate88</name>
                         <newname>l</newname>
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate89</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate8b</name>
                         <newname>i</newname>
                     </field>
                     <field>
                         <signature>System.Threading.ThreadStart</signature>
-                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate8a</name>
+                        <name>CS$&lt;&gt;9__CachedAnonymousMethodDelegate8c</name>
                         <newname>j</newname>
                     </field>
                     <field>
@@ -3672,7 +3687,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonArray</name>
-                <newname>x</newname>
+                <newname>aa</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -3710,7 +3725,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonBinary</name>
-                <newname>bg</newname>
+                <newname>bi</newname>
                 <methodlist>
                     <method>
                         <signature>void(unsigned int8[], Newtonsoft.Json.Bson.BsonBinaryType)</signature>
@@ -3739,7 +3754,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonBinaryType</name>
-                <newname>bv</newname>
+                <newname>bw</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -3880,7 +3895,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonObject</name>
-                <newname>bp</newname>
+                <newname>bq</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -3950,7 +3965,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonProperty</name>
-                <newname>bu</newname>
+                <newname>bv</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -4363,7 +4378,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonRegex</name>
-                <newname>bj</newname>
+                <newname>bm</newname>
                 <methodlist>
                     <method>
                         <signature>void(string, string)</signature>
@@ -4412,7 +4427,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonString</name>
-                <newname>ap</newname>
+                <newname>as</newname>
                 <methodlist>
                     <method>
                         <signature>void(object, bool)</signature>
@@ -4618,7 +4633,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Bson.BsonValue</name>
-                <newname>b3</newname>
+                <newname>b4</newname>
                 <methodlist>
                     <method>
                         <signature>void(object, Newtonsoft.Json.Bson.BsonType)</signature>
@@ -5150,7 +5165,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/&lt;&gt;c__DisplayClass1</name>
-                <newname>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/b</newname>
+                <newname>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/d</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -5198,7 +5213,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/Union</name>
-                <newname>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/d</newname>
+                <newname>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/c</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -5232,7 +5247,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/UnionCase</name>
-                <newname>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/c</newname>
+                <newname>Newtonsoft.Json.Converters.DiscriminatedUnionConverter/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -5570,7 +5585,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.IXmlDocumentType</name>
-                <newname>bd</newname>
+                <newname>bf</newname>
                 <methodlist>
                     <method>
                         <signature>string()</signature>
@@ -5599,7 +5614,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.IXmlElement</name>
-                <newname>a4</newname>
+                <newname>a5</newname>
                 <methodlist>
                     <method>
                         <signature>bool()</signature>
@@ -5629,7 +5644,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.IXmlNode</name>
-                <newname>co</newname>
+                <newname>cn</newname>
                 <methodlist>
                     <method>
                         <signature>Newtonsoft.Json.Converters.IXmlNode(Newtonsoft.Json.Converters.IXmlNode)</signature>
@@ -5947,7 +5962,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XAttributeWrapper</name>
-                <newname>b6</newname>
+                <newname>b7</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XAttribute)</signature>
@@ -6016,7 +6031,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XCommentWrapper</name>
-                <newname>bq</newname>
+                <newname>br</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XComment)</signature>
@@ -6049,7 +6064,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XContainerWrapper</name>
-                <newname>an</newname>
+                <newname>aq</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XContainer)</signature>
@@ -6093,7 +6108,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XDeclarationWrapper</name>
-                <newname>bn</newname>
+                <newname>bp</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XDeclaration)</signature>
@@ -6196,7 +6211,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XDocumentWrapper</name>
-                <newname>b1</newname>
+                <newname>b2</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XDocument)</signature>
@@ -6289,7 +6304,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XElementWrapper</name>
-                <newname>ba</newname>
+                <newname>bb</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XElement)</signature>
@@ -6402,7 +6417,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XmlDocumentTypeWrapper</name>
-                <newname>a1</newname>
+                <newname>a3</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.XmlDocumentType)</signature>
@@ -6530,7 +6545,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XmlElementWrapper</name>
-                <newname>w</newname>
+                <newname>z</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.XmlElement)</signature>
@@ -6863,7 +6878,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XmlNodeWrapper</name>
-                <newname>bt</newname>
+                <newname>bu</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.XmlNode)</signature>
@@ -6942,7 +6957,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XObjectWrapper</name>
-                <newname>az</newname>
+                <newname>a1</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XObject)</signature>
@@ -7011,7 +7026,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XProcessingInstructionWrapper</name>
-                <newname>ab</newname>
+                <newname>ae</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XProcessingInstruction)</signature>
@@ -7044,7 +7059,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Converters.XTextWrapper</name>
-                <newname>a3</newname>
+                <newname>a4</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Xml.Linq.XText)</signature>
@@ -7492,7 +7507,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.JsonContainerType</name>
-                <newname>z</newname>
+                <newname>ac</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -8304,7 +8319,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.JsonPosition</name>
-                <newname>b4</newname>
+                <newname>b5</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -14603,7 +14618,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JPropertyKeyedCollection</name>
-                <newname>ac</newname>
+                <newname>af</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -14772,7 +14787,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.ArrayIndexFilter</name>
-                <newname>br</newname>
+                <newname>bs</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -14806,7 +14821,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.ArrayIndexFilter/&lt;ExecuteFilter&gt;d__0</name>
-                <newname>br/a</newname>
+                <newname>bs/a</newname>
                 <methodlist>
                     <method>
                         <signature>void(int32)</signature>
@@ -15291,7 +15306,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.BooleanQueryExpression</name>
-                <newname>bw</newname>
+                <newname>bx</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -15537,7 +15552,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.FieldMultipleFilter</name>
-                <newname>aj</newname>
+                <newname>am</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -15581,7 +15596,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.FieldMultipleFilter/&lt;ExecuteFilter&gt;d__2</name>
-                <newname>aj/a</newname>
+                <newname>am/a</newname>
                 <methodlist>
                     <method>
                         <signature>void(int32)</signature>
@@ -15710,7 +15725,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.JPath</name>
-                <newname>b7</newname>
+                <newname>ax</newname>
                 <methodlist>
                     <method>
                         <signature>void(string)</signature>
@@ -15824,7 +15839,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.PathFilter</name>
-                <newname>bz</newname>
+                <newname>b0</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -15847,7 +15862,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.QueryExpression</name>
-                <newname>a6</newname>
+                <newname>a7</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -15881,7 +15896,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.QueryFilter</name>
-                <newname>ay</newname>
+                <newname>a0</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -15915,7 +15930,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.QueryFilter/&lt;ExecuteFilter&gt;d__0</name>
-                <newname>ay/a</newname>
+                <newname>a0/a</newname>
                 <methodlist>
                     <method>
                         <signature>void(int32)</signature>
@@ -16024,7 +16039,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.QueryOperator</name>
-                <newname>u</newname>
+                <newname>w</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -16087,7 +16102,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.ScanFilter</name>
-                <newname>aw</newname>
+                <newname>ap</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -16121,7 +16136,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Linq.JsonPath.ScanFilter/&lt;ExecuteFilter&gt;d__0</name>
-                <newname>aw/a</newname>
+                <newname>ap/a</newname>
                 <methodlist>
                     <method>
                         <signature>void(int32)</signature>
@@ -18353,7 +18368,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.ReadType</name>
-                <newname>a0</newname>
+                <newname>a2</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -19195,7 +19210,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaBuilder</name>
-                <newname>b5</newname>
+                <newname>b6</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.Schema.JsonSchemaResolver)</signature>
@@ -19319,7 +19334,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaBuilder/&lt;&gt;c__DisplayClass2</name>
-                <newname>b5/a</newname>
+                <newname>b6/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -19343,7 +19358,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaConstants</name>
-                <newname>am</newname>
+                <newname>bo</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -19830,7 +19845,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaModel</name>
-                <newname>be</newname>
+                <newname>bg</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -20384,7 +20399,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaNode</name>
-                <newname>ad</newname>
+                <newname>ag</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.Schema.JsonSchema)</signature>
@@ -20537,7 +20552,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaNodeCollection</name>
-                <newname>aa</newname>
+                <newname>ad</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -20666,7 +20681,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Schema.JsonSchemaWriter</name>
-                <newname>af</newname>
+                <newname>ai</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.JsonWriter, Newtonsoft.Json.Schema.JsonSchemaResolver)</signature>
@@ -21413,7 +21428,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.DefaultContractResolverState</name>
-                <newname>y</newname>
+                <newname>ab</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -21437,7 +21452,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.DefaultReferenceResolver</name>
-                <newname>by</newname>
+                <newname>bz</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -22643,7 +22658,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonContractType</name>
-                <newname>at</newname>
+                <newname>aw</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -22955,7 +22970,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonFormatterConverter</name>
-                <newname>ak</newname>
+                <newname>an</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.Serialization.JsonSerializerInternalReader, Newtonsoft.Json.Serialization.JsonISerializableContract, Newtonsoft.Json.Serialization.JsonProperty)</signature>
@@ -23921,7 +23936,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonSerializerInternalBase</name>
-                <newname>as</newname>
+                <newname>av</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.JsonSerializer)</signature>
@@ -23980,7 +23995,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonSerializerInternalBase/ReferenceEqualsEqualityComparer</name>
-                <newname>as/a</newname>
+                <newname>av/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -24003,7 +24018,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonSerializerInternalReader</name>
-                <newname>ah</newname>
+                <newname>ak</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.JsonSerializer)</signature>
@@ -24317,7 +24332,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonSerializerInternalReader/&lt;&gt;c__DisplayClassc</name>
-                <newname>ah/b</newname>
+                <newname>ak/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -24341,7 +24356,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonSerializerInternalReader/PropertyPresence</name>
-                <newname>ah/a</newname>
+                <newname>ak/a</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -24369,7 +24384,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonSerializerInternalWriter</name>
-                <newname>ao</newname>
+                <newname>ar</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.JsonSerializer)</signature>
@@ -24873,7 +24888,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonTypeReflector</name>
-                <newname>ae</newname>
+                <newname>ah</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -25031,7 +25046,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.JsonTypeReflector/&lt;&gt;c__DisplayClass2</name>
-                <newname>ae/a</newname>
+                <newname>ah/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -25403,7 +25418,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Serialization.TraceJsonWriter</name>
-                <newname>a2</newname>
+                <newname>v</newname>
                 <methodlist>
                     <method>
                         <signature>void(Newtonsoft.Json.JsonWriter)</signature>
@@ -25645,7 +25660,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.Base64Encoder</name>
-                <newname>a7</newname>
+                <newname>a8</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.IO.TextWriter)</signature>
@@ -25770,7 +25785,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.CollectionUtils</name>
-                <newname>bc</newname>
+                <newname>be</newname>
                 <methodlist>
                     <method>
                         <arity>1</arity>
@@ -25867,7 +25882,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.CollectionWrapper`1</name>
-                <newname>bb</newname>
+                <newname>bd</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Collections.Generic.ICollection`1&lt;!0&gt;)</signature>
@@ -26012,7 +26027,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ConvertUtils</name>
-                <newname>a8</newname>
+                <newname>a9</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -26136,7 +26151,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ConvertUtils/&lt;&gt;c__DisplayClass1</name>
-                <newname>a8/c</newname>
+                <newname>a9/c</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -26160,7 +26175,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ConvertUtils/ConvertResult</name>
-                <newname>a8/a</newname>
+                <newname>a9/a</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -26193,7 +26208,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ConvertUtils/TypeConvertKey</name>
-                <newname>a8/b</newname>
+                <newname>a9/b</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Type, System.Type)</signature>
@@ -26244,7 +26259,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.Creator`1</name>
-                <newname>l</newname>
+                <newname>bc</newname>
                 <methodlist>
                     <method>
                         <signature>void(object, native int)</signature>
@@ -26458,7 +26473,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.DateTimeUtils</name>
-                <newname>t</newname>
+                <newname>u</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -26641,7 +26656,7 @@
                     <newname>b</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.DictionaryWrapper`2</name>
-                <newname>bk</newname>
+                <newname>bn</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Collections.Generic.IDictionary`2&lt;!0,!1&gt;)</signature>
@@ -26848,7 +26863,7 @@
                     <newname>d</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.DictionaryWrapper`2/DictionaryEnumerator`2</name>
-                <newname>bk/a</newname>
+                <newname>bn/a</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Collections.Generic.IEnumerator`1&lt;System.Collections.Generic.KeyValuePair`2&lt;!2,!3&gt;&gt;)</signature>
@@ -26896,7 +26911,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.DynamicProxy`1</name>
-                <newname>b2</newname>
+                <newname>b3</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -27767,7 +27782,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.DynamicUtils</name>
-                <newname>au</newname>
+                <newname>cr</newname>
                 <methodlist>
                     <method>
                         <signature>System.Collections.Generic.IEnumerable`1&lt;string&gt;(System.Dynamic.IDynamicMetaObjectProvider)</signature>
@@ -27781,7 +27796,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.DynamicUtils/BinderWrapper</name>
-                <newname>au/a</newname>
+                <newname>cr/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -27866,7 +27881,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.EnumUtils</name>
-                <newname>cm</newname>
+                <newname>bj</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -27974,7 +27989,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.EnumValue`1</name>
-                <newname>cp</newname>
+                <newname>co</newname>
                 <methodlist>
                     <method>
                         <signature>void(string, !0)</signature>
@@ -28103,7 +28118,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.ExpressionReflectionDelegateFactory/&lt;&gt;c__DisplayClass4`1</name>
-                <newname>q/a</newname>
+                <newname>q/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28132,7 +28147,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ExpressionReflectionDelegateFactory/ByRefParameter</name>
-                <newname>q/b</newname>
+                <newname>q/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28161,7 +28176,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.FSharpFunction</name>
-                <newname>s</newname>
+                <newname>t</newname>
                 <methodlist>
                     <method>
                         <signature>void(object, Newtonsoft.Json.Utilities.MethodCall`2&lt;object,object&gt;)</signature>
@@ -28189,7 +28204,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.FSharpUtils</name>
-                <newname>bo</newname>
+                <newname>x</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28414,7 +28429,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.FSharpUtils/&lt;&gt;c__DisplayClass2</name>
-                <newname>bo/a</newname>
+                <newname>x/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28452,7 +28467,7 @@
                     <newname>b</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.FSharpUtils/&lt;&gt;c__DisplayClass6`2</name>
-                <newname>bo/b</newname>
+                <newname>x/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28525,7 +28540,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ImmutableCollectionsUtils</name>
-                <newname>b0</newname>
+                <newname>b1</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28684,7 +28699,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ImmutableCollectionsUtils/&lt;&gt;c__DisplayClass3</name>
-                <newname>b0/c</newname>
+                <newname>b1/c</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28708,7 +28723,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ImmutableCollectionsUtils/&lt;&gt;c__DisplayClass8</name>
-                <newname>b0/a</newname>
+                <newname>b1/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28732,7 +28747,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ImmutableCollectionsUtils/ImmutableCollectionTypeInfo</name>
-                <newname>b0/b</newname>
+                <newname>b1/b</newname>
                 <methodlist>
                     <method>
                         <signature>void(string, string, string)</signature>
@@ -28807,7 +28822,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.IWrappedCollection</name>
-                <newname>bf</newname>
+                <newname>bh</newname>
                 <methodlist>
                     <method>
                         <signature>object()</signature>
@@ -28821,7 +28836,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.IWrappedDictionary</name>
-                <newname>ai</newname>
+                <newname>al</newname>
                 <methodlist>
                     <method>
                         <signature>object()</signature>
@@ -28894,7 +28909,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.JsonTokenUtils</name>
-                <newname>bx</newname>
+                <newname>by</newname>
                 <methodlist>
                     <method>
                         <signature>bool(Newtonsoft.Json.JsonToken)</signature>
@@ -28918,7 +28933,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory</name>
-                <newname>a5</newname>
+                <newname>a6</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -28992,7 +29007,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClass11`1</name>
-                <newname>a5/f</newname>
+                <newname>a6/f</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29021,7 +29036,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClass14`1</name>
-                <newname>a5/b</newname>
+                <newname>a6/c</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29050,7 +29065,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClass17`1</name>
-                <newname>a5/g</newname>
+                <newname>a6/g</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29074,7 +29089,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClass3</name>
-                <newname>a5/c</newname>
+                <newname>a6/d</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29113,7 +29128,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClass7`1</name>
-                <newname>a5/a</newname>
+                <newname>a6/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29152,7 +29167,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClassb`1</name>
-                <newname>a5/e</newname>
+                <newname>a6/e</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29191,7 +29206,7 @@
                     <newname>a</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.LateBoundReflectionDelegateFactory/&lt;&gt;c__DisplayClasse`1</name>
-                <newname>a5/d</newname>
+                <newname>a6/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29263,7 +29278,7 @@
                     <newname>b</newname>
                 </genericparameter>
                 <name>Newtonsoft.Json.Utilities.MethodCall`2</name>
-                <newname>v</newname>
+                <newname>y</newname>
                 <methodlist>
                     <method>
                         <signature>void(object, native int)</signature>
@@ -29288,7 +29303,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.MiscellaneousUtils</name>
-                <newname>aq</newname>
+                <newname>at</newname>
                 <methodlist>
                     <method>
                         <signature>int32(unsigned int8[], unsigned int8[])</signature>
@@ -29337,7 +29352,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.NoThrowExpressionVisitor</name>
-                <newname>a9</newname>
+                <newname>ba</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29364,7 +29379,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.NoThrowGetBinderMember</name>
-                <newname>bh</newname>
+                <newname>bk</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Dynamic.GetMemberBinder)</signature>
@@ -29387,7 +29402,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.NoThrowSetBinderMember</name>
-                <newname>cq</newname>
+                <newname>cp</newname>
                 <methodlist>
                     <method>
                         <signature>void(System.Dynamic.SetMemberBinder)</signature>
@@ -29410,7 +29425,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ParseResult</name>
-                <newname>bl</newname>
+                <newname>l</newname>
                 <methodlist />
                 <fieldlist>
                     <field>
@@ -29699,7 +29714,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.PropertyNameTable</name>
-                <newname>cn</newname>
+                <newname>cm</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29762,7 +29777,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.PropertyNameTable/Entry</name>
-                <newname>cn/a</newname>
+                <newname>cm/a</newname>
                 <methodlist>
                     <method>
                         <signature>void(string, int32, Newtonsoft.Json.Utilities.PropertyNameTable/Entry)</signature>
@@ -29791,7 +29806,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionDelegateFactory</name>
-                <newname>ax</newname>
+                <newname>az</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29857,7 +29872,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionMember</name>
-                <newname>ag</newname>
+                <newname>aj</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29916,7 +29931,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionObject</name>
-                <newname>av</newname>
+                <newname>ay</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -29985,7 +30000,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionObject/&lt;&gt;c__DisplayClass3</name>
-                <newname>av/c</newname>
+                <newname>ay/c</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30009,7 +30024,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionObject/&lt;&gt;c__DisplayClass5</name>
-                <newname>av/a</newname>
+                <newname>ay/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30033,7 +30048,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionObject/&lt;&gt;c__DisplayClass7</name>
-                <newname>av/b</newname>
+                <newname>ay/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30057,7 +30072,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionUtils</name>
-                <newname>bi</newname>
+                <newname>bl</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30334,7 +30349,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionUtils/&lt;&gt;c__DisplayClass11</name>
-                <newname>bi/a</newname>
+                <newname>bl/a</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30363,7 +30378,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.ReflectionUtils/&lt;&gt;c__DisplayClasse</name>
-                <newname>bi/b</newname>
+                <newname>bl/b</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30397,7 +30412,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.StringBuffer</name>
-                <newname>cr</newname>
+                <newname>cq</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30478,7 +30493,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.StringReference</name>
-                <newname>ar</newname>
+                <newname>au</newname>
                 <methodlist>
                     <method>
                         <signature>void(char[], int32, int32)</signature>
@@ -30729,7 +30744,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.TypeExtensions</name>
-                <newname>bs</newname>
+                <newname>bt</newname>
                 <methodlist>
                     <method>
                         <signature>System.Reflection.Assembly(System.Type)</signature>
@@ -30818,7 +30833,7 @@
             </type>
             <type>
                 <name>Newtonsoft.Json.Utilities.TypeInformation</name>
-                <newname>al</newname>
+                <newname>ao</newname>
                 <methodlist>
                     <method>
                         <signature>void()</signature>
@@ -30933,11 +30948,11 @@
         </statisticline>
         <statisticline>
             <description>Total Methods</description>
-            <statistic>3673</statistic>
+            <statistic>3674</statistic>
         </statisticline>
         <statisticline>
             <description>Total Fields</description>
-            <statistic>1725</statistic>
+            <statistic>1727</statistic>
         </statisticline>
         <statisticline>
             <description>Total Properties</description>
@@ -30954,13 +30969,13 @@
         </statisticline>
         <statisticline>
             <description>Total Methods Renamed</description>
-            <statistic>1635</statistic>
-            <statistic>44,51%</statistic>
+            <statistic>1636</statistic>
+            <statistic>44,53%</statistic>
         </statisticline>
         <statisticline>
             <description>Total Fields Renamed</description>
-            <statistic>1537</statistic>
-            <statistic>89,10%</statistic>
+            <statistic>1539</statistic>
+            <statistic>89,11%</statistic>
         </statisticline>
         <statisticline>
             <description>Total Properties Renamed</description>
@@ -30975,7 +30990,7 @@
         <statisticline>
             <description>Methods Renamed to 'a'</description>
             <statistic>513</statistic>
-            <statistic>13,97%</statistic>
+            <statistic>13,96%</statistic>
         </statisticline>
         <statisticline>
             <description>Methods Renamed to 'b'</description>

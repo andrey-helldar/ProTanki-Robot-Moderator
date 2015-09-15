@@ -37,6 +37,7 @@ namespace AIRUS_Bot_Moderator
             new JProperty("ErrorDelete", 0),
             new JProperty("Circles", 0),
             new JProperty("Starting", 0),
+            new JProperty("AllPostsGroup", 0),
             new JProperty("AllComments", 0),
             new JProperty("AllDeleted", 0),
             new JProperty("AllErrorDelete", 0),
@@ -422,7 +423,7 @@ namespace AIRUS_Bot_Moderator
                     groupId != null
                     )
                 {
-                    // Устанавливаем переменную
+                    // Устанавливаем переменную количества постов
                     int max_posts = Data.Default.Posts > 100 || Data.Default.Posts == 0 ? 100 : Data.Default.Posts;
 
                     JToken res = POST(Properties.Resources.API + "wall.get",
@@ -438,6 +439,9 @@ namespace AIRUS_Bot_Moderator
                     {
                         res = (JToken)res.SelectToken("response");
 
+                        // Запоминаем общее количество постов для передачи в форму
+                        Task.Factory.StartNew(() => Log("AllPostsGroup", (int)res["count"])).Wait();
+
                         //  Получаем общее количество записей
                         int count = (int)res["count"];
 
@@ -451,7 +455,7 @@ namespace AIRUS_Bot_Moderator
                         else
                         {
                             if (Data.Default.Posts > 0)
-                                count = Data.Default.Posts;
+                                count = count > Data.Default.Posts ? Data.Default.Posts : count;
 
                             if (count % max_posts == 0)
                                 step = count / max_posts;
@@ -459,20 +463,25 @@ namespace AIRUS_Bot_Moderator
                                 step = (count / max_posts) + 1;
                         }
 
+                        // Запоминаем сколько постов сканировать
+                        int scan_posts = count;
+
                         // Устанавливаем значение прогресс бара
                         Task.Factory.StartNew(() => SetProgress(true, count)).Wait();
 
                         // Запоминаем статистику
-                        Task.Factory.StartNew(() => Log("AllPosts", (double)count)).Wait();
+                        Task.Factory.StartNew(() => Log("AllPosts", (int)count)).Wait();
 
                         // Перебираем записи по шагам
                         for (int i = 0; i < step; i++)
                         {
+                            int scan = scan_posts > 100 ? 100 : scan_posts;
+
                             res = POST(Properties.Resources.API + "wall.get",
                                 new JObject(
                                     new JProperty("owner_id", groupId),
                                     new JProperty("offset", (max_posts * i).ToString()),
-                                    new JProperty("count", max_posts.ToString()),
+                                    new JProperty("count", scan.ToString()),
                                     new JProperty("filter", "all")
                                 )
                             );
@@ -511,6 +520,9 @@ namespace AIRUS_Bot_Moderator
                                 // Принудительно выходим из цикла
                                 break;
                             }
+
+                            // Уменьшаем сессионное значение количества сканированных постов
+                            scan_posts = scan_posts - scan;
                         }
                     }
                     else
@@ -664,7 +676,6 @@ namespace AIRUS_Bot_Moderator
                                          (string)result.SelectToken("error.error_code"),
                                          (string)result.SelectToken("error.error_msg"),
                                          postId);
-                                     bStartBot.IsEnabled = false;
                                  }));
 
                                 break;
@@ -961,35 +972,28 @@ namespace AIRUS_Bot_Moderator
         private async void SetStatus(string block = "start")
         {
             await Dispatcher.BeginInvoke(new ThreadStart(delegate
-              {
-                  try
-                  {
-                      switch (block)
-                      {
-                          case "end":
-                              tbStatus.Text = "Отдыхаем";
-                              bStartBot.IsEnabled = true;
+            {
+                try
+                {
+                    switch (block)
+                    {
+                        case "end":
+                            tbStatus.Text = "Отдыхаем";
+                            timer = false;
+                            break;
 
-                              timer = false;
-                              break;
+                        default:
+                            tbStartAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+                            tbStatus.Text = "Работаем...";
 
-                          default:
-                              tbStartAt.Text = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-                              tbStatus.Text = "Работаем...";
-                              bStartBot.IsEnabled = false;
-
-                              timer = true;
-                              Task.Factory.StartNew(() => SetTimer());
-                              Task.Factory.StartNew(() => ShowLog());
-                              break;
-                      }
-                  }
-                  catch (Exception ex)
-                  {
-                      bStartBot.IsEnabled = true;
-                      Task.Factory.StartNew(() => TextLog(ex));
-                  }
-              }));
+                            timer = true;
+                            Task.Factory.StartNew(() => SetTimer());
+                            Task.Factory.StartNew(() => ShowLog());
+                            break;
+                    }
+                }
+                catch (Exception ex) { Task.Factory.StartNew(() => TextLog(ex)); }
+            }));
         }
 
         private async void SetTimer()
@@ -1066,7 +1070,7 @@ namespace AIRUS_Bot_Moderator
                         // Выводим логи на экран
                         await Dispatcher.BeginInvoke(new ThreadStart(delegate
                         {
-                            logAllPosts.Text = (string)log.SelectToken("CurrentPost") + " / " + (string)log.SelectToken("AllPosts");
+                            logAllPosts.Text = String.Format("{0} / {1} / {2}", (string)log.SelectToken("CurrentPost"), (string)log.SelectToken("AllPosts"), (string)log.SelectToken("AllPostsGroup"));
                             logAllComments.Text = (string)log.SelectToken("CurrentComment");
                             logDeleted.Text = String.Format("{0} / {1}%", (string)log["Deleted"], (Math.Round(((double)log["Deleted"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
                             logErrorDelete.Text = String.Format("{0} / {1}%", (string)log["ErrorDelete"], (Math.Round(((double)log["ErrorDelete"] / (double)log["CurrentComment"]) * 100, 3)).ToString());
@@ -1098,7 +1102,7 @@ namespace AIRUS_Bot_Moderator
             {
                 await Dispatcher.BeginInvoke(new ThreadStart(delegate
                 {
-                    tbDiff.Text = String.Format("{0}", i.ToString());
+                    tbDiff.Text = String.Format("{0}", (i > 0 ? i : sec).ToString());
                 }));
 
                 Thread.Sleep(1000);
@@ -1230,7 +1234,7 @@ namespace AIRUS_Bot_Moderator
 
                                  "Всего комментариев: " + (string)log["AllComments"] + Environment.NewLine +
                                  "Всего удалено: " + String.Format("{0} / {1}%\n", (string)log["AllDeleted"], (Math.Round(((double)log["AllDeleted"] / (double)log["AllComments"]) * 100, 3)).ToString()) +
-                                 "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString()) +
+                                 "Всего ошибок удаления: " + String.Format("{0} / {1}%", (string)log["AllErrorDelete"], (Math.Round(((double)log["AllErrorDelete"] / (double)log["AllComments"]) * 100, 3)).ToString()) + Environment.NewLine +
                                  "Всего заблокировано аккаунтов: " + (string)log["AllBanned"];
                          }));
                     }
