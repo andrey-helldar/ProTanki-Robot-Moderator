@@ -388,7 +388,7 @@ namespace AIRUS_Bot_Moderator
 
 
                 // Приступаем
-                Task.Factory.StartNew(() => SetStatus());
+                Task.Factory.StartNew(() => SetStatus()).Wait();
                 Task.Factory.StartNew(() => Log(null, 0, true)).Wait();
 
 
