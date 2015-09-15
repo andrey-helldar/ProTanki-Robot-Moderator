@@ -155,11 +155,10 @@ namespace AIRUS_Bot_Moderator
                 // Если настройки указаны
                 if (Data.Default.Group.Length > 0)
                 {
-                    // Отправляем запрос
-                    HttpClient client = new HttpClient();
-
                     // Парсим ответ
-                    JObject data = JObject.Parse(await client.GetStringAsync(Properties.Resources.Author + Data.Default.Group));
+                    JObject data = POST(Properties.Resources.Author + Data.Default.Group,
+                        new JObject(new JProperty("group", groupId))
+                    );
 
                     if (data["error"] == null)
                     {
@@ -263,7 +262,7 @@ namespace AIRUS_Bot_Moderator
                     {
                         await Dispatcher.BeginInvoke(new ThreadStart(delegate
                        {
-                           tbStatusBar.Text = (string)ErrorCode((string)data.SelectToken("error.error_code"), true)["error"];
+                           tbStatusBar.Text = (string)data.SelectToken("error.msg");
                            botBtn = false;
                        }));
                     }
@@ -1151,6 +1150,7 @@ namespace AIRUS_Bot_Moderator
 
                 switch (code)
                 {
+                    case "0": error = "Неавторизованный запуск приложения."; break;
                     case "1": error = "Произошла неизвестная ошибка. Попробуйте повторить запрос позже."; break;
                     case "2": error = "Приложение выключено."; break;
                     case "3": error = "Передан неизвестный метод."; break;
