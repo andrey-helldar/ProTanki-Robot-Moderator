@@ -88,7 +88,7 @@ namespace AIRUS_Bot_Moderator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 377.
+        ///   Looks up a localized string similar to 377,382.
         /// </summary>
         internal static string AuthorPost {
             get {

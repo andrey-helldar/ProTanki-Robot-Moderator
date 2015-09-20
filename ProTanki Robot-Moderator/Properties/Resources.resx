@@ -128,7 +128,7 @@
     <comment>ai_rus</comment>
   </data>
   <data name="AuthorPost" xml:space="preserve">
-    <value>377</value>
+    <value>377,382</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="favicon" type="System.Resources.ResXFileRef, System.Windows.Forms">

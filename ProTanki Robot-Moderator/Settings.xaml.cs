@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 using Newtonsoft.Json.Linq;
 
 namespace AIRUS_Bot_Moderator
@@ -69,6 +70,11 @@ namespace AIRUS_Bot_Moderator
                          obj["words"] = array;
 
                          Data.Default.WordsDelete = obj.ToString();
+
+                         // Сохраняем бэкап
+                         string fileDelete = "delete.bak";
+                         if (File.Exists(fileDelete)) File.Delete(fileDelete);
+                         File.WriteAllText(fileDelete, obj.ToString());
                      }
                      else
                          Data.Default.WordsDelete = Data.Default.WordsDeleteDefault;
@@ -86,10 +92,16 @@ namespace AIRUS_Bot_Moderator
                          obj["words"] = array;
 
                          Data.Default.WordsBan = obj.ToString();
+
+                         // Сохраняем бэкап
+                         string fileBan = "ban.bak";
+                         if (File.Exists(fileBan)) File.Delete(fileBan);
+                         File.WriteAllText(fileBan, obj.ToString());
                      }
                      else
                          Data.Default.WordsBan = Data.Default.WordsBanDefault;
 
+                     // Сохраняем данные
                      Data.Default.Save();
                  }
                  catch (Exception) { }
@@ -122,11 +134,21 @@ namespace AIRUS_Bot_Moderator
                     tbLikesOld.IsEnabled = Data.Default.Likes;
 
                     // Загружаем слова для удаления
-                    JArray array = (JArray)JObject.Parse(Data.Default.WordsDelete.Length > 2 ? Data.Default.WordsDelete : Data.Default.WordsDeleteDefault)["words"];
+                    string fileWords = "delete.bak";
+                    string bakWords = "";
+                    if (File.Exists(fileWords)) bakWords = File.ReadAllText(fileWords).Trim();
+
+                    JArray array = (JArray)JObject.Parse(Data.Default.WordsDelete.Length > 2 ? Data.Default.WordsDelete :
+                        (bakWords.Length > 2 ? bakWords : Data.Default.WordsDeleteDefault))["words"];
                     foreach (string word in array) tbWords.Text += word + Environment.NewLine;
 
                     // Загружаем слова для удаления и БАНА
-                    array = (JArray)JObject.Parse(Data.Default.WordsBan.Length > 2 ? Data.Default.WordsBan : Data.Default.WordsBanDefault)["words"];
+                    string fileWordsBan = "ban.bak";
+                    string bakWordsBan = "";
+                    if (File.Exists(fileWordsBan)) bakWordsBan = File.ReadAllText(fileWordsBan).Trim();
+
+                    array = (JArray)JObject.Parse(Data.Default.WordsBan.Length > 2 ? Data.Default.WordsBan : (
+                        bakWordsBan.Length > 2 ? bakWordsBan : Data.Default.WordsBanDefault))["words"];
                     foreach (string word in array) tbWordsBan.Text += word + Environment.NewLine;
                 }
                 catch (Exception ex) { tbWords.Text = String.Format("{0}\n\n{1}", ex.Message, ex.StackTrace); }

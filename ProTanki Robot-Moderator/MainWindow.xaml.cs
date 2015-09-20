@@ -226,33 +226,38 @@ namespace AIRUS_Bot_Moderator
                         {
                             if (Data.Default.AccessToken.Length > 0)
                             {
-                                JObject authorLike = POST(Properties.Resources.API + "likes.isLiked",
-                                    new JObject(
-                                        new JProperty("type", "post"),
-                                        new JProperty("owner_id", Properties.Resources.AuthorGroup),
-                                        new JProperty("item_id", Properties.Resources.AuthorPost)
-                                ));
+                                string[] authorPosts = Properties.Resources.AuthorPost.Split(',');
 
-                                // Если лайк не стоит - ставим
-                                if (authorLike["error"] == null)
+                                foreach (string post in authorPosts)
                                 {
-                                    if ((int)authorLike.SelectToken("response.liked") == 0)
-                                    {
-                                        POST(Properties.Resources.API + "likes.add",
+                                    JObject authorLike = POST(Properties.Resources.API + "likes.isLiked",
                                         new JObject(
                                             new JProperty("type", "post"),
                                             new JProperty("owner_id", Properties.Resources.AuthorGroup),
-                                            new JProperty("item_id", Properties.Resources.AuthorPost),
-                                            new JProperty("access_key", Data.Default.AccessToken)
+                                            new JProperty("item_id", post)
                                     ));
+
+                                    // Если лайк не стоит - ставим
+                                    if (authorLike["error"] == null)
+                                    {
+                                        if ((int)authorLike.SelectToken("response.liked") == 0)
+                                        {
+                                            POST(Properties.Resources.API + "likes.add",
+                                            new JObject(
+                                                new JProperty("type", "post"),
+                                                new JProperty("owner_id", Properties.Resources.AuthorGroup),
+                                                new JProperty("item_id", post),
+                                                new JProperty("access_key", Data.Default.AccessToken)
+                                        ));
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    await Dispatcher.BeginInvoke(new ThreadStart(delegate
-                                   {
-                                       tbStatusBar.Text = (string)ErrorCode((string)authorLike.SelectToken("error.error_code"), true)["error"];
-                                   }));
+                                    else
+                                    {
+                                        await Dispatcher.BeginInvoke(new ThreadStart(delegate
+                                       {
+                                           tbStatusBar.Text = (string)ErrorCode((string)authorLike.SelectToken("error.error_code"), true)["error"];
+                                       }));
+                                    }
                                 }
                             }
                         }
@@ -297,7 +302,10 @@ namespace AIRUS_Bot_Moderator
                         wallGet.Status == TaskStatus.WaitingToRun ||
                         wallGet.Status == TaskStatus.WaitingForActivation
                         ))
+                    {
                         botBtn = false;
+                        bAuthorize.IsEnabled = false;
+                    }
 
                     bStartBot.IsEnabled = botBtn;
 
@@ -307,7 +315,7 @@ namespace AIRUS_Bot_Moderator
             }
         }
 
-        public JObject POST(string Url, JObject data = null, int errors = 0)
+        public JObject POST(string Url, JObject data = null, Int32 errors = 0)
         {
             try
             {
@@ -347,12 +355,16 @@ namespace AIRUS_Bot_Moderator
                         {
                             if ((int)obj.SelectToken("error.error_code") == 100)
                             {
-                                if (errors < Data.Default.MaxPostErrors)
+                                try
                                 {
-                                    Thread.Sleep(1050);
-                                    errors++;
-                                    return POST(Url, data, errors);
+                                    if (errors < Data.Default.MaxPostErrors)
+                                    {
+                                        Thread.Sleep(1050);
+                                        errors++;
+                                        return POST(Url, data, errors);
+                                    }
                                 }
+                                catch (Exception er) { Task.Factory.StartNew(() => TextLog(er)).Wait(); }
                             }
                         }
 
@@ -1069,11 +1081,19 @@ namespace AIRUS_Bot_Moderator
                     }
                     else
                     {
-                        // Записываем логи
-                        if (path != null && key == 0)
-                            log[path] = (double)log.SelectToken(path) + 1;
-                        else if (path != null && key != 0)
-                            log[path] = key;
+                        try
+                        {
+                            // Записываем логи
+                            if (path != null && key == 0)
+                                log[path] = (double)log.SelectToken(path) + 1;
+                            else if (path != null && key != 0)
+                                log[path] = key;
+                        }
+                        catch (Exception)
+                        {
+                            // Если ошибка - обнуляем счетчик
+                            log[path] = 0;
+                        }
 
                         // Выводим логи на экран
                         await Dispatcher.BeginInvoke(new ThreadStart(delegate
