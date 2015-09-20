@@ -20,10 +20,10 @@
     <ROW Property="ARPURLINFOABOUT" Value="https://ai-rus.com"/>
     <ROW Property="CTRLS" Value="3"/>
     <ROW Property="Manufacturer" Value="AI RUS - Professional IT support"/>
-    <ROW Property="ProductCode" Value="1033:{70CEAC35-40D3-47B5-BD00-8B275EF1EADE} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{0EDE7491-7543-4E8B-BA88-53496F2D8044} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="AI RUS VK Bot-Moderator"/>
-    <ROW Property="ProductVersion" Value="3.28.5736.36030" Type="32"/>
+    <ROW Property="ProductVersion" Value="3.31.5742.5648" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{CD8EDEC6-E401-46FF-B8F0-B3DAAD235627}"/>
