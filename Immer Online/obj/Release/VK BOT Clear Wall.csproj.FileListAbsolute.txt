@@ -1,0 +1,16 @@
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\bin\Release\VK BOT Clear Wall.exe.config
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\bin\Release\VK BOT Clear Wall.exe
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\bin\Release\VK BOT Clear Wall.pdb
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\bin\Release\Newtonsoft.Json.dll
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\bin\Release\Newtonsoft.Json.xml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK BOT Clear Wall.csprojResolveAssemblyReference.cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\MainWindow.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\MainWindow.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\App.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK BOT Clear Wall_MarkupCompile.cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK BOT Clear Wall.g.resources
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK_BOT_Clear_Wall.Properties.Resources.resources
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK BOT Clear Wall.csproj.GenerateResource.Cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK BOT Clear Wall.exe
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\obj\Release\VK BOT Clear Wall.pdb
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\VK BOT Clear Wall\bin\Release\settings.json

@@ -1,0 +1,16 @@
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\bin\Release\settings.json
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\bin\Release\Newtonsoft.Json.dll
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\bin\Release\Newtonsoft.Json.xml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\Immer Online.csprojResolveAssemblyReference.cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\MainWindow.baml
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\MainWindow.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\App.g.cs
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\VK_BOT_Clear_Wall.Properties.Resources.resources
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\Immer Online.csproj.GenerateResource.Cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\bin\Release\VK BOT Immer Online.exe.config
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\bin\Release\VK BOT Immer Online.exe
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\bin\Release\VK BOT Immer Online.pdb
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\VK BOT Immer Online_MarkupCompile.cache
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\VK BOT Immer Online.g.resources
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\VK BOT Immer Online.exe
+F:\ВАЖНЫЕ ДАННЫЕ\!!Важные документы\!Сохранения программ\Visual Studio C#\Robot-Moderator\Immer Online\obj\Release\VK BOT Immer Online.pdb
