@@ -163,6 +163,12 @@ namespace VK_BOT_Clear_Wall
         {
             try
             {
+                POST(Properties.Resources.API + "audio.setBroadcast", "&access_token=" + JsonGet("access_token"));
+                Thread.Sleep(350);
+
+                POST(Properties.Resources.API + "audio.setBroadcast", "&access_token=" + JsonGet("access_token"));
+                Thread.Sleep(350);
+
                 JsonSet("access_token", tbToken.Text);
                 File.WriteAllText("settings.json", settings.ToString());
             }
@@ -223,46 +229,40 @@ namespace VK_BOT_Clear_Wall
                     // Перебираем записи по шагам
                     while (true)
                     {
-                        string Data =
-                            "&access_token=" + JsonGet("access_token") +
-                            "&offset=0" +
-                            "&count=100" +
-                            "&only_eng=0" +
-                            "&genre_id=18"; // Other Genre
+                        // Получаем список аудио
+                        JObject audios = JObject.Parse(POST(Properties.Resources.API + "audio.get", "&access_token=" + JsonGet("access_token") + "&count=100&offset=0&need_user=0"));
 
-                        string result = POST(Properties.Resources.API + "audio.getPopular", Data);
-                        Thread.Sleep(350);
-
-                        if (result != null)
+                        if (audios["response"] != null)
                         {
-                            JToken res = JObject.Parse(result).SelectToken("response");
-
-                            foreach (JToken musik in (JArray)res)
+                            foreach (JToken audio in (JArray)audios.SelectToken("response.items"))
                             {
                                 // set Online
                                 POST(Properties.Resources.API + "account.setOnline", "&access_token=" + JsonGet("access_token") + "&voip=0");
                                 Thread.Sleep(350);
 
-                                Data =
-                                    "&access_token=" + JsonGet("access_token") +
-                                    "&audio=" + (string)musik["owner_id"] + "_" + (string)musik["id"];
+                                // Слушаем музыку))
+                                POST(Properties.Resources.API + "audio.setBroadcast", "&access_token=" + JsonGet("access_token") +
+                                    String.Format("&audio={0}_{1}", (string)audio["owner_id"], (string)audio["id"]));
 
-                                // set Audio
-                                string rt = POST(Properties.Resources.API + "audio.setBroadcast", Data
-                                    );
-
-
+                                // Лог
                                 Dispatcher.BeginInvoke(new ThreadStart(delegate
                                 {
-                                    tbLog.Text = "Сейчас играет: " + (string)musik["artist"] + " - " + (string)musik["title"] + rt;
+                                    tbLog.Text += String.Format("{0} - {1}" + Environment.NewLine, (string)audio["artist"], (string)audio["title"]);
                                 }));
 
-
-                                Thread.Sleep((int)musik["duration"] * 1000);
+                                Thread.Sleep((int)audio["duration"] * 1000);
                             }
                         }
+                        else
+                        {
+                            POST(Properties.Resources.API + "audio.setBroadcast", "&access_token=" + JsonGet("access_token"));
+                            Thread.Sleep(350);
 
-                        Thread.Sleep(350);
+                            POST(Properties.Resources.API + "audio.setBroadcast", "&access_token=" + JsonGet("access_token"));
+                            Thread.Sleep(350);
+
+                            Thread.Sleep(60000);
+                        }
                     }
                 }
                 else
